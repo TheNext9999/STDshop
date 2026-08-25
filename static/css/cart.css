@@ -1,0 +1,239 @@
+﻿:root {
+            --primary: #00C9B0;
+            --primary-dark: #00a68f;
+        }
+
+.cart-page {
+    max-width: 1250px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Header cột */
+.cart-table-header {
+    background: #f8f9fa;
+    padding: 16px 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-table-header-row {
+    display: grid;
+    grid-template-columns: 50px 3.8fr 130px 140px 150px 90px;
+    gap: 15px;
+    align-items: center;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Mỗi dòng sản phẩm */
+.cart-item {
+    display: grid;
+    grid-template-columns: 50px 3.8fr 130px 140px 150px 90px;
+    gap: 15px;
+    padding: 20px 25px;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+}
+
+.cart-item img {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Nút + - rõ ràng, màu Cyan */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.quantity-control button {
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: none;
+    color: var(--primary);           /* Màu Cyan */
+    font-size: 1.35rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.quantity-control span {
+    padding: 0 16px;
+    font-weight: 600;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Thao tác */
+.remove-btn {
+    color: #e74c3c;
+    font-size: 1.7rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    justify-self: center;
+}
+
+/* Phần dưới */
+.cart-bottom {
+    padding: 25px 30px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-bottom-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.remove-all-btn {
+    color: #e74c3c;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-buy {
+    background: var(--primary);
+    color: white;
+    padding: 14px 45px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        /* ==================== NAVBAR GIỎ HÀNG (Giống Shopee) ==================== */
+.cart-navbar {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Bên trái */
+.cart-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-img {
+    height: 42px;
+    margin-right: 8px;
+}
+
+.logo-text {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.nav-divider {
+    color: #ddd;
+    font-size: 1.6rem;
+    margin: 0 10px;
+}
+
+.cart-title {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: #00C9B0;
+
+}
+
+/* Thanh tìm kiếm */
+.cart-search-bar {
+    width: 420px;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    padding: 8px 12px;
+}
+
+#cartSearchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    padding: 6px 0;
+}
+
+.search-submit-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* === PHẦN TÊN SẢN PHẨM - SÁT SHOPEE === */
+.product-col {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 3px;
+    color: #222;
+}
+
+.cart-item-shop {
+    font-size: 0.9rem;
+    color: #777;
+}
+

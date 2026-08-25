@@ -1,0 +1,395 @@
+﻿:root {
+            --primary: #00C9B0;
+            --primary-dark: #00a68f;
+        }
+
+        .orders-page {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .orders-header {
+            margin-bottom: 25px;
+        }
+
+        .tab-container {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            padding: 12px 53px;
+            white-space: nowrap;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-shipping { background: #d1ecf1; color: #0c5460; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-return { background: #f5c6cb; color: #721c24; }
+
+        .product-row {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .product-row img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .product-info strong {
+    font-size: 15px;
+}
+
+.product-info small {
+    color: #777;
+}
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            background: white;
+        }
+        /* Container bao quanh nút và dropdown */
+.cart-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* Ẩn dropdown mặc định */
+.cart-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 400px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    display: none; /* Ẩn đi */
+    z-index: 1000;
+    padding: 15px;
+    border: 1px solid #eee;
+}
+
+/* Hiển thị khi hover */
+.cart-wrapper:hover .cart-dropdown {
+    display: block;
+}
+
+/* Mũi tên nhỏ phía trên giỏ hàng */
+.cart-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid white;
+}
+
+.cart-dropdown-title {
+    color: #888;
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.cart-items-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Item trong giỏ hàng nhỏ */
+.cart-mini-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.cart-mini-item img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.cart-mini-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.cart-mini-name {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cart-mini-price {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.cart-dropdown-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.btn-view-cart {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.empty-cart-msg {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+.status-waiting { 
+    background: #ffeeba; 
+    color: #856404; 
+}
+.order-extra {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.order-footer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-total {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+}
+/* ===== MODAL OVERLAY ===== */
+.order-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    animation: fadeIn 0.25s ease;
+}
+
+/* ===== MODAL BOX ===== */
+.modal-content {
+    background: #fff;
+    width: 650px;
+    max-height: 85vh;
+    overflow-y: auto;
+    margin: 60px auto;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    animation: scaleUp 0.25s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== CLOSE BUTTON ===== */
+#closeModal {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #999;
+    transition: 0.2s;
+}
+
+#closeModal:hover {
+    color: #00C9B0;
+    transform: rotate(90deg);
+}
+
+/* ===== HEADER ===== */
+.modal-header {
+    font-size: 20px;
+    font-weight: 600;
+    color: #00C9B0;
+    margin-bottom: 15px;
+}
+
+/* ===== INFO TEXT ===== */
+.modal-info {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* ===== PRODUCT ITEM ===== */
+.modal-product {
+    display: flex;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.modal-product img {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.modal-product-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-product-qty {
+    font-size: 13px;
+    color: #888;
+}
+
+/* ===== TOTAL ===== */
+.modal-total {
+    text-align: right;
+    font-size: 16px;
+    font-weight: 600;
+    color: #00C9B0;
+    margin-top: 15px;
+}
+/* ===== BUTTON GROUP ===== */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ===== PRIMARY BUTTON (Chi tiết đơn hàng) ===== */
+.btn-primary {
+    background: #00C9B0;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0,201,176,0.25);
+}
+
+.btn-primary i {
+    font-size: 13px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,201,176,0.35);
+    background: linear-gradient(135deg, #00e0c5, #00b39f);
+}
+
+/* ===== OUTLINE BUTTON ===== */
+.btn-outline {
+    border: 1.5px solid #00C9B0;
+    color: #00C9B0;
+    background: #fff;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-outline:hover {
+    background: #00C9B0;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===== DANGER BUTTON ===== */
+.btn-danger {
+    border: 1.5px solid #ff4d4f;
+    color: #ff4d4f;
+    background: #fff;
+}
+
+.btn-danger:hover {
+    background: #ff4d4f;
+    color: white;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+    from { opacity: 0 }
+    to { opacity: 1 }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.9); opacity: 0 }
+    to { transform: scale(1); opacity: 1 }
+}
+

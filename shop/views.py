@@ -1,5 +1,4 @@
 from django.shortcuts import render
 
-
 def index(request):
-	return render(request, 'shop/base.html')
+       return render(request, 'shop/index.html')

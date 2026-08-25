@@ -1,0 +1,133 @@
+﻿:root {
+            --primary: #00C9B0;
+            --primary-dark: #00a68f;
+            --text: #222;
+            --gray: #555;
+            --light: #f8f9fa;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=1600') center/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            width: 100%;
+            max-width: 480px;
+            margin: 40px 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 40px 30px 30px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+        }
+
+        .form-body {
+            padding: 40px 35px 50px;
+        }
+        .method-tabs {
+            display: flex;
+            background: var(--light);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .method-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .method-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .btn-otp {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .btn-otp:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .otp-input {
+            display: none;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        .otp-input input {
+            width: 52px;
+            height: 52px;
+            text-align: center;
+            font-size: 1.8rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        .footer-text a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+

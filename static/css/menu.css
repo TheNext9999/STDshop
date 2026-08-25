@@ -1,0 +1,130 @@
+﻿.menu-hero {
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=1600') center/cover no-repeat;
+            height: 420px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .menu-hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+        }
+        .menu-hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .category-section {
+            padding: 80px 0;
+            background: white;
+        }
+        .category-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #11cabb;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .menu-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        .menu-card:hover {
+            transform: translateY(-10px);
+        }
+        .menu-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .menu-info {
+            padding: 20px;
+        }
+        .menu-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.35rem;
+        }
+        .menu-info p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        .menu-info .price {
+            color: #00C9B0;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .benefits {
+            background: #f8f9fa;
+            padding: 70px 0;
+            text-align: center;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        /* ==================== THỰC ĐƠN - ĐÃ MỞ RỘNG ĐẦY ĐẶN ==================== */
+.category-block {
+    margin-bottom: 80px;
+}
+.category-block h3 {
+    font-size: 2rem;
+    color: #11cabb;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.category-desc {
+    font-size: 1.1rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+.menu-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+.menu-card:hover {
+    transform: translateY(-10px);
+}
+.menu-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+.menu-info {
+    padding: 20px;
+}
+.menu-info h3 {
+    margin-bottom: 10px;
+    font-size: 1.35rem;
+}
+.menu-info p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+

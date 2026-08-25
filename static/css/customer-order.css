@@ -1,0 +1,425 @@
+﻿/* ==================== FLASH SALE ==================== */
+.flash-sale-section {
+    background: linear-gradient(135deg, #03f8dc 0%,#01d8bb, #02aa94, #007969 100%);
+    color: white;
+    padding-top: 10px;
+    margin: 40px auto;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    padding: 30px 0px 30px;
+    max-width: 1130px;           /* Thu nhỏ chiều rộng */
+    width: 90%;
+    box-shadow: 0 8px 25px rgba(0, 201, 176, 0.25);
+}
+
+.flash-sale-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.flash-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.flash-badge {
+    background: #fff;
+    color: #05aa97;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.countdown {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 1.35rem;
+    font-weight: 600;
+    display: flex;
+    gap: 6px;
+}
+
+.flash-sale-grid {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 10px 10px 20px;
+    scrollbar-width: none;
+}
+
+.flash-sale-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.flash-card {
+    background: white;
+    color: #222;
+    border-radius: 12px;
+    width: 185px;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.flash-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.flash-card img {
+    width: 100%;
+    height: 185px;
+    object-fit: cover;
+}
+
+.flash-info {
+    padding: 12px;
+}
+
+.flash-price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #00C9B0;
+}
+
+.flash-old-price {
+    font-size: 0.85rem;
+    text-decoration: line-through;
+    color: #999;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #029b7a;
+    color: white;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.sold-badge {
+    background: linear-gradient(90deg, #00C9B0, #00a68f);
+    color: white;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+    display: inline-block;
+}
+.flash-sale-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.flash-sale-grid {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 10px 0 20px;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    flex: 1;
+}
+
+.flash-sale-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.flash-nav-btn {
+    width: 42px;
+    height: 42px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.flash-nav-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.08);
+}
+
+.flash-nav-btn.left { margin-left: -10px; }
+.flash-nav-btn.right { margin-right: -10px; }
+
+/* ==================== HERO BANNER SLIDER ==================== */
+        .hero-banner {
+            position: relative;
+            height: 55vh;
+            min-height: 520px;
+            overflow: hidden;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.35));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 3.2rem;
+            margin-bottom: 12px;
+        }
+
+        .hero-content p {
+            font-size: 1.35rem;
+            margin-bottom: 25px;
+        }
+
+        /* Nút điều hướng slider */
+        .hero-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+        }
+
+        .hero-nav.left { left: 30px; }
+        .hero-nav.right { right: 30px; }
+
+        .hero-nav:hover {
+            background: rgba(255,255,255,0.6);
+        }
+/* ==================== PRODUCT CARD – MỚI ==================== */
+
+/* Grid chứa cards */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+/* Card tổng thể */
+.product-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e8f7f4;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 14px 34px rgba(0, 201, 176, 0.18);
+}
+
+/* ---- Vùng ảnh ---- */
+.product-card__img-wrap {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    background: #f3fafa;
+}
+
+.product-card__img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+    display: block;
+}
+
+.product-card:hover .product-card__img-wrap img {
+    transform: scale(1.06);
+}
+
+/* Badge giảm giá – góc trái trên */
+.product-card__discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(255,71,87,0.35);
+}
+
+/* Badge "Bán chạy" – góc phải trên */
+.product-card__hot {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #00C9B0, #007969);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    z-index: 2;
+}
+
+/* ---- Vùng thông tin ---- */
+.product-card__body {
+    padding: 13px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+/* Tên sản phẩm */
+.product-card__name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1a2a27;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.45em;
+}
+
+/* Đánh giá sao */
+.product-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+}
+
+.product-card__stars {
+    color: #f5a623;
+    letter-spacing: 1px;
+    font-size: 0.82rem;
+}
+
+.product-card__rating-score {
+    color: #444;
+    font-weight: 600;
+}
+
+.product-card__sold {
+    color: #888;
+    font-size: 0.78rem;
+}
+
+.product-card__rating-divider {
+    color: #ccc;
+}
+
+/* Dải giá */
+.product-card__price-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 2px;
+}
+
+.product-card__price {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #00C9B0;
+}
+
+.product-card__price-original {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+/* Thanh lượt bán nhỏ phía dưới */
+.product-card__sold-bar-wrap {
+    margin-top: 4px;
+}
+
+.product-card__sold-bar-label {
+    font-size: 0.72rem;
+    color: #888;
+    margin-bottom: 3px;
+}
+
+.product-card__sold-bar {
+    height: 4px;
+    background: #e0f5f1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.product-card__sold-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00C9B0, #007969);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+/* Responsive */
+@media (max-width: 640px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .product-card__img-wrap {
+        height: 155px;
+    }
+}

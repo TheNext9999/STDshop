@@ -1,0 +1,93 @@
+﻿:root {
+            --primary: #00C9B0;
+            --dark: #0f172a;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0bd696, #0d9a80, #075a4b);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .admin-card {
+            background: white;
+            color: #333;
+            width: 100%;
+            max-width: 460px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .admin-header {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+        .admin-header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+        }
+        .admin-header p {
+            opacity: 0.9;
+            font-size: 1.05rem;
+        }
+        .badge {
+            background: #dc2626;
+            color: white;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .tabs {
+            display: flex;
+            background: #f1f5f9;
+        }
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .form-area {
+            padding: 40px 35px;
+        }
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        .btn-admin {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-admin:hover {
+            background: #00a68f;
+        }
+        .footer-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #64748b;
+        }
+

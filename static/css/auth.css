@@ -1,0 +1,235 @@
+﻿:root {
+            --primary: #00C9B0;
+            --primary-dark: #00a68f;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .login-container {
+            display: flex;
+            background: linear-gradient(135deg, #00C9B0, #00a68f);
+            min-height: calc(90vh - 68px);   /* Điều chỉnh theo navbar mới */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .logo-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-box img {
+    width: 300px;           /* Giảm nhẹ kích thước logo cho cân đối */
+    filter: drop-shadow(0 15px 35px rgba(0,0,0,0.25));
+    margin-bottom: -60px;    
+}
+
+.left-panel h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin: 0;              /* Loại bỏ margin-top thừa */
+    letter-spacing: -2px;
+}
+
+.left-panel p {
+    font-size: 1.25rem;
+    margin-top: 1px;
+    opacity: 0.95;
+}
+
+        .form-panel {
+            width: 460px;
+            background: white;
+            padding: 50px 40px;
+            box-shadow: -10px 0 35px rgba(0,0,0,0.15);
+            border-radius: 10px;
+        }
+
+        .tab-header {
+            display: flex;
+            margin-bottom: 35px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.05rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 15px 0;
+        }
+        .top-navbar {
+    background: white;
+    padding: 16px 50px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+.auth-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 1.02rem;
+}
+
+.auth-link:hover {
+    color: var(--primary);
+}
+/* ==================== FOOTER ==================== */
+.footer {
+    background: #ffffff;
+    border-top: 1px solid #eee;
+    padding: 60px 0 30px;
+    color: #333;
+    font-size: 1rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.support-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.support-card {
+    background: #f8f9fa;
+    padding: 28px 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.support-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 201, 176, 0.1);
+}
+
+.support-card i {
+    font-size: 2.8rem;
+    color: #00C9B0;
+    margin-bottom: 15px;
+}
+
+.support-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.support-card .highlight {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #00C9B0;
+    margin: 8px 0;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-column h4 {
+    margin-bottom: 16px;
+    color: #00C9B0;
+    font-size: 1.1rem;
+}
+
+.footer-column a {
+    display: block;
+    color: #555;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: 0.2s;
+}
+
+.footer-column a:hover {
+    color: #00C9B0;
+    padding-left: 4px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+    color: #888;
+    font-size: 0.95rem;
+}
+

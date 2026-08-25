@@ -1,0 +1,549 @@
+/* ═══════════════════════════════════════════════════════════════
+   AI WIDGET — STDShop Smart Layer
+   Gồm: Mini Chat Bubble, Dwell-Time Tracker, Related Products Panel
+   Palette: teal #00C9B0, font: Be Vietnam Pro (khớp customer-order.html)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────
+   1. MINI HERO CHAT (nhúng trong hero-search-box)
+   ────────────────────────────────────────────────────────────── */
+.hero-ai-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: .82rem;
+    color: rgba(255,255,255,.75);
+    animation: fadeSlideUp .5s .4s both;
+}
+.hero-ai-hint span { letter-spacing: .3px; }
+.hero-ai-hint strong { color: #fff; font-weight: 700; cursor: pointer; text-decoration: underline dotted; }
+.hero-ai-hint strong:hover { color: #00C9B0; }
+
+/* AI Quick Suggestions (chips dưới search) */
+.hero-ai-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    animation: fadeSlideUp .5s .6s both;
+}
+.ai-chip {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 999px;
+    color: #fff;
+    cursor: pointer;
+    font-size: .76rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    transition: background .2s, border-color .2s, transform .15s;
+    backdrop-filter: blur(6px);
+}
+.ai-chip:hover {
+    background: rgba(0,201,176,.35);
+    border-color: #00C9B0;
+    transform: translateY(-1px);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   2. FLOATING MINI CHAT BUBBLE
+   ────────────────────────────────────────────────────────────── */
+#aiChatBubble {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+/* Nút bong bóng mở chat */
+.ai-bubble-btn {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00C9B0, #007a6b);
+    border: none;
+    box-shadow: 0 6px 24px rgba(0,201,176,.45), 0 2px 8px rgba(0,0,0,.18);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: transform .2s, box-shadow .2s;
+    position: relative;
+    flex-shrink: 0;
+}
+.ai-bubble-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 32px rgba(0,201,176,.55);
+}
+.ai-bubble-btn .bubble-notif {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    background: #ff4f5e;
+    color: #fff;
+    font-size: .6rem;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 1px 5px;
+    line-height: 1.5;
+    display: none;
+}
+.ai-bubble-btn .bubble-notif.show { display: block; }
+
+/* Panel chat popup */
+.ai-chat-panel {
+    width: 340px;
+    max-height: 480px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.16), 0 4px 16px rgba(0,201,176,.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: popIn .25s cubic-bezier(.34,1.56,.64,1);
+    border: 1px solid rgba(0,201,176,.2);
+}
+.ai-chat-panel.hidden { display: none; }
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(.85) translateY(16px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Header chat panel */
+.ai-chat-header {
+    background: linear-gradient(135deg, #00C9B0 0%, #007a6b 100%);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    flex-shrink: 0;
+}
+.ai-chat-header .ai-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.ai-chat-header .ai-name {
+    flex: 1;
+    line-height: 1.3;
+}
+.ai-chat-header .ai-name strong {
+    display: block;
+    font-size: .88rem;
+    font-weight: 700;
+}
+.ai-chat-header .ai-name span {
+    font-size: .7rem;
+    opacity: .8;
+}
+.ai-chat-header .ai-status-dot {
+    width: 8px;
+    height: 8px;
+    background: #a8ffed;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(168,255,237,.3);
+    animation: pulse 2s infinite;
+}
+.ai-fullchat-btn {
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 8px;
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 600;
+    padding: 4px 9px;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+}
+.ai-fullchat-btn:hover { background: rgba(255,255,255,.32); }
+
+/* Chat messages */
+.ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 180px;
+    max-height: 260px;
+    scroll-behavior: smooth;
+}
+.ai-messages::-webkit-scrollbar { width: 4px; }
+.ai-messages::-webkit-scrollbar-thumb { background: #d0f5ef; border-radius: 4px; }
+
+.ai-msg {
+    display: flex;
+    gap: 7px;
+    max-width: 90%;
+    animation: msgSlide .2s ease-out;
+}
+@keyframes msgSlide {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.ai-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.ai-msg .msg-bubble {
+    background: #f0faf8;
+    border: 1px solid #daf0ec;
+    border-radius: 14px 14px 14px 4px;
+    color: #0d1f1d;
+    font-size: .8rem;
+    line-height: 1.5;
+    padding: 8px 11px;
+    max-width: 100%;
+    word-break: break-word;
+}
+.ai-msg.user .msg-bubble {
+    background: linear-gradient(135deg, #00C9B0, #00a896);
+    border-color: transparent;
+    border-radius: 14px 14px 4px 14px;
+    color: #fff;
+}
+.ai-msg .msg-bubble a {
+    color: #00a896;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.ai-msg.user .msg-bubble a { color: rgba(255,255,255,.85); }
+
+/* Product pills in messages */
+.ai-product-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    border: 1.5px solid #00C9B0;
+    border-radius: 8px;
+    color: #007a6b;
+    cursor: pointer;
+    font-size: .73rem;
+    font-weight: 600;
+    margin: 3px 3px 0 0;
+    padding: 4px 9px;
+    text-decoration: none;
+    transition: background .15s, transform .1s;
+}
+.ai-product-pill:hover { background: #e6faf7; transform: translateY(-1px); }
+
+/* Typing dots */
+.ai-typing {
+    display: flex;
+    gap: 4px;
+    padding: 8px 11px;
+    background: #f0faf8;
+    border: 1px solid #daf0ec;
+    border-radius: 14px 14px 14px 4px;
+    width: fit-content;
+}
+.ai-typing span {
+    width: 6px; height: 6px;
+    background: #00C9B0;
+    border-radius: 50%;
+    animation: typeBounce 1s infinite;
+}
+.ai-typing span:nth-child(2) { animation-delay: .15s; }
+.ai-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes typeBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+    30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Chat input */
+.ai-chat-input-bar {
+    padding: 10px 12px;
+    border-top: 1px solid #daf0ec;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+.ai-chat-input-bar input {
+    flex: 1;
+    background: #f3faf8;
+    border: 1.5px solid #daf0ec;
+    border-radius: 10px;
+    color: #0d1f1d;
+    font-family: inherit;
+    font-size: .8rem;
+    outline: none;
+    padding: 8px 12px;
+    transition: border-color .2s;
+}
+.ai-chat-input-bar input:focus { border-color: #00C9B0; background: #fff; }
+.ai-chat-send-btn {
+    background: linear-gradient(135deg, #00C9B0, #007a6b);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: .85rem;
+    transition: transform .15s, box-shadow .15s;
+    flex-shrink: 0;
+}
+.ai-chat-send-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,201,176,.4); }
+
+/* ──────────────────────────────────────────────────────────────
+   3. DWELL-TIME TRACKER — Related Products Drawer
+   ────────────────────────────────────────────────────────────── */
+#relatedDrawer {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 40px rgba(0,0,0,.14), 0 -2px 12px rgba(0,201,176,.1);
+    z-index: 9990;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.34,1.2,.64,1);
+    max-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+#relatedDrawer.open { transform: translateY(0); }
+
+.drawer-handle {
+    width: 40px;
+    height: 4px;
+    background: #daf0ec;
+    border-radius: 4px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+    cursor: grab;
+}
+
+.drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 10px;
+    flex-shrink: 0;
+    border-bottom: 1px solid #f0faf8;
+}
+.drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.drawer-title h3 {
+    font-size: .95rem;
+    font-weight: 800;
+    color: #0d1f1d;
+    letter-spacing: -.2px;
+}
+.drawer-title .drawer-badge {
+    background: linear-gradient(135deg, #00C9B0, #007a6b);
+    border-radius: 999px;
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    letter-spacing: .3px;
+}
+.drawer-trigger-info {
+    font-size: .72rem;
+    color: #5a7572;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.drawer-trigger-info .dwell-bar {
+    width: 50px;
+    height: 4px;
+    background: #daf0ec;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.drawer-trigger-info .dwell-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00C9B0, #007a6b);
+    border-radius: 4px;
+    transition: width .3s;
+    width: 0%;
+}
+.drawer-close-btn {
+    background: #f3faf8;
+    border: none;
+    border-radius: 8px;
+    color: #5a7572;
+    cursor: pointer;
+    font-size: .85rem;
+    padding: 5px 9px;
+    transition: background .15s;
+}
+.drawer-close-btn:hover { background: #daf0ec; color: #0d1f1d; }
+
+.drawer-products {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 14px 20px 20px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+.drawer-products::-webkit-scrollbar { height: 4px; }
+.drawer-products::-webkit-scrollbar-thumb { background: #daf0ec; border-radius: 4px; }
+
+/* Mini product card in drawer */
+.drawer-product-card {
+    flex-shrink: 0;
+    width: 140px;
+    border: 1.5px solid #daf0ec;
+    border-radius: 14px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: border-color .2s, transform .18s, box-shadow .18s;
+    background: #fff;
+}
+.drawer-product-card:hover {
+    border-color: #00C9B0;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,201,176,.18);
+}
+.drawer-product-card img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+}
+.drawer-card-body {
+    padding: 8px 9px 10px;
+}
+.drawer-card-name {
+    font-size: .73rem;
+    font-weight: 600;
+    color: #1e3330;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.drawer-card-price {
+    font-size: .78rem;
+    font-weight: 800;
+    color: #00a896;
+}
+.drawer-card-old-price {
+    font-size: .67rem;
+    color: #8aadaa;
+    text-decoration: line-through;
+    margin-left: 4px;
+}
+.drawer-card-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #00C9B0, #007a6b);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .7rem;
+    font-weight: 700;
+    margin-top: 6px;
+    padding: 6px 0;
+    transition: opacity .15s, transform .1s;
+}
+.drawer-card-btn:hover { opacity: .88; transform: scale(1.02); }
+
+/* Dwell progress bar overlay on product cards (injected by JS) */
+.dwell-progress-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 3px;
+    background: rgba(0,201,176,.15);
+    pointer-events: none;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+}
+.dwell-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00C9B0, #007a6b);
+    border-radius: inherit;
+    width: 0%;
+    transition: width .2s linear;
+}
+
+/* Dwell ripple indicator */
+.dwell-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(0,201,176,.2);
+    pointer-events: none;
+    animation: dwellRipple 1s ease-out forwards;
+}
+@keyframes dwellRipple {
+    to { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   4. TOAST NOTIFICATION
+   ────────────────────────────────────────────────────────────── */
+.ai-toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: #0d1f1d;
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    z-index: 99999;
+    transition: transform .3s cubic-bezier(.34,1.2,.64,1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+.ai-toast.show { transform: translateX(-50%) translateY(0); }
+.ai-toast .toast-icon { font-size: 1rem; }
+
+/* ──────────────────────────────────────────────────────────────
+   5. ANIMATIONS
+   ────────────────────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(168,255,237,.4); }
+    50%       { box-shadow: 0 0 0 5px rgba(168,255,237,.0); }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   6. RESPONSIVE
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .ai-chat-panel { width: calc(100vw - 32px); }
+    #aiChatBubble { bottom: 16px; right: 16px; }
+    .drawer-product-card { width: 125px; }
+}
