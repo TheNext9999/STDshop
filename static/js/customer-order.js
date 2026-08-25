@@ -28,12 +28,12 @@
     
     
     
-    // Dữ liệu Flash Sale
+    // Dữ liệu MẪU Flash Sale có thể thay bằng dữ liệu thực tế từ server và xóa code này 
 const flashSaleProducts = [
     { name: "Áo Hoodie Oversize Unisex", price: 189000, oldPrice: 279000, discount: 42, img: "https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe", sold: "1.2k" }
 ];
 
-// ==================== DỮ LIỆU SẢN PHẨM ====================
+// ==================== DỮ MẪU LIỆU SẢN PHẨM có thể thay bằng dữ liệu thực tế từ server và xóa code này  ====================
 const allProducts = [
     {
         id: 1,
