@@ -1,0 +1,804 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STDShop Admin Portal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/admin.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- ===================== SIDEBAR ===================== -->
+<aside class="admin-sidebar">
+    <div class="sidebar-header">
+        <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img">
+        <span class="logo-text">STDShop Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-group-label">Tổng quan</div>
+        <a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+
+        <div class="nav-group-label">Quản lý</div>
+        <a href="#manage-items"><i class="fa-solid fa-list-check"></i> Sản phẩm</a>
+        <a href="#approve-dishes"><i class="fas fa-check-circle"></i> Duyệt sản phẩm</a>
+        <a href="#manage-listings"><i class="fas fa-recycle"></i> Thanh lý
+    <span id="sidebarListingBadge" style="
+        background:#ef4444;color:#fff;border-radius:50px;
+        padding:1px 7px;font-size:0.7rem;margin-left:auto;display:none;">0</span>
+</a>
+        <a href="#manage-users"><i class="fas fa-users"></i> Người dùng</a>
+        <a href="#orders"><i class="fas fa-shopping-bag"></i> Đơn hàng</a>
+
+        <div class="nav-group-label">Chăm sóc</div>
+        <a href="#support-complaints"><i class="fas fa-headset"></i> Hỗ trợ & Khiếu nại</a>
+        <a href="#vouchers"><i class="fas fa-gift"></i> Voucher</a>
+
+        <div class="nav-group-label">Hệ thống</div>
+        <a href="#reports"><i class="fas fa-chart-bar"></i> Báo cáo</a>
+        <a href="#settings"><i class="fas fa-cog"></i> Cài đặt</a>
+        <a href="#manage-admins"><i class="fas fa-user-shield"></i> Tài khoản Admin</a>
+    </nav>
+</aside>
+
+<!-- ===================== MAIN ===================== -->
+<main class="admin-main">
+    <header class="admin-header">
+        <h2 id="pageTitle">Dashboard Tổng quan</h2>
+        <div class="header-right">
+            <div class="admin-avatar" id="adminAvatar">A</div>
+            <span id="adminName">Admin</span>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+        </div>
+    </header>
+
+    <div class="admin-content">
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <section id="dashboard" class="admin-section active">
+
+        <!-- 5 STAT CARDS 1 HÀNG -->
+        <div class="dash-stats">
+            <div class="dash-card c-teal">
+                <div class="dc-badge up">+18%</div>
+                <div class="dc-icon"><i class="fas fa-shopping-bag"></i></div>
+                <div class="dc-value" id="stat-orders-today">45.200</div>
+                <div class="dc-label">Đơn hàng hôm nay</div>
+            </div>
+            <div class="dash-card c-green">
+                <div class="dc-badge up">+22%</div>
+                <div class="dc-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="dc-value" id="stat-revenue">23.800</div>
+                <div class="dc-label">Doanh thu tháng này</div>
+            </div>
+            <div class="dash-card c-yellow">
+                <div class="dc-badge stable">Ổn định</div>
+                <div class="dc-icon"><i class="fas fa-star"></i></div>
+                <div class="dc-value">4.82★</div>
+                <div class="dc-label">Đánh giá trung bình</div>
+            </div>
+            <div class="dash-card c-red">
+                <div class="dc-badge down">-5%</div>
+                <div class="dc-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="dc-value" id="stat-complaints">128</div>
+                <div class="dc-label">Đơn khiếu nại</div>
+            </div>
+            <div class="dash-card c-blue">
+                <div class="dc-badge up">+12%</div>
+                <div class="dc-icon"><i class="fas fa-users"></i></div>
+                <div class="dc-value" id="stat-active-users">1.45M</div>
+                <div class="dc-label">Khách hàng hoạt động</div>
+            </div>
+        </div>
+
+        <!-- TOP 3 PODIUM -->
+        <div class="section-label">🏆 Top 3 cửa hàng có doanh thu cao nhất</div>
+        <div class="podium-row">
+            <div class="podium-card rank-2">
+                <div class="podium-badge">2</div>
+                <img class="podium-img" src="/css/pic/avt.jpg" onerror="this.src='https://via.placeholder.com/80'" alt="">
+                <div class="podium-name">Shop đồ điện tử </div>
+                <div class="podium-stats">
+                    <div><span class="p-stat-val">460</span><span class="p-stat-lbl">Đơn mua</span></div>
+                    <div><span class="p-stat-val">77M</span><span class="p-stat-lbl">Doanh thu</span></div>
+                </div>
+            </div>
+            <div class="podium-card rank-1">
+                <span class="podium-crown">👑</span>
+                <div class="podium-badge">1</div>
+                <img class="podium-img" src="/css/pic/Screenshot 2026-05-24 205825.png" onerror="this.src='https://via.placeholder.com/80'" alt="">
+                <div class="podium-name">Shop thời trang vietshop</div>
+                <div class="podium-stats">
+                    <div><span class="p-stat-val">560</span><span class="p-stat-lbl">Đơn mua</span></div>
+                    <div><span class="p-stat-val">80M</span><span class="p-stat-lbl">Doanh thu</span></div>
+                </div>
+            </div>
+            <div class="podium-card rank-3">
+                <div class="podium-badge">3</div>
+                <img class="podium-img" src="/css/pic/Screenshot 2026-05-24 210129.png" onerror="this.src='https://via.placeholder.com/80'" alt="">
+                <div class="podium-name">NShop phụ kiện máy tính</div>
+                <div class="podium-stats">
+                    <div><span class="p-stat-val">360</span><span class="p-stat-lbl">Đơn mua</span></div>
+                    <div><span class="p-stat-val">67M</span><span class="p-stat-lbl">Doanh thu</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 CHARTS CẠNH NHAU -->
+        <div class="charts-row">
+            <div class="chart-box">
+                <div class="chart-box-head">
+                    <h4><i class="fas fa-chart-line"></i> Doanh thu theo tháng</h4>
+                    <div class="chart-periods">
+                        <span class="active">6T</span><span>12T</span>
+                    </div>
+                </div>
+                <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+            </div>
+            <div class="chart-box">
+                <div class="chart-box-head">
+                    <h4><i class="fas fa-chart-pie"></i> Trạng thái đơn hàng</h4>
+                </div>
+                <div class="chart-wrap"><canvas id="orderStatusChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- BOTTOM: ACTIVITY + TOP SHOPS -->
+        <div class="dash-bottom">
+            <div class="dash-panel">
+                <h4><i class="fas fa-clock"></i> Hoạt động gần đây</h4>
+                <div class="act-item"><div class="act-dot"></div><div><div class="act-time">10:45</div><div class="act-text"><strong>Admin Nguyễn</strong> duyệt sản phẩm <strong>"Áo phông nam mùa hè"</strong></div></div></div>
+                <div class="act-item"><div class="act-dot" style="background:var(--yellow)"></div><div><div class="act-time">09:30</div><div class="act-text"><strong>Hệ thống</strong> xóa voucher hết hạn <strong>"SUMMER20"</strong></div></div></div>
+                <div class="act-item"><div class="act-dot" style="background:var(--red)"></div><div><div class="act-time">08:15</div><div class="act-text"><strong>Khách hàng A</strong> khiếu nại đơn <strong>#12345</strong></div></div></div>
+                <div class="act-item"><div class="act-dot" style="background:var(--blue)"></div><div><div class="act-time">07:00</div><div class="act-text"><strong>Hệ thống</strong> hoàn tất <strong>1.245 đơn hàng</strong> đêm qua</div></div></div>
+            </div>
+            <div class="dash-panel">
+                <h4><i class="fas fa-store"></i> Top cửa hàng</h4>
+                <div class="shop-row"><div class="shop-rank r1">1</div><div class="shop-name">Shop Sinh Viên HPU</div><div><div class="shop-revenue">88M VND</div><div class="shop-orders">467 đơn</div></div></div>
+                <div class="shop-row"><div class="shop-rank r2">2</div><div class="shop-name">TechZone Giá Rẻ</div><div><div class="shop-revenue">77M VND</div><div class="shop-orders">460 đơn</div></div></div>
+                <div class="shop-row"><div class="shop-rank r3">3</div><div class="shop-name">Sneaker Campus</div><div><div class="shop-revenue">54M VND</div><div class="shop-orders">420 đơn</div></div></div>
+                <div class="shop-row"><div class="shop-rank">4</div><div class="shop-name">Phụ Kiện Baseus VN</div><div><div class="shop-revenue">40M VND</div><div class="shop-orders">400 đơn</div></div></div>
+                <div class="shop-row"><div class="shop-rank">5</div><div class="shop-name">Jeans Local Brand</div><div><div class="shop-revenue">35M VND</div><div class="shop-orders">380 đơn</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== QUẢN LÝ SẢN PHẨM ==================== -->
+    <section id="manage-items" class="admin-section">
+        <div class="stat-grid stat-grid-3" style="margin-bottom:20px;">
+            <div class="stat-card total"><i class="fa-solid fa-box-archive"></i><h3>12.450</h3><p>Tổng sản phẩm</p></div>
+            <div class="stat-card pending"><i class="fas fa-clock"></i><h3>328</h3><p>Chờ duyệt</p></div>
+            <div class="stat-card featured"><i class="fa-solid fa-percent"></i><h3>85</h3><p>Đang sale</p></div>
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Danh sách sản phẩm</h2>
+            <button class="btn-primary"><i class="fas fa-plus"></i> Thêm sản phẩm</button>
+        </div>
+        <div class="filter-toolbar">
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="dishSearch" placeholder="Tìm theo tên sản phẩm hoặc shop..."></div>
+            <select id="statusFilter"><option value="">Tất cả trạng thái</option><option>Đang bán</option><option>Hết hàng</option></select>
+            <select id="categoryFilter">
+                <option value="">Tất cả danh mục</option>
+                <option>👕 Thời Trang Nam</option><option>👚 Thời Trang Nữ</option><option>👟 Giày Dép</option>
+                <option>🎒 Balo & Túi Xách</option><option>💻 Laptop & Phụ Kiện</option><option>📱 Điện Thoại</option>
+                <option>📚 Sách & Văn Phòng</option><option>🏋️ Thể Thao</option><option>🧴 Mỹ Phẩm</option>
+            </select>
+            <select id="priceSort"><option value="">Sắp xếp giá</option><option value="asc">Thấp → Cao</option><option value="desc">Cao → Thấp</option></select>
+            <button class="btn-filter"><i class="fas fa-filter"></i> Áp dụng</button>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead><tr><th><input type="checkbox"></th><th>Ảnh</th><th>Tên sản phẩm</th><th>Giá</th><th>Shop</th><th>Danh mục</th><th>Đánh giá</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                <tbody id="itemsTableBody"></tbody>
+            </table>
+        </div>
+        <div class="bulk-actions">
+            <button class="btn-secondary"><i class="fas fa-edit"></i> Sửa hàng loạt</button>
+            <button class="btn-remove"><i class="fas fa-trash"></i> Xóa</button>
+            <button class="btn-secondary"><i class="fas fa-eye-slash"></i> Ẩn</button>
+            <button class="btn-primary"><i class="fas fa-star"></i> Nổi bật</button>
+        </div>
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <span>Trang 1 / 45</span>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- ==================== DUYỆT SẢN PHẨM ==================== -->
+    <section id="approve-dishes" class="admin-section">
+        <div class="approve-stats">
+            <div class="stat-card pending"><i class="fas fa-clock"></i><h3>328</h3><p>Chờ duyệt</p></div>
+            <div class="stat-card success"><i class="fas fa-check-circle"></i><h3>1.245</h3><p>Đã duyệt tháng này</p></div>
+            <div class="stat-card danger"><i class="fas fa-ban"></i><h3>52</h3><p>Từ chối tháng này</p></div>
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Sản phẩm chờ duyệt</h2>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-primary"><i class="fas fa-check"></i> Duyệt tất cả</button>
+                <button class="btn-remove"><i class="fas fa-times"></i> Từ chối tất cả</button>
+            </div>
+        </div>
+        <div class="filter-toolbar">
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Tìm sản phẩm, tên shop..."></div>
+            <select><option>Tất cả danh mục</option></select>
+            <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead><tr><th><input type="checkbox"></th><th>Ảnh</th><th>Tên sản phẩm</th><th>Shop</th><th>Mô tả</th><th>Hành động</th></tr></thead>
+                <tbody id="approveTableBody"></tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <span>Trang 1 / 12</span>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+    <section id="manage-listings" class="admin-section">
+ 
+    <!-- STAT CARDS -->
+    <div class="stat-grid stat-grid-5" style="margin-bottom:20px;" id="listingsStatGrid">
+        <div class="stat-card pending"><i class="fas fa-clock"></i><h3 id="lstPending">–</h3><p>Chờ duyệt</p></div>
+        <div class="stat-card success"><i class="fas fa-check-circle"></i><h3 id="lstApproved">–</h3><p>Đã duyệt</p></div>
+        <div class="stat-card total"><i class="fas fa-handshake"></i><h3 id="lstSold">–</h3><p>Đã bán</p></div>
+        <div class="stat-card danger"><i class="fas fa-ban"></i><h3 id="lstRejected">–</h3><p>Từ chối</p></div>
+        <div class="stat-card revenue"><i class="fas fa-wallet"></i><h3 id="lstRevenue">–</h3><p>Doanh thu TL</p></div>
+    </div>
+ 
+    <!-- HEADER -->
+    <div class="section-header">
+        <h2 class="section-title"><i class="fas fa-recycle" style="color:var(--primary);margin-right:8px;"></i>Quản lý Thanh lý</h2>
+        <div style="display:flex;gap:10px;">
+            <button class="btn-primary" onclick="listingsBulkAction('approve')">
+                <i class="fas fa-check"></i> Duyệt đã chọn
+            </button>
+            <button class="btn-remove" onclick="listingsBulkAction('reject')">
+                <i class="fas fa-times"></i> Từ chối đã chọn
+            </button>
+        </div>
+    </div>
+ 
+    <!-- FILTER TABS -->
+    <div class="listing-filter-tabs">
+        <button class="listing-filter-tab active" data-status="" onclick="loadListings('')">
+            Tất cả <span class="cnt" id="tabCntAll">0</span>
+        </button>
+        <button class="listing-filter-tab" data-status="pending" onclick="loadListings('pending')">
+            ⏳ Chờ duyệt <span class="cnt" id="tabCntPending">0</span>
+        </button>
+        <button class="listing-filter-tab" data-status="approved" onclick="loadListings('approved')">
+            ✅ Đã duyệt <span class="cnt" id="tabCntApproved">0</span>
+        </button>
+        <button class="listing-filter-tab" data-status="sold" onclick="loadListings('sold')">
+            🤝 Đã bán <span class="cnt" id="tabCntSold">0</span>
+        </button>
+        <button class="listing-filter-tab" data-status="rejected" onclick="loadListings('rejected')">
+            ❌ Từ chối <span class="cnt" id="tabCntRejected">0</span>
+        </button>
+        <button class="listing-filter-tab" data-status="reports" onclick="loadListingReports()">
+            🚨 Báo cáo vi phạm <span class="cnt" id="tabCntReports">0</span>
+        </button>
+    </div>
+ 
+    <!-- SEARCH BAR -->
+    <div class="filter-toolbar" id="listingsFilterBar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input id="listingSearch" type="text" placeholder="Tìm tên SP, tên người đăng, SĐT..."
+                oninput="debounceListingSearch()">
+        </div>
+        <select id="listingCategoryFilter" onchange="loadListings(currentListingStatus)">
+            <option value="">Tất cả danh mục</option>
+            <option value="phone">📱 Điện thoại</option>
+            <option value="laptop">💻 Laptop</option>
+            <option value="tablet">📟 Máy tính bảng</option>
+            <option value="audio">🎧 Âm thanh</option>
+            <option value="camera">📷 Máy ảnh</option>
+            <option value="watch">⌚ Đồng hồ</option>
+            <option value="keyboard">⌨️ Bàn phím</option>
+            <option value="monitor">🖥 Màn hình</option>
+            <option value="book">📚 Sách</option>
+            <option value="other">📦 Khác</option>
+        </select>
+        <button class="btn-filter" onclick="loadListings(currentListingStatus)">
+            <i class="fas fa-filter"></i> Lọc
+        </button>
+    </div>
+ 
+    <!-- TABLE: LISTINGS -->
+    <div id="listingsTableWrap">
+        <div class="table-responsive">
+            <table class="admin-table" id="listingsTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="checkAllListings" onchange="toggleAllListings(this)"></th>
+                        <th>Ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Người đăng</th>
+                        <th>Giá</th>
+                        <th>Tình trạng</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày đăng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="listingsTableBody">
+                    <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted);">
+                        <i class="fas fa-spinner fa-spin"></i> Đang tải...
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" id="listingsPagination"></div>
+    </div>
+ 
+    <!-- TABLE: REPORTS (ẩn mặc định) -->
+    <div id="listingsReportsWrap" style="display:none;">
+        <div class="section-header" style="margin-bottom:16px;">
+            <h3 style="font-size:1rem;font-weight:700;"><i class="fas fa-flag" style="color:#ef4444;margin-right:6px;"></i>Báo cáo vi phạm đang chờ xử lý</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sản phẩm bị báo cáo</th>
+                        <th>Người báo cáo</th>
+                        <th>Lý do</th>
+                        <th>Chi tiết</th>
+                        <th>Ngày báo cáo</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="listingReportsTableBody">
+                    <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted);">Đang tải...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+</section>
+    <!-- ==================== QUẢN LÝ NGƯỜI DÙNG ==================== -->
+    <section id="manage-users" class="admin-section">
+        <div class="user-tabs">
+            <button class="user-tab active" data-tab="customers">👤 Khách hàng</button>
+            <button class="user-tab" data-tab="sellers">🏪 Người bán</button>
+        </div>
+
+        <!-- Tab khách hàng -->
+        <div class="user-tab-content active" id="customersTab">
+            <div class="filter-toolbar">
+                <div class="search-box"><i class="fas fa-search"></i><input placeholder="Tìm tên, SĐT, email..."></div>
+                <select><option>Tất cả trạng thái</option><option>Hoạt động</option><option>Bị khóa</option></select>
+                <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead><tr><th><input type="checkbox"></th><th>Avatar</th><th>Họ tên</th><th>Email / SĐT</th><th>Ngày tạo</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab người bán -->
+        <div class="user-tab-content" id="sellersTab">
+            <div class="section-header">
+                <div></div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-remove"><i class="fas fa-ban"></i> Khóa hàng loạt</button>
+                    <button class="btn-primary"><i class="fas fa-check"></i> Duyệt hàng loạt</button>
+                </div>
+            </div>
+            <div class="filter-toolbar">
+                <div class="search-box"><i class="fas fa-search"></i><input placeholder="Tìm tên quán, SĐT, email..."></div>
+                <select><option>Tất cả trạng thái</option><option>Đã duyệt</option><option>Chờ duyệt</option><option>Bị khóa</option></select>
+                <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead><tr><th><input type="checkbox"></th><th>Ảnh quán</th><th>Tên quán</th><th>Email / SĐT</th><th>Ngày đăng ký</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                    <tbody id="sellersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="pagination"><button class="page-btn"><i class="fas fa-chevron-left"></i></button><span>Trang 1 / 50</span><button class="page-btn"><i class="fas fa-chevron-right"></i></button></div>
+    </section>
+
+    <!-- ==================== ĐƠN HÀNG ==================== -->
+    <section id="orders" class="admin-section">
+        <div class="stat-grid stat-grid-5" style="margin-bottom:20px;">
+            <div class="stat-card total"><i class="fas fa-shopping-bag"></i><h3>45.230</h3><p>Đơn hôm nay</p></div>
+            <div class="stat-card processing"><i class="fas fa-truck"></i><h3>8.450</h3><p>Đang giao</p></div>
+            <div class="stat-card completed"><i class="fas fa-check-circle"></i><h3>35.120</h3><p>Hoàn thành</p></div>
+            <div class="stat-card cancelled"><i class="fas fa-ban"></i><h3>1.660</h3><p>Đã hủy</p></div>
+            <div class="stat-card revenue"><i class="fas fa-dollar-sign"></i><h3>2.8 tỷ</h3><p>Doanh thu</p></div>
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Danh sách đơn hàng</h2>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-primary"><i class="fas fa-file-export"></i> Xuất Excel</button>
+                <button class="btn-remove"><i class="fas fa-ban"></i> Hủy hàng loạt</button>
+            </div>
+        </div>
+        <div class="filter-toolbar">
+            <div class="search-box"><i class="fas fa-search"></i><input id="orderSearch" placeholder="Tìm ID đơn, tên khách, SĐT..."></div>
+            <select><option value="">Tất cả trạng thái</option><option>Chờ xác nhận</option><option>Đang giao</option><option>Hoàn thành</option><option>Đã hủy</option></select>
+            <select><option value="">Khoảng thời gian</option><option>Hôm nay</option><option>Tuần này</option><option>Tháng này</option></select>
+            <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead><tr><th><input type="checkbox"></th><th>ID Đơn</th><th>Khách hàng</th><th>SĐT</th><th>Tổng giá</th><th>Trạng thái</th><th>Thời gian</th><th>Hành động</th></tr></thead>
+                <tbody id="orderTableBody"></tbody>
+            </table>
+        </div>
+        <div class="bulk-actions"><button class="btn-primary"><i class="fas fa-check"></i> Hoàn thành loạt</button><button class="btn-remove"><i class="fas fa-ban"></i> Hủy loạt</button></div>
+        <div class="pagination"><button class="page-btn"><i class="fas fa-chevron-left"></i></button><span>Trang 1 / 50</span><button class="page-btn"><i class="fas fa-chevron-right"></i></button></div>
+    </section>
+
+    <!-- ==================== HỖ TRỢ & KHIẾU NẠI (MERGED) ==================== -->
+    <section id="support-complaints" class="admin-section">
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid stat-grid-4" style="margin-bottom:22px;">
+            <div class="stat-card danger"><i class="fas fa-exclamation-circle"></i><span class="stat-badge down">Khẩn</span><h3>128</h3><p>Tổng khiếu nại</p></div>
+            <div class="stat-card pending"><i class="fas fa-clock"></i><h3>45</h3><p>Chưa xử lý</p></div>
+            <div class="stat-card total"><i class="fas fa-headset"></i><h3>1.820</h3><p>Tổng ticket hỗ trợ</p></div>
+            <div class="stat-card success"><i class="fas fa-check-circle"></i><h3>83%</h3><p>Tỷ lệ giải quyết</p></div>
+        </div>
+
+        <!-- 2 TABS: KHIẾU NẠI | HỖ TRỢ -->
+        <div class="sc-tabs">
+            <button class="sc-tab active" data-sc="complaints">
+                <i class="fas fa-exclamation-triangle"></i> Quản lý khiếu nại
+            </button>
+            <button class="sc-tab" data-sc="tickets">
+                <i class="fas fa-headset"></i> Hỗ trợ khách hàng
+            </button>
+        </div>
+
+        <!-- TAB KHIẾU NẠI -->
+        <div class="sc-content active" id="sc-complaints">
+            <div class="section-header">
+                <h2 class="section-title">Danh sách đơn khiếu nại</h2>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-primary"><i class="fas fa-check"></i> Duyệt hàng loạt</button>
+                    <button class="btn-remove"><i class="fas fa-times"></i> Từ chối hàng loạt</button>
+                </div>
+            </div>
+            <div class="filter-toolbar">
+                <div class="search-box"><i class="fas fa-search"></i><input placeholder="Tìm ID, tên khách, tên shop..."></div>
+                <select id="complaintStatusFilter">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="success">Đã xử lý</option>
+                    <option value="reject">Từ chối</option>
+                </select>
+                <input type="date">
+                <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox"></th>
+                            <th>ID</th>
+                            <th>Sản phẩm</th>
+                            <th>Shop</th>
+                            <th>Người gửi</th>
+                            <th>Lý do</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complaintTable"></tbody>
+                </table>
+            </div>
+            <div class="pagination"><button class="page-btn"><i class="fas fa-chevron-left"></i></button><span>Trang 1 / 6</span><button class="page-btn"><i class="fas fa-chevron-right"></i></button></div>
+        </div>
+
+        <!-- TAB HỖ TRỢ -->
+        <div class="sc-content" id="sc-tickets">
+            <div class="section-header">
+                <h2 class="section-title">Ticket hỗ trợ khách hàng</h2>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-primary"><i class="fas fa-plus"></i> Tạo ticket</button>
+                    <button class="btn-secondary"><i class="fas fa-filter"></i> Lọc ưu tiên</button>
+                </div>
+            </div>
+            <div class="filter-toolbar">
+                <div class="search-box"><i class="fas fa-search"></i><input placeholder="Tìm ticket theo ID, khách hàng..."></div>
+                <select><option value="">Tất cả trạng thái</option><option>Đang mở</option><option>Đang xử lý</option><option>Đã giải quyết</option></select>
+                <select><option value="">Mức độ ưu tiên</option><option>Cao</option><option>Trung bình</option><option>Thấp</option></select>
+                <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+            </div>
+
+            <!-- STATS MINI cho tickets -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+                <div style="background:#fff;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-left:3px solid var(--red);display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:1.5rem;color:var(--red);">🔥</div>
+                    <div><div style="font-size:1.3rem;font-weight:800;">95</div><div style="font-size:0.75rem;color:var(--muted);">Ưu tiên cao</div></div>
+                </div>
+                <div style="background:#fff;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-left:3px solid var(--blue);display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:1.5rem;color:var(--blue);">📬</div>
+                    <div><div style="font-size:1.3rem;font-weight:800;">420</div><div style="font-size:0.75rem;color:var(--muted);">Đang mở</div></div>
+                </div>
+                <div style="background:#fff;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-left:3px solid var(--yellow);display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:1.5rem;color:var(--yellow);">⚙️</div>
+                    <div><div style="font-size:1.3rem;font-weight:800;">680</div><div style="font-size:0.75rem;color:var(--muted);">Đang xử lý</div></div>
+                </div>
+                <div style="background:#fff;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-left:3px solid var(--green);display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:1.5rem;color:var(--green);">✅</div>
+                    <div><div style="font-size:1.3rem;font-weight:800;">720</div><div style="font-size:0.75rem;color:var(--muted);">Đã giải quyết</div></div>
+                </div>
+            </div>
+
+            <!-- TICKET LIST -->
+            <div class="ticket-list" id="ticketList">
+                <div class="ticket-card priority-high">
+                    <div class="ticket-icon"><i class="fas fa-fire"></i></div>
+                    <div class="ticket-info">
+                        <div class="ticket-id">#TK-0842 · 08/04/2026 10:30</div>
+                        <div class="ticket-subject">Không nhận được hàng sau 7 ngày</div>
+                        <div class="ticket-meta"><span>👤 Nguyễn Văn A</span><span>📦 Đơn #STD240401</span><span>🏪 Shop Tech</span></div>
+                    </div>
+                    <div class="ticket-actions">
+                        <span class="badge pending">Đang mở</span>
+                        <button class="action-btn btn-view">Xem</button>
+                        <button class="action-btn btn-approve">Giải quyết</button>
+                    </div>
+                </div>
+                <div class="ticket-card priority-med">
+                    <div class="ticket-icon"><i class="fas fa-question-circle"></i></div>
+                    <div class="ticket-info">
+                        <div class="ticket-id">#TK-0841 · 07/04/2026 14:22</div>
+                        <div class="ticket-subject">Không thể đổi mật khẩu tài khoản</div>
+                        <div class="ticket-meta"><span>👤 Trần Thị B</span><span>📱 App Mobile</span></div>
+                    </div>
+                    <div class="ticket-actions">
+                        <span class="badge shipping">Đang xử lý</span>
+                        <button class="action-btn btn-view">Xem</button>
+                        <button class="action-btn btn-approve">Giải quyết</button>
+                    </div>
+                </div>
+                <div class="ticket-card priority-med">
+                    <div class="ticket-icon"><i class="fas fa-credit-card"></i></div>
+                    <div class="ticket-info">
+                        <div class="ticket-id">#TK-0840 · 07/04/2026 09:15</div>
+                        <div class="ticket-subject">Thanh toán MoMo bị trừ tiền nhưng đơn không tạo</div>
+                        <div class="ticket-meta"><span>👤 Lê Văn C</span><span>💳 Thanh toán</span><span>📦 Đơn #STD240399</span></div>
+                    </div>
+                    <div class="ticket-actions">
+                        <span class="badge pending">Đang mở</span>
+                        <button class="action-btn btn-view">Xem</button>
+                        <button class="action-btn btn-approve">Giải quyết</button>
+                    </div>
+                </div>
+                <div class="ticket-card priority-low">
+                    <div class="ticket-icon"><i class="fas fa-star"></i></div>
+                    <div class="ticket-info">
+                        <div class="ticket-id">#TK-0839 · 06/04/2026 16:00</div>
+                        <div class="ticket-subject">Yêu cầu thêm tính năng đánh giá video</div>
+                        <div class="ticket-meta"><span>👤 Phạm Thị D</span><span>💡 Góp ý tính năng</span></div>
+                    </div>
+                    <div class="ticket-actions">
+                        <span class="badge success">Đã giải quyết</span>
+                        <button class="action-btn btn-view">Xem</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagination" style="margin-top:20px;"><button class="page-btn"><i class="fas fa-chevron-left"></i></button><span>Trang 1 / 20</span><button class="page-btn"><i class="fas fa-chevron-right"></i></button></div>
+        </div>
+
+    </section>
+
+    <!-- ==================== BÁO CÁO ==================== -->
+    <section id="reports" class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title">Báo cáo thống kê</h2>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <select><option>Hôm nay</option><option>Tuần này</option><option selected>Tháng này</option><option>Năm nay</option></select>
+                <button class="btn-primary"><i class="fas fa-file-export"></i> Xuất báo cáo</button>
+            </div>
+        </div>
+        <div class="stat-grid stat-grid-4" style="margin-bottom:24px;">
+            <div class="stat-card revenue"><div class="stat-badge up">+22%</div><i class="fas fa-dollar-sign"></i><h3>2.8 tỷ</h3><p>Doanh thu</p></div>
+            <div class="stat-card total"><div class="stat-badge up">+18%</div><i class="fas fa-shopping-bag"></i><h3>45.230</h3><p>Đơn hàng</p></div>
+            <div class="stat-card active"><div class="stat-badge up">+12%</div><i class="fas fa-users"></i><h3>1.45M</h3><p>Người dùng hoạt động</p></div>
+            <div class="stat-card warning"><div class="stat-badge stable">Ổn định</div><i class="fas fa-star"></i><h3>4.82★</h3><p>Đánh giá TB</p></div>
+        </div>
+        <div class="charts-row">
+            <div class="chart-box">
+                <div class="chart-box-head"><h4><i class="fas fa-chart-line"></i> Doanh thu theo thời gian</h4></div>
+                <div class="chart-wrap"><canvas id="revenueChartReport"></canvas></div>
+            </div>
+            <div class="chart-box">
+                <div class="chart-box-head"><h4><i class="fas fa-chart-bar"></i> Đơn theo trạng thái</h4></div>
+                <div class="chart-wrap"><canvas id="orderBarChart"></canvas></div>
+            </div>
+        </div>
+        <div style="background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);">
+            <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:16px;"><i class="fas fa-trophy" style="color:var(--primary);margin-right:7px;"></i>Top shop doanh thu cao</h4>
+            <table class="admin-table"><thead><tr><th>Shop</th><th>Doanh thu</th><th>Đơn hàng</th><th>Đánh giá</th></tr></thead><tbody id="topShopsTable"></tbody></table>
+        </div>
+    </section>
+
+    <!-- ==================== VOUCHERS ==================== -->
+    <section id="vouchers" class="admin-section">
+        <div class="stat-grid stat-grid-4" style="margin-bottom:22px;">
+            <div class="stat-card total"><i class="fas fa-gift"></i><h3>1.250</h3><p>Tổng voucher</p></div>
+            <div class="stat-card active"><i class="fas fa-check-circle"></i><h3>980</h3><p>Đang hoạt động</p></div>
+            <div class="stat-card expired"><i class="fas fa-calendar-times"></i><h3>170</h3><p>Đã hết hạn</p></div>
+            <div class="stat-card used"><i class="fas fa-chart-line"></i><h3>45.200</h3><p>Lượt sử dụng</p></div>
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Danh sách voucher & khuyến mãi</h2>
+            <button class="btn-primary add-voucher-btn"><i class="fas fa-plus"></i> Tạo voucher mới</button>
+        </div>
+        <div class="filter-toolbar">
+            <div class="search-box"><i class="fas fa-search"></i><input id="voucherSearch" placeholder="Tìm theo mã voucher..."></div>
+            <select><option value="">Tất cả trạng thái</option><option>Đang hoạt động</option><option>Hết hạn</option><option>Chưa kích hoạt</option></select>
+            <select><option value="">Tất cả loại</option><option>Giảm %</option><option>Giảm cố định</option><option>Miễn phí ship</option></select>
+            <button class="btn-filter"><i class="fas fa-filter"></i> Lọc</button>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead><tr><th><input type="checkbox"></th><th>Mã</th><th>Loại</th><th>Giá trị</th><th>Hiệu lực</th><th>Lượt dùng</th><th>Giới hạn</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                <tbody id="voucherTableBody"></tbody>
+            </table>
+        </div>
+        <div class="bulk-actions"><button class="btn-primary"><i class="fas fa-play"></i> Kích hoạt loạt</button><button class="btn-remove"><i class="fas fa-stop"></i> Hết hạn loạt</button><button class="btn-remove"><i class="fas fa-trash"></i> Xóa</button></div>
+        <div class="pagination"><button class="page-btn"><i class="fas fa-chevron-left"></i></button><span id="voucherPageInfo">Trang 1 / 20</span><button class="page-btn"><i class="fas fa-chevron-right"></i></button></div>
+
+        <!-- MODAL VOUCHER -->
+        <div id="voucherModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal"><i class="fas fa-times"></i></span>
+                <h3 style="margin-bottom:20px;color:var(--primary);">✨ Tạo / Chỉnh sửa voucher</h3>
+                <form id="voucherForm">
+                    <div class="form-row">
+                        <div class="form-col"><label>Mã voucher *</label><input type="text" id="voucherCode" placeholder="VD: FIRST50" required></div>
+                        <div class="form-col"><label>Loại giảm giá *</label><select id="voucherType" required><option value="">Chọn loại</option><option value="percent">Giảm % </option><option value="fixed">Giảm VND</option><option value="free_ship">Miễn phí ship</option></select></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col"><label>Giá trị giảm *</label><input type="number" id="voucherValue" min="0" placeholder="50 cho %, 50000 cho VND" required></div>
+                        <div class="form-col"><label>Giới hạn sử dụng</label><input type="number" id="voucherLimit" min="0" placeholder="0 = không giới hạn"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col"><label>Ngày bắt đầu</label><input type="date" id="voucherStartDate"></div>
+                        <div class="form-col"><label>Ngày kết thúc</label><input type="date" id="voucherEndDate"></div>
+                    </div>
+                    <div class="form-group full"><label>Mô tả / Điều kiện</label><textarea id="voucherDesc" rows="3" placeholder="Điều kiện áp dụng..."></textarea></div>
+                    <div class="modal-actions"><button type="button" class="btn-secondary close-modal">Hủy</button><button type="submit" class="btn-primary">💾 Lưu voucher</button></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CÀI ĐẶT ==================== -->
+    <section id="settings" class="admin-section">
+        <div class="section-header"><h2 class="section-title">Cài đặt hệ thống</h2><button class="btn-primary"><i class="fas fa-save"></i> Lưu thay đổi</button></div>
+        <div class="settings-grid">
+            <div class="settings-card">
+                <h4><i class="fas fa-bell"></i> Thông báo</h4>
+                <div class="setting-row"><div><div class="setting-label">Email thông báo đơn mới</div><div class="setting-desc">Gửi email khi có đơn hàng mới</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Thông báo khiếu nại</div><div class="setting-desc">Alert khi có khiếu nại mới</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Báo cáo hàng tuần</div><div class="setting-desc">Tự động gửi báo cáo mỗi thứ Hai</div></div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+            </div>
+            <div class="settings-card">
+                <h4><i class="fas fa-shield-alt"></i> Bảo mật</h4>
+                <div class="setting-row"><div><div class="setting-label">Xác thực 2 bước (2FA)</div><div class="setting-desc">Bắt buộc OTP khi đăng nhập</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Đăng nhập một thiết bị</div><div class="setting-desc">Tự động đăng xuất thiết bị cũ</div></div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Ghi nhật ký hành động</div><div class="setting-desc">Lưu log tất cả thao tác admin</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+            </div>
+            <div class="settings-card">
+                <h4><i class="fas fa-store"></i> Hệ thống bán hàng</h4>
+                <div class="setting-row"><div><div class="setting-label">Duyệt sản phẩm thủ công</div><div class="setting-desc">Yêu cầu admin duyệt trước khi đăng</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Tự động hoàn tiền</div><div class="setting-desc">Hoàn tiền tự động sau 7 ngày</div></div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Cho phép đánh giá ẩn danh</div><div class="setting-desc">User đánh giá mà không lộ tên</div></div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+            </div>
+            <div class="settings-card">
+                <h4><i class="fas fa-paint-brush"></i> Giao diện</h4>
+                <div class="setting-row"><div><div class="setting-label">Chế độ tối (Dark mode)</div><div class="setting-desc">Áp dụng dark theme</div></div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Hiện số liệu thời gian thực</div><div class="setting-desc">Dashboard auto-refresh mỗi 30 giây</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+                <div class="setting-row"><div><div class="setting-label">Hiện banner khuyến mãi</div><div class="setting-desc">Banner quảng cáo trên trang chủ</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== QUẢN LÝ ADMIN ==================== -->
+    <section id="manage-admins" class="admin-section">
+        <div class="admin-stats-row">
+            <div class="stat-card total"><i class="fas fa-user-shield"></i><h3 id="totalAdmins">--</h3><p>Tổng tài khoản Admin</p></div>
+            <div class="stat-card pending"><i class="fas fa-clock"></i><h3 id="pendingCount">--</h3><p>Chờ duyệt</p></div>
+            <div class="stat-card success"><i class="fas fa-check-circle"></i><h3 id="approvedCount">--</h3><p>Đang hoạt động</p></div>
+            <div class="stat-card danger"><i class="fas fa-ban"></i><h3 id="rejectedCount">--</h3><p>Bị khóa</p></div>
+        </div>
+        <div class="section-header">
+            <h2 class="section-title">Danh sách tài khoản Admin</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead><tr><th>ID</th><th>Họ tên</th><th>Email</th><th>SĐT</th><th>Ngày tạo</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                <tbody id="adminAccountsTableBody"></tbody>
+            </table>
+        </div>
+        <div id="noAdminData" style="display:none;text-align:center;padding:40px;color:var(--muted);">Chưa có tài khoản Admin nào</div>
+
+        <!-- MODAL DETAIL ADMIN -->
+        <div id="adminDetailModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal"><i class="fas fa-times"></i></span>
+                <h3 style="margin-bottom:20px;color:var(--primary);">Chi tiết tài khoản Admin</h3>
+                <div class="form-row">
+                    <div class="form-col"><label>Họ tên</label><p id="adminDetailName" style="padding:9px 0;font-weight:600;"></p></div>
+                    <div class="form-col"><label>Email</label><p id="adminDetailEmail" style="padding:9px 0;"></p></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col"><label>Số điện thoại</label><p id="adminDetailPhone" style="padding:9px 0;"></p></div>
+                    <div class="form-col"><label>Vai trò</label><p id="adminDetailRole" style="padding:9px 0;"></p></div>
+                </div>
+                <div class="form-col" style="margin-bottom:16px;"><label>Trạng thái</label><p id="adminStatus" style="padding:9px 0;"></p></div>
+                <div id="adminActions" class="modal-actions"></div>
+            </div>
+        </div>
+    </section>
+
+    </div><!-- end admin-content -->
+</main>
+
+<!-- MODAL KHIẾU NẠI CHI TIẾT -->
+<div id="complaintModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeComplaintModal()"><i class="fas fa-times"></i></span>
+        <h3 style="margin-bottom:20px;color:var(--primary);">Chi tiết khiếu nại</h3>
+        <div id="complaintDetailBody">
+            <div class="form-row">
+                <div class="form-col"><label>Mã đơn</label><p style="font-weight:700;">#KN001</p></div>
+                <div class="form-col"><label>Thời gian</label><p>08/04/2026</p></div>
+            </div>
+            <div class="form-row">
+                <div class="form-col"><label>Người gửi</label><p>Nguyễn Văn A</p></div>
+                <div class="form-col"><label>SĐT</label><p>09xxxxxxx</p></div>
+            </div>
+            <div class="form-row">
+                <div class="form-col"><label>Sản phẩm</label><p>Áo Hoodie Oversize</p></div>
+                <div class="form-col"><label>Shop</label><p>Shop Thời Trang SV</p></div>
+            </div>
+            <div class="form-group full"><label>Lý do khiếu nại</label><p style="padding:9px;background:#f8fafc;border-radius:8px;">Hàng không giống mô tả, chất vải mỏng hơn so với hình...</p></div>
+            <div class="form-group full"><label>Hình ảnh bằng chứng</label><img src="https://via.placeholder.com/150x100?text=Bằng+chứng" style="border-radius:10px;max-width:100%;"></div>
+            <div class="form-group full"><label>Ghi chú xử lý (Admin)</label><textarea rows="3" placeholder="Nhập ghi chú xử lý..."></textarea></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="closeComplaintModal()">Đóng</button>
+            <button class="btn-remove" onclick="updateStatus('KN001','reject');closeComplaintModal()"><i class="fas fa-times"></i> Từ chối</button>
+            <button class="btn-primary" onclick="updateStatus('KN001','success');closeComplaintModal()"><i class="fas fa-check"></i> Đã xử lý</button>
+        </div>
+    </div>
+</div>
+<div id="listingDetailModal" class="modal" style="display:none;position:fixed;inset:0;z-index:9999;
+     background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;">
+    <div class="modal-box" style="background:#fff;border-radius:16px;width:min(720px,96vw);
+         max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2);">
+        <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+            <h3 style="font-size:1.05rem;font-weight:700;"><i class="fas fa-recycle" style="color:var(--primary);margin-right:8px;"></i>Chi tiết sản phẩm thanh lý</h3>
+            <button onclick="closeListingModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);">&times;</button>
+        </div>
+        <div class="modal-body" style="padding:24px;" id="listingDetailBody">
+            <!-- Populated by JS -->
+        </div>
+        <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:12px;justify-content:flex-end;" id="listingDetailActions">
+        </div>
+    </div>
+</div>
+ 
+    <script src="/js/admin.js?v=20260822"></script>
+</body>
+
+</html>

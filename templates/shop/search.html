@@ -1,0 +1,142 @@
+<!-- Navbar giữ nguyên -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/html/customer-order.html" style="text-decoration: none;">
+      <div class="logo">
+        <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
+      </div>
+    </a>
+    <!-- Thanh tìm kiếm ở giữa -->
+    <div class="search-bar">
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon" id="searchIcon"></i>
+        <input type="text" id="searchInput" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off" />
+        <button type="submit" class="search-submit-btn"><i class="fas fa-arrow-right"></i></button>
+      </div>
+      <!-- Kết quả tìm kiếm -->
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <button id="cartBtn" class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount" class="cart-count">0</span>
+        </button>
+
+        <div class="cart-dropdown" id="cartDropdown">
+          <h4 class="cart-dropdown-title">Sản phẩm mới thêm</h4>
+          <div class="cart-items-list" id="cartItemsList">
+            <p class="empty-cart-msg">Chưa có sản phẩm</p>
+          </div>
+          <div class="cart-dropdown-footer">
+            <span id="cartStatusText">0 sản phẩm trong giỏ</span>
+            <button class="btn-view-cart" onclick="location.href='cart.html'">Xem Giỏ Hàng</button>
+          </div>
+        </div>
+      </div>
+      <a href="auth.html" class="auth-link">
+        <i class="fas fa-user-circle"></i>
+        <span class="auth-text">Đăng nhập / Đăng ký</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Trang tìm kiếm -->
+<div class="search-page">
+  <!-- CỘT BỘ LỌC BÊN TRÁI (Giống Shopee) -->
+  <!-- CỘT BỘ LỌC BÊN TRÁI - ĐÃ CẢI TIẾN -->
+  <div class="filter-sidebar">
+    <h3 class="filter-title">BỘ LỌC TÌM KIẾM</h3>
+
+    <!-- 1. Theo Danh Mục -->
+    <div class="filter-group">
+      <strong>Theo Danh Mục</strong><br />
+      <label><input type="checkbox" class="category-filter" value="hoodie" />Áo Hoodie</label>
+      <label><input type="checkbox" class="category-filter" value="balo" />Balo & Túi</label>
+      <label><input type="checkbox" class="category-filter" value="giay" />Giày Sneaker</label>
+      <label><input type="checkbox" class="category-filter" value="sac" />Sạc & Phụ kiện</label>
+      <label><input type="checkbox" class="category-filter" value="quan" />Quần Jeans</label>
+      <label><input type="checkbox" class="category-filter" value="ao-thun" />Áo Thun</label>
+    </div>
+
+    <!-- 2. Khoảng Giá - ĐÃ SỬA -->
+    <div class="filter-group">
+      <strong>Khoảng Giá</strong>
+
+      <div class="price-range">
+        <input type="number" id="priceFrom" placeholder="Từ" class="price-input" />
+        <span class="price-separator">—</span>
+        <input type="number" id="priceTo" placeholder="Đến" class="price-input" />
+        <button id="applyPrice" class="apply-btn">Áp dụng</button>
+      </div>
+
+      <div class="price-quick">
+        <button class="price-quick-btn" data-max="100000">Dưới 100k</button>
+        <button class="price-quick-btn" data-max="200000">100k - 200k</button>
+        <button class="price-quick-btn" data-max="500000">200k - 500k</button>
+        <button class="price-quick-btn" data-max="0">Trên 500k</button>
+      </div>
+    </div>
+
+    <!-- 3. Đánh Giá - ĐÃ SỬA (Màu vàng + xuống dòng) -->
+    <div class="filter-group">
+      <strong>Đánh Giá</strong>
+
+      <label class="rating-label">
+        <input type="checkbox" class="rating-filter" value="5" />
+        <span class="stars">★★★★★</span>
+        Trở lên
+      </label>
+
+      <label class="rating-label">
+        <input type="checkbox" class="rating-filter" value="4" />
+        <span class="stars">★★★★☆</span>
+        Trở lên
+      </label>
+
+      <label class="rating-label">
+        <input type="checkbox" class="rating-filter" value="3" />
+        <span class="stars">★★★☆☆</span>
+        Trở lên
+      </label>
+
+      <label class="rating-label">
+        <input type="checkbox" class="rating-filter" value="2" />
+        <span class="stars">★★☆☆☆</span>
+        Trở lên
+      </label>
+    </div>
+
+    <!-- 4. Dịch Vụ & Khuyến Mãi -->
+    <div class="filter-group">
+      <strong>Dịch Vụ & Khuyến Mãi</strong>
+      <label><input type="checkbox" class="service-filter" />Miễn phí vận chuyển</label>
+      <label><input type="checkbox" class="service-filter" />Có sẵn hàng</label>
+      <label><input type="checkbox" class="service-filter" />Shop Yêu Thích</label>
+      <label><input type="checkbox" class="service-filter" />Giảm giá hôm nay</label>
+    </div>
+  </div>
+
+  <!-- Khu vực kết quả tìm kiếm -->
+  <div class="search-results-area">
+    <div class="search-header">
+      <div class="search-keyword">
+        Kết quả tìm kiếm cho: <strong id="searchKeyword"></strong>
+      </div>
+      <div class="sort-tabs">
+        <div class="sort-tab active" data-sort="relevance">Liên Quan</div>
+        <div class="sort-tab" data-sort="newest">Mới Nhất</div>
+        <div class="sort-tab" data-sort="bestselling">Bán Chạy</div>
+        <div class="sort-tab" data-sort="price-asc">Giá Thấp → Cao</div>
+        <div class="sort-tab" data-sort="price-desc">Giá Cao → Thấp</div>
+      </div>
+    </div>
+
+    <div class="results-grid" id="searchResultsGrid">
+      <!-- JS sẽ render sản phẩm tìm được vào đây -->
+    </div>
+  </div>
+</div>
+
+<script src="/js/search.js"></script>

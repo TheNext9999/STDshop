@@ -1,0 +1,66 @@
+<nav class="navbar">
+        <div class="nav-container">
+            <a href="/html/customer-order.html" style="text-decoration: none;"><div class="logo">
+                <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img"><span class="logo-text">STDShop</span>
+            </div></a>
+            <!-- Thanh tìm kiếm ở giữa -->
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon" id="searchIcon"></i>
+                <input type="text" id="searchInput" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off">
+                <button type="submit" class="search-submit-btn">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <!-- Kết quả tìm kiếm -->
+            <div id="searchResults" class="search-results"></div>
+        </div>
+            <div class="nav-right">
+                <div class="cart-wrapper">
+    <button id="cartBtn" class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartCount" class="cart-count">0</span>
+    </button>
+
+    <div class="cart-dropdown" id="cartDropdown">
+        <h4 class="cart-dropdown-title">Sản phẩm mới thêm</h4>
+        <div class="cart-items-list" id="cartItemsList">
+            <p class="empty-cart-msg">Chưa có sản phẩm</p>
+        </div>
+        <div class="cart-dropdown-footer">
+            <span id="cartStatusText">0 sản phẩm trong giỏ</span>
+            <button class="btn-view-cart" onclick="location.href='cart.html'">Xem Giỏ Hàng</button>
+        </div>
+    </div>
+</div>
+                <a href="auth.html" class="auth-link">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="auth-text">Đăng nhập / Đăng ký</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="orders-page">
+        
+
+        <!-- Tab điều hướng -->
+        <div class="tab-container" id="orderTabs">
+            <div class="tab active" data-status="all">Tất cả</div>
+            <div class="tab" data-status="waiting">Chờ vận chuyển</div>
+            <div class="tab" data-status="shipping">Vận chuyển</div>
+            <div class="tab" data-status="completed">Hoàn thành</div>
+            <div class="tab" data-status="cancelled">Đã hủy</div>
+            <div class="tab" data-status="return">Trả hàng/Hoàn tiền</div>
+        </div>
+
+        <!-- Danh sách đơn hàng -->
+        <div id="orderList"></div>
+    </div>
+    <div id="orderModal" class="order-modal">
+    <div class="modal-content">
+        <span id="closeModal">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+<script src="/js/done.js"></script>

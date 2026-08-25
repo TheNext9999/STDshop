@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh giá sản phẩm - STDShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/rate.css">
+</head>
+<body>
+
+    <div class="review-container">
+        <div class="review-header">
+            Đánh Giá Sản Phẩm
+        </div>
+
+        <!-- Banner điểm thưởng -->
+        <div class="points-banner">
+            <i class="fas fa-coins" style="color:#f59e0b; font-size:1.4rem;"></i>
+            <span><strong>Xem hướng dẫn đánh giá chuẩn để nhận đến 200 xu!</strong></span>
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="product-info">
+            <img src="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe" alt="Sản phẩm">
+            <div>
+                <h3>Áo Hoodie Oversize Unisex</h3>
+                <p style="color:#666; margin-top:5px;">Thời trang • STDShop</p>
+            </div>
+        </div>
+
+        <div class="review-form">
+            <!-- Chọn sao -->
+            <div style="text-align:center;">
+                <p style="margin-bottom:10px; font-size:1.1rem;">Bạn cảm thấy sản phẩm này như thế nào?</p>
+                <div class="stars" id="starRating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <h3 id="ratingText" style="color:#f59e0b; margin-top:8px;">Tuyệt vời</h3>
+            </div>
+
+            <!-- Nội dung đánh giá -->
+            <textarea id="reviewText" placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này với những người mua khác nhé..."></textarea>
+
+            <!-- Upload ảnh & video -->
+            <div class="upload-btns">
+                <div class="upload-btn">
+                    <i class="fas fa-camera"></i><br>Thêm Hình ảnh
+                </div>
+                <div class="upload-btn">
+                    <i class="fas fa-video"></i><br>Thêm Video
+                </div>
+            </div>
+
+            <!-- Checkbox hiển thị tên -->
+            <label class="checkbox-label">
+                <input type="checkbox" checked>
+                <span>Hiển thị tên đăng nhập trên đánh giá này</span>
+            </label>
+        </div>
+
+        <!-- Footer buttons -->
+        <div class="footer-buttons">
+    <button class="btn btn-back" onclick="history.back()">Trở lại</button>
+
+    <!-- Nút khiếu nại -->
+    <a href="/html/report.html" style="text-decoration: none;">
+        <button class="btn btn-complaint">
+            Khiếu nại sản phẩm
+        </button>
+    </a>
+
+    <a href="/html/done.html" style="text-decoration: none;">
+        <button class="btn btn-submit" onclick="submitReview()">
+            Hoàn thành
+        </button>
+    </a>
+</div>
+
+    
+    <script src="/js/rate.js"></script>
+</body>
+</html>

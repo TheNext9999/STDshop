@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Nộp bài thành công</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FONT (GIỮ NGUYÊN THEME) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>ThankDatjj</h2>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <img src="/assets/images/home.png" alt="Trang chủ" class="nav-icon">
+                    <span class="nav-text">Trang chủ</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="courses.html" class="nav-link active">
+                    <img src="/assets/images/courses.png" alt="Khóa học của tôi" class="nav-icon">
+                    <span class="nav-text">Khóa học của tôi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="explore.html" class="nav-link">
+                    <img src="/assets/images/explore.png" alt="Khám phá" class="nav-icon">
+                    <span class="nav-text">Khám phá</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/HTML/progress.html" class="nav-link">
+                    <img src="/assets/images/progress.png" alt="Tiến độ" class="nav-icon">
+                    <span class="nav-text">Tiến độ</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/HTML/setting.html" class="nav-link">
+                    <img src="/assets/images/settings.png" alt="Cài đặt" class="nav-icon">
+                    <span class="nav-text">Cài đặt</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="welcome">
+                <h1>🎉 Nộp bài thành công</h1>
+                <p>Bài làm của bạn đã được ghi nhận</p>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar">👤</div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="exercise-container">
+
+            <div class="exercise-instruction" style="grid-column: 1 / -1; text-align: center;">
+
+                <h2 style="color:#22c55e;">✔ Nộp bài thành công</h2>
+
+                <p style="margin-top:15px; font-size:16px;">
+                    Hệ thống đã ghi nhận bài làm của bạn.<br>
+                    Bạn có thể yên tâm vì bài đã được lưu lại.
+                </p>
+
+                <div class="time-warning" style="
+                    margin: 30px auto;
+                    max-width: 500px;
+                    background: rgba(0, 242, 89, 0.15);
+                    border-left-color: #5ae28c;
+                    color: #008df3;
+                ">
+                    ⏱ Thời gian nộp bài: <strong id="submit-time"></strong>
+                </div>
+
+                <div class="exercise-actions" style="justify-content: center;">
+                <a href="/HTML/dashboard.html" class="btn-submit" style="text-decoration: none;">Về trang chủ</a>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    
+
+    <script src="/js/success.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,132 @@
+   <!-- ==================== NAVBAR ==================== -->
+<nav class="top-navbar">
+    <div class="nav-container">
+        
+        <!-- Logo bên trái -->
+        <div class="nav-left">
+            <a href="/html/customer-order.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <!-- Phần logo - bạn thay link ảnh logo thật vào đây -->
+                <img src="/css/pic/STDLogo2.png" alt="STDShop" style="height: 60px; margin-right: 10px;">
+                <span style="font-size: 28px; font-weight: 1000; color: #00C9B0;">STDShop</span>
+                <span style="color:#555; font-weight:600; font-size:1.5rem; margin-left: 20px;">Đăng nhập</span>
+            </a>
+        </div>
+</nav>
+
+    <div class="login-container">
+        <!-- Bên trái Logo -->
+        <div class="left-panel">
+            <div class="logo-box">
+                <!-- Thay link ảnh logo thật của bạn vào đây -->
+                <img src="/css/pic/STDLogo2.png" alt="STDShop Logo">
+                <h1>STDShop</h1>
+                <p>Nền tảng mua sắm dành riêng cho sinh viên<br>Trường Đại học Công Nghệ Đông Á</p>
+            </div>
+        </div>
+
+        <!-- Form --><div style="padding-left: 200px;">
+        <div class="form-panel">
+            <div class="tab-header">
+                <div class="tab active" id="tab-login">Đăng nhập</div>
+                <div class="tab" id="tab-register">Đăng ký</div>
+            </div>
+
+            <div id="form-login">
+                <div class="form-group">
+                    <label>Email sinh viên / Tài khoản</label>
+                    <input type="email" placeholder="ví dụ: ten.sinhvien@sinhvien.edu.vn" id="login-email">
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" placeholder="Nhập mật khẩu" id="login-password">
+                </div>
+                <button class="btn-login" onclick="login()">ĐĂNG NHẬP</button>
+            </div>
+
+            <div id="form-register" style="display:none;">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" placeholder="Nhập họ tên" id="reg-name">
+                </div>
+                <div class="form-group">
+                    <label>Email sinh viên</label>
+                    <input type="email" placeholder="ví dụ: ten.sinhvien@sinhvien.edu.vn" id="reg-email">
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" placeholder="Tạo mật khẩu" id="reg-password">
+                </div>
+                <button class="btn-login" onclick="register()">ĐĂNG KÝ</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+    <div class="footer-container">
+
+        <!-- Top Row: Hotline, Email, Zalo -->
+        <div class="support-cards">
+            <div class="support-card">
+                <i class="fas fa-phone-volume"></i>
+                <h3>Hotline</h3>
+                <p class="highlight">1900 636 636</p>
+                <small>Gọi ngay để được hỗ trợ</small>
+            </div>
+            <div class="support-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Email</h3>
+                <p class="highlight">support@stdshop.vn</p>
+                <small>Phản hồi trong 24h</small>
+            </div>
+            <div class="support-card">
+                <i class="fab fa-zalo"></i>
+                <h3>Zalo OA</h3>
+                <p class="highlight">STDShop Official</p>
+                <small>Chat trực tiếp nhanh chóng</small>
+            </div>
+        </div>
+
+        <!-- Bottom Links -->
+        <div class="footer-links">
+            <div class="footer-column">
+                <h4>STDShop</h4>
+                <a href="#">Nền tảng mua sắm cho sinh viên</a>
+                <a href="#">Giới thiệu</a>
+                <a href="#">Blog</a>
+                <a href="#">Tuyển dụng</a>
+            </div>
+            <div class="footer-column">
+                <h4>Về chúng tôi</h4>
+                <a href="#">Giới thiệu</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Chính sách bảo mật</a>
+            </div>
+            <div class="footer-column">
+                <h4>Dành cho đối tác</h4>
+                <a href="#">Trở thành nhà bán hàng</a>
+                <a href="#">Trở thành tài xế</a>
+            </div>
+            <div class="footer-column">
+                <h4>Hỗ trợ</h4>
+                <a href="#">Trung tâm trợ giúp</a>
+                <a href="#">Chính sách hoàn tiền</a>
+                <a href="#">Hướng dẫn mua hàng</a>
+            </div>
+            <div class="footer-column">
+                <h4>Theo dõi chúng tôi</h4>
+                <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fab fa-tiktok"></i> TikTok</a>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>© 2026 STDShop - Nền tảng mua sắm dành cho sinh viên Việt Nam</p>
+            <p>Giấy phép kinh doanh: 0101234567 | All rights reserved</p>
+        </div>
+    </div>
+</footer>
+<script src="/js/auth.js"></script>
+

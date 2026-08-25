@@ -1,0 +1,67 @@
+
+<nav class="navbar cart-navbar">
+    <div class="nav-container">
+
+        <!-- Bên trái: Logo + Tiêu đề Giỏ Hàng -->
+        <div class="cart-nav-left">
+            <a href="index.html" class="logo-link">
+                <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img">
+                <span class="logo-text">STDShop</span>
+            </a>
+            <div class="nav-divider">|</div>
+            <span class="cart-title">Giỏ Hàng</span>
+        </div>
+
+        <!-- Thanh tìm kiếm bên phải -->
+        <div class="cart-search-bar">
+            <div class="search-wrapper">
+                <input type="text" id="cartSearchInput"
+                       placeholder="Tìm sản phẩm trong giỏ hàng..." 
+                       autocomplete="off">
+                <button type="button" class="search-submit-btn">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+    <div class="cart-page">
+
+    <!-- Header cột -->
+    <div class="cart-table-header">
+        <div class="cart-table-header-row">
+            <input type="checkbox" id="selectAll" checked>
+            <span>Sản Phẩm</span>
+            <span>Đơn Giá</span>
+            <div style="padding-left: 30px;"><span>Số lượng</span></div>
+            <div style="padding-left: 20px;"><span>Số tiền</span></div>
+            <div style="padding-left: 15px;"><span>Thao tác</span></div>
+        </div>
+    </div>
+
+    <!-- Danh sách sản phẩm -->
+    <div id="cartItemsContainer"></div>
+
+    <!-- Phần dưới -->
+    <div class="cart-bottom">
+        <div class="cart-bottom-left">
+            <input type="checkbox" id="selectAllBottom" checked>
+            <label for="selectAllBottom">Chọn tất cả</label>
+            <button onclick="removeSelected()" class="remove-all-btn">Xóa</button>
+        </div>
+
+        <div class="cart-total-right">
+            <p>Tổng cộng (<span id="totalItems">0</span> sản phẩm): 
+               <strong id="totalPrice">0đ</strong>
+            </p>
+            <div style="padding: 10px; padding-left: 75px;">
+            <button class="btn-buy" onclick="checkout()">
+                Mua Hàng
+            </button></div>
+        </div>
+    </div>
+</div>
+<script src="/js/cart.js"></script>
+

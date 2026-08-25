@@ -1,0 +1,228 @@
+<!-- TOP CONTROL DECK: PERSONA BEHAVIOR SIMULATOR -->
+<div class="simulator-deck">
+  <div class="deck-inner">
+    <div class="deck-header">
+      <span class="deck-tag">DEMO CONSOLE</span>
+      <h3>HỆ THỐNG GIẢ LẬP HÀNH VI NGƯỜI DÙNG (PERSONA SIMULATOR)</h3>
+      <p>Nhấp vào bất kỳ nút nào để giả lập hành vi lịch sử tức thời và xem cách Trợ lý AI & Gợi ý thay đổi thời gian thực.</p>
+    </div>
+    <div class="deck-buttons">
+      <button class="sim-btn active" data-persona="cold_start">
+        <span class="btn-icon">❄️</span>
+        <div class="btn-txt">
+          <strong>Khách Mới tinh</strong>
+          <span>Cold Start (Chưa có tương tác)</span>
+        </div>
+      </button>
+      <button class="sim-btn" data-persona="session_only">
+        <span class="btn-icon">⚡</span>
+        <div class="btn-txt">
+          <strong>Lướt Xem Sản Phẩm</strong>
+          <span>Session Only (Quan tâm Nhẫn titan)</span>
+        </div>
+      </button>
+      <button class="sim-btn" data-persona="cart_only">
+        <span class="btn-icon">🛒</span>
+        <div class="btn-txt">
+          <strong>Chưa Thanh Toán</strong>
+          <span>Cart Only (Kẹp tóc, Scrunchies)</span>
+        </div>
+      </button>
+      <button class="sim-btn" data-persona="purchase_history">
+        <span class="btn-icon">💎</span>
+        <div class="btn-txt">
+          <strong>Khách Hàng Quen</strong>
+          <span>Purchase History (Vương miện, Ngọc trai)</span>
+        </div>
+      </button>
+      <button class="sim-btn" data-persona="hybrid">
+        <span class="btn-icon">🔮</span>
+        <div class="btn-txt">
+          <strong>Kết Hợp VIP</strong>
+          <span>Hybrid (Aviator + Trầm hương + Clicks)</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP WRAPPER -->
+<div class="app-container">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-glow"></span>
+      <h1>UNI Mart AI</h1>
+      <span class="brand-subtitle">Smart Shopping Accessories</span>
+    </div>
+
+    <div class="header-actions">
+      <div class="active-badge" id="active-persona-badge">
+        <span class="badge-dot"></span>
+        Persona: <strong id="persona-name-display">Khách Mới tinh</strong>
+      </div>
+
+      <button class="cart-toggle-btn" id="open-cart-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>Giỏ hàng (<span id="cart-count-badge">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- DASHBOARD BODY -->
+  <div class="dashboard-grid">
+    <!-- LEFT PANEL: AI ASSISTANT -->
+    <section class="panel chat-panel">
+      <div class="panel-header">
+        <div class="header-title">
+          <span class="status-indicator online"></span>
+          <div>
+            <h2>Trợ Lý Tư Vấn Mua Sắm AI</h2>
+            <p>Hiểu ý định chat & trích xuất bộ lọc thông minh</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT LOG -->
+      <div class="chat-log" id="chat-log-container">
+        <div class="msg assistant">
+          <div class="msg-bubble">Chào bạn! Mình là Trợ lý Mua sắm thông minh của UNI Mart. Mình có thể giúp bạn tìm kiếm khuyên tai, lắc tay, nhẫn thời trang phù hợp hoặc so sánh các mẫu mã theo tầm giá và chất liệu nè. Hôm nay bạn muốn tìm phụ kiện gì thế? 😊</div>
+        </div>
+      </div>
+
+      <!-- DYNAMIC INTENT INDICATOR -->
+      <div class="intent-indicator hidden" id="intent-display-bar">
+        <div class="intent-bar-inner">
+          <span class="intent-label">AI Intent Detected:</span>
+          <div class="intent-tags" id="intent-tags-container">
+            <!-- JS will render active filters here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TYPING INDICATOR -->
+      <div class="typing-indicator hidden" id="chat-typing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+
+      <!-- CHAT INPUT -->
+      <div class="chat-input-bar">
+        <input type="text" id="chat-input-field" placeholder="Ví dụ: Vòng tay bạc dưới 200k làm quà sinh nhật..." autocomplete="off" />
+        <button id="send-chat-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: PERSONALIZATION & STORE CATALOG -->
+    <section class="right-panel-wrapper">
+      <!-- ROW 1: PERSONALIZATION DASHBOARD -->
+      <div class="panel stats-panel">
+        <div class="panel-header">
+          <h2>Hồ Sơ Tương Tác Cá Nhân Hóa</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-lbl">Phân Phân Khúc</span>
+            <strong class="stat-val" id="stat-segment">Cold Start</strong>
+            <span class="stat-sub">Tính từ hành vi thực tế</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-lbl">Chi Tiêu Trung Bình</span>
+            <strong class="stat-val" id="stat-spend">0đ</strong>
+            <span class="stat-sub">Tổng giá trị mua hàng</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-lbl">Danh Mục Yêu Thích</span>
+            <strong class="stat-val" id="stat-fav">Chưa có</strong>
+            <span class="stat-sub">Dựa trên clicks/orders</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: RECOMMENDATIONS ("DÀNH CHO BẠN") -->
+      <div class="panel recommendations-panel">
+        <div class="panel-header">
+          <div class="recs-title-wrap">
+            <h2>Dành Riêng Cho Bạn (Real-Time Recs)</h2>
+            <span class="rec-sub" id="rec-trigger-reason">Đang hiển thị sản phẩm thịnh hành nhất</span>
+          </div>
+        </div>
+        <div class="recs-grid" id="recommendations-container">
+          <!-- Recs cards will be injected dynamically -->
+        </div>
+      </div>
+
+      <!-- ROW 3: PRODUCT CATALOG EXPLORER -->
+      <div class="panel catalog-panel">
+        <div class="panel-header-catalog">
+          <h2>Khám Phá Cửa Hàng</h2>
+          <!-- Tabs -->
+          <div class="catalog-tabs" id="catalog-category-tabs">
+            <button class="tab-btn active" data-cat="all">Tất cả</button>
+            <button class="tab-btn" data-cat="trang suc nu">Trang Sức Nữ</button>
+            <button class="tab-btn" data-cat="phu kien nu">Phụ Kiện & Kính</button>
+          </div>
+        </div>
+
+        <div class="catalog-grid" id="catalog-products-container">
+          <!-- Product catalog cards will be injected here -->
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- FLOATING CART SIDEBAR -->
+<div class="cart-sidebar" id="cart-sidebar-container">
+  <div class="cart-sidebar-overlay" id="cart-sidebar-overlay-bg"></div>
+  <div class="cart-content">
+    <div class="cart-header">
+      <h2>Giỏ Hàng Của Bạn</h2>
+      <button class="close-cart-btn" id="close-cart-btn">✕</button>
+    </div>
+
+    <div class="cart-items-list" id="cart-items-list-container">
+      <!-- Cart items will be loaded here -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Tổng cộng:</span>
+        <strong id="cart-total-price-display">0đ</strong>
+      </div>
+      <button class="checkout-btn" id="checkout-action-btn">MUA HÀNG (GIẢ LẬP ORDER)</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL (Tracks Dwell Time & Scroll) -->
+<div class="modal" id="product-detail-modal">
+  <div class="modal-overlay" id="product-detail-overlay"></div>
+  <div class="modal-wrapper">
+    <button class="close-modal-btn" id="close-detail-modal-btn">✕</button>
+    <div class="modal-body" id="product-detail-modal-body">
+      <!-- Dynamic detail specs -->
+    </div>
+  </div>
+</div>
+
+<!-- REAL-TIME LOG OVERLAY (Floating HUD showcasing calculations) -->
+<div class="calc-hud" id="calc-hud-hud">
+  <div class="calc-hud-header">
+    <h4>DEBUG LOG: Real-time Calculations</h4>
+    <button class="calc-toggle" id="toggle-hud-btn">✕</button>
+  </div>
+  <div class="calc-hud-body" id="calc-hud-logs">
+    <p class="hud-item system">[SYSTEM] Khoi chay he thong Aura AI. Dang ket noi database...</p>
+  </div>
+</div>
+
+<!-- JS Client File -->
+<script src="/js/chatbot.js"></script>

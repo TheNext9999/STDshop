@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STD MarketSeller – Kênh Người Bán</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+    <link rel="stylesheet" href="/css/landing-seller.css">
+</head>
+<body>
+
+<!-- ===================================================
+     NAVBAR
+=================================================== -->
+<nav class="navbar">
+  <!-- LOGO -->
+  <a class="logo" href="#">
+  <div class="logo-mark">
+    <img src="/css/pic/marketlogo.png" alt="Logo">
+  </div>
+
+  <div class="logo-text-block">
+    <div class="logo-name">
+      <span class="std">STD</span>
+      <span class="dot"> · </span>
+      MarketSeller
+    </div>
+
+    <div class="logo-sub">Kênh người bán</div>
+  </div>
+</a>
+
+  <!-- NAV LINKS -->
+  <div class="nav-links">
+    <a href="#" onclick="switchTab('post')">Đăng bán</a>
+    <a href="#" onclick="switchTab('listings')">Sản phẩm của tôi</a>
+    <a href="#" onclick="switchTab('orders')">Đơn hàng</a>
+    <a href="#" onclick="switchTab('wallet')">Ví & Thu nhập</a>
+    <a href="#" onclick="switchTab('notifs')">Thông báo</a>
+  </div>
+
+  <!-- NAV RIGHT -->
+  <div class="nav-right">
+    <button class="btn-post" onclick="switchTab('post')">
+      <i class="fas fa-plus"></i> Đăng sản phẩm
+    </button>
+
+    <div class="nav-user">
+      <img src="/css/pic/avt.jpg" class="nav-avatar" alt="avatar">
+      <span class="nav-username">Thành Đạt</span>
+      <i class="fas fa-chevron-down nav-chevron"></i>
+
+      <div class="nav-dropdown">
+        <a href="#"><i class="fas fa-user"></i> Hồ sơ người bán</a>
+        <a href="#"><i class="fas fa-star"></i> Đánh giá & Phản hồi</a>
+        <a href="#"><i class="fas fa-chart-bar"></i> Thống kê</a>
+        <a href="#"><i class="fas fa-cog"></i> Cài đặt cửa hàng</a>
+        <div class="sep"></div>
+        <a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================================================
+     PAGE WRAPPER
+=================================================== -->
+<div class="page-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- SELLER PROFILE -->
+    <div class="seller-profile">
+      <img src="/css/pic/avt.jpg" alt="avatar">
+      <h4>Nguyễn Thành Đạt</h4>
+      <p>Thành viên từ 01/2025</p>
+      <div class="seller-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star-half-alt"></i>
+        <span style="margin-left:4px; color:var(--text);">4.8</span>
+        <span style="color:var(--text-3);">(32)</span>
+      </div>
+    </div>
+
+    <!-- MINI STATS -->
+    <div class="side-stats">
+      <div class="side-stat"><div class="num">12</div><div class="lbl">Đang rao</div></div>
+      <div class="side-stat"><div class="num">28</div><div class="lbl">Đã bán</div></div>
+      <div class="side-stat"><div class="num">3</div><div class="lbl">Chờ duyệt</div></div>
+      <div class="side-stat"><div class="num">98%</div><div class="lbl">Hoàn thành</div></div>
+    </div>
+
+    <!-- NAV -->
+    <div class="sidebar-nav-label">Quản lý</div>
+
+    <div class="sidebar-item active" onclick="switchTab('post')">
+      <i class="fas fa-plus-circle"></i> Đăng sản phẩm mới
+    </div>
+    <div class="sidebar-item" onclick="switchTab('listings')">
+      <i class="fas fa-box-open"></i> Sản phẩm của tôi
+      <span class="sidebar-badge">12</span>
+    </div>
+    <div class="sidebar-item" onclick="switchTab('orders')">
+      <i class="fas fa-receipt"></i> Quản lý đơn hàng
+      <span class="sidebar-badge orange">2</span>
+    </div>
+    <div class="sidebar-item" onclick="switchTab('wallet')">
+      <i class="fas fa-wallet"></i> Ví & Thu nhập
+    </div>
+
+    <div class="sidebar-item" onclick="switchTab('notifs')">
+      <i class="fas fa-bell"></i> Thông báo
+      <span class="sidebar-badge green">4</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- ---- PAGE HEADER ---- -->
+    <div class="page-header">
+      <div>
+        <h1 id="page-title">Đăng sản phẩm mới</h1>
+        <p id="page-sub">Điền thông tin đầy đủ để sản phẩm được duyệt nhanh nhất</p>
+      </div>
+      <div class="tag"><span class="dot"></span> Kênh người bán STD</div>
+    </div>
+
+    <!-- ---- DASHBOARD STATS ---- -->
+    <div class="stats-row">
+      <div class="stat-card highlight">
+        <div class="stat-icon"><i class="fas fa-coins"></i></div>
+        <div class="num">1.850.000đ</div>
+        <div class="lbl">Số dư khả dụng</div>
+        <div class="change">↑ +320.000đ tuần này</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+        <div class="num">3</div>
+        <div class="lbl">Sản phẩm chờ duyệt</div>
+        <div class="change" style="color:#f97316;">Đang xem xét</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-handshake"></i></div>
+        <div class="num">2</div>
+        <div class="lbl">Đơn hàng cần xử lý</div>
+        <div class="change" style="color:#22c55e;">Hành động ngay</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-eye"></i></div>
+        <div class="num">248</div>
+        <div class="lbl">Lượt xem hôm nay</div>
+        <div class="change">↑ +18% so với hôm qua</div>
+      </div>
+    </div>
+
+    <!-- ---- PIPELINE ---- -->
+    <div class="pipeline">
+      <div class="pipeline-title"><i class="fas fa-route"></i> Hành trình của sản phẩm</div>
+      <div class="pipeline-steps">
+        <div class="pip-step done">
+          <div class="pip-circle"><i class="fas fa-check"></i></div>
+          <div class="pip-label">Đăng sản phẩm</div>
+          <div class="pip-count">Hoàn tất</div>
+        </div>
+        <div class="pip-step done">
+          <div class="pip-circle"><i class="fas fa-check"></i></div>
+          <div class="pip-label">Đang duyệt</div>
+          <div class="pip-count">3 đang chờ</div>
+        </div>
+        <div class="pip-step active">
+          <div class="pip-circle"><i class="fas fa-shopping-cart"></i></div>
+          <div class="pip-label">Có người mua</div>
+          <div class="pip-count">2 đơn mới</div>
+        </div>
+        <div class="pip-step">
+          <div class="pip-circle"><i class="fas fa-truck"></i></div>
+          <div class="pip-label">Gửi hàng</div>
+          <div class="pip-count">Chờ xử lý</div>
+        </div>
+        <div class="pip-step">
+          <div class="pip-circle"><i class="fas fa-wallet"></i></div>
+          <div class="pip-label">Nhận tiền</div>
+          <div class="pip-count">Sau xác nhận</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================
+         TABS
+    ====================================== -->
+    <div class="tabs" id="mainTabs">
+      <button class="tab-btn active" onclick="switchTab('post')">
+        <i class="fas fa-plus"></i> Đăng bán <span class="cnt">Mới</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('listings')">
+        <i class="fas fa-box"></i> Sản phẩm <span class="cnt">12</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('orders')">
+        <i class="fas fa-receipt"></i> Đơn hàng <span class="cnt">2</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('wallet')">
+        <i class="fas fa-wallet"></i> Ví tiền
+      </button>
+      <button class="tab-btn" onclick="switchTab('notifs')">
+        <i class="fas fa-bell"></i> Thông báo <span class="cnt">4</span>
+      </button>
+    </div>
+
+    <!-- ======================================
+         TAB: ĐĂNG SẢN PHẨM
+    ====================================== -->
+    <div class="tab-panel active" id="tab-post">
+      <div class="form-card">
+        <!-- header -->
+        <div class="form-card-header">
+          <div class="fch-icon"><i class="fas fa-tag"></i></div>
+          <div>
+            <h2>Đăng sản phẩm thanh lý</h2>
+            <p>Điền thông tin chính xác để tăng khả năng bán hàng nhanh</p>
+          </div>
+        </div>
+
+        <div class="form-body">
+
+          <!-- SECTION 1: ẢNH -->
+          <div class="form-section-title"><i class="fas fa-camera"></i> Hình ảnh sản phẩm</div>
+
+          <div class="form-group full">
+            <label class="form-label">Ảnh thật của sản phẩm <span class="required">*</span> <span style="font-weight:400; color:var(--text-3);">(bắt buộc tối thiểu 3 ảnh)</span></label>
+
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFileSelect(event)">
+              <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+              <h4>Kéo thả ảnh vào đây hoặc nhấn để chọn</h4>
+              <p>Hỗ trợ JPG, PNG, WEBP · Tối đa 10MB mỗi ảnh<br>Ảnh rõ nét, chụp từ nhiều góc độ sẽ bán được nhanh hơn</p>
+              <div class="upload-note"><i class="fas fa-exclamation-triangle"></i> Bắt buộc tối thiểu 3 ảnh thật</div>
+            </div>
+
+            <div class="preview-grid" id="previewGrid"></div>
+            <div class="img-counter warn" id="imgCounter"><i class="fas fa-images"></i> <span id="imgCountText">0 / 3 ảnh tối thiểu</span></div>
+          </div>
+
+          <div style="margin-top: 28px;"></div>
+
+          <!-- SECTION 2: THÔNG TIN -->
+          <div class="form-section-title"><i class="fas fa-info-circle"></i> Thông tin sản phẩm</div>
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">Tên sản phẩm <span class="required">*</span></label>
+              <input class="form-input" type="text" placeholder="Ví dụ: Laptop Asus Vivobook 15 – Core i5, 8GB RAM, SSD 256GB" maxlength="120" oninput="updateCharCount(this)">
+              <span style="font-size:.75rem; color:var(--text-3); margin-top:3px;" id="nameCount">0 / 120 ký tự – Đặt tên rõ ràng, chứa thương hiệu và thông số chính</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Danh mục <span class="required">*</span></label>
+              <div class="select-wrap">
+                <select class="form-select">
+                  <option value="">-- Chọn danh mục --</option>
+                  <option>💻 Laptop & Máy tính</option>
+                  <option>📱 Điện thoại</option>
+                  <option>🎧 Điện tử & Phụ kiện</option>
+                  <option>📚 Sách & Tài liệu</option>
+                  <option>🛋️ Đồ nội thất</option>
+                  <option>👕 Quần áo & Thời trang</option>
+                  <option>🍳 Đồ gia dụng</option>
+                  <option>🚴 Xe cộ</option>
+                  <option>🎮 Giải trí & Thể thao</option>
+                  <option>📦 Khác</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Thương hiệu / Xuất xứ</label>
+              <input class="form-input" type="text" placeholder="Asus, Samsung, Việt Nam, Không rõ...">
+            </div>
+          </div>
+
+          <!-- TÌNH TRẠNG -->
+          <div class="form-group" style="margin-bottom:22px;">
+            <label class="form-label">Tình trạng sản phẩm <span class="required">*</span></label>
+            <div class="condition-group">
+              <button class="condition-btn" onclick="selectCondition(this, 'new')">✨ Mới – Chưa dùng</button>
+              <button class="condition-btn" onclick="selectCondition(this, '90')">👍 90% – Như mới</button>
+              <button class="condition-btn" onclick="selectCondition(this, '70')">🔧 70% – Còn tốt</button>
+              <button class="condition-btn" onclick="selectCondition(this, 'minor')">⚠️ Lỗi nhẹ – Vẫn dùng được</button>
+            </div>
+            <input type="hidden" id="conditionVal">
+          </div>
+
+          <div class="form-grid">
+            <!-- GIÁ BÁN -->
+            <div class="form-group">
+              <label class="form-label">Giá bán <span class="required">*</span></label>
+              <div class="price-wrap">
+                <span class="price-icon">đ</span>
+                <input class="form-input" type="number" id="priceInput" placeholder="0" oninput="formatPrice()">
+              </div>
+              <div class="price-suggestion">
+                <span style="font-size:.75rem; color:var(--text-3);">Gợi ý nhanh:</span>
+                <span class="price-chip" onclick="setPrice(50000)">50k</span>
+                <span class="price-chip" onclick="setPrice(100000)">100k</span>
+                <span class="price-chip" onclick="setPrice(500000)">500k</span>
+                <span class="price-chip" onclick="setPrice(1000000)">1tr</span>
+                <span class="price-chip" onclick="setPrice(3000000)">3tr</span>
+                <span class="price-chip" onclick="setPrice(5000000)">5tr</span>
+              </div>
+            </div>
+
+            <!-- GIÁ GỐC -->
+            <div class="form-group">
+              <label class="form-label">Giá gốc (nếu nhớ)</label>
+              <div class="price-wrap">
+                <span class="price-icon">đ</span>
+                <input class="form-input" type="number" placeholder="Giá mua ban đầu...">
+              </div>
+            </div>
+
+            <!-- LÝ DO THANH LÝ -->
+            <div class="form-group full">
+              <label class="form-label">Lý do thanh lý <span class="required">*</span></label>
+              <div class="select-wrap" style="margin-bottom:10px;">
+                <select class="form-select" id="reasonSelect" onchange="toggleCustomReason()">
+                  <option value="">-- Chọn lý do --</option>
+                  <option value="upgrade">🔄 Nâng cấp lên đồ mới hơn</option>
+                  <option value="money">💸 Cần tiền gấp</option>
+                  <option value="graduate">🎓 Tốt nghiệp / Chuyển chỗ ở</option>
+                  <option value="gift">🎁 Được tặng đồ mới</option>
+                  <option value="notuse">📦 Không còn nhu cầu sử dụng</option>
+                  <option value="other">✏️ Lý do khác...</option>
+                </select>
+              </div>
+              <textarea class="form-textarea" id="customReason" placeholder="Mô tả thêm lý do thanh lý (giúp người mua tin tưởng hơn)..." style="display:none;"></textarea>
+            </div>
+
+            <!-- MÔ TẢ -->
+            <div class="form-group full">
+              <label class="form-label">Mô tả chi tiết <span class="required">*</span></label>
+              <textarea class="form-textarea" rows="5" placeholder="Mô tả tình trạng thực tế, những hư hỏng (nếu có), thời gian sử dụng, phụ kiện đi kèm...&#10;&#10;Ví dụ: Máy dùng được 1 năm, pin còn 88%, vỏ có 1 vết xước nhỏ cạnh bên phải, kèm túi và sạc zin."></textarea>
+            </div>
+          </div>
+
+          <!-- SECTION 3: GIAO HÀNG -->
+          <div class="form-section-title" style="margin-top:8px;"><i class="fas fa-truck"></i> Giao hàng</div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Khu vực của bạn <span class="required">*</span></label>
+              <div class="select-wrap">
+                <select class="form-select">
+                  <option value="">-- Chọn quận/huyện --</option>
+                  <option>Cầu Giấy, Hà Nội</option>
+                  <option>Đống Đa, Hà Nội</option>
+                  <option>Thanh Xuân, Hà Nội</option>
+                  <option>Hai Bà Trưng, Hà Nội</option>
+                  <option>Hoàn Kiếm, Hà Nội</option>
+                  <option>Thủ Đức, TP.HCM</option>
+                  <option>Bình Thạnh, TP.HCM</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phương thức giao hàng</label>
+              <div class="condition-group" style="flex-wrap: wrap; gap: 8px;">
+                <button class="condition-btn selected" onclick="toggleShip(this)">🤝 Gặp mặt trực tiếp</button>
+                <button class="condition-btn" onclick="toggleShip(this)">📦 Ship COD</button>
+                <button class="condition-btn" onclick="toggleShip(this)">🏪 Giao tại trường</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TIPS -->
+          <div class="tips-box">
+            <h5><i class="fas fa-lightbulb"></i> Mẹo đăng bán nhanh</h5>
+            <ul>
+              <li>📸 Chụp ít nhất 3 ảnh thật – ảnh rõ nét giúp tăng 70% khả năng bán được</li>
+              <li>💬 Mô tả trung thực tình trạng – người mua tin tưởng hơn, ít tranh chấp hơn</li>
+              <li>💰 Đặt giá hợp lý – so sánh với sản phẩm tương tự để ra giá tốt nhất</li>
+              <li>⚡ Sản phẩm được duyệt trong 1 giờ – đăng vào buổi sáng để tiếp cận nhiều người nhất</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- FORM FOOTER -->
+        <div class="form-footer">
+          <div class="form-footer-left">
+            <i class="fas fa-shield-alt"></i> STD Marketplace kiểm duyệt tất cả sản phẩm trước khi hiển thị
+          </div>
+          <div class="form-actions">
+            <button class="btn-draft" onclick="saveDraft()">
+              <i class="fas fa-save"></i> Lưu nháp
+            </button>
+            <button class="btn-submit" onclick="submitProduct()">
+              <i class="fas fa-paper-plane"></i> Đăng sản phẩm ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-post -->
+
+    <!-- ======================================
+         TAB: SẢN PHẨM CỦA TÔI
+    ====================================== -->
+    <div class="tab-panel" id="tab-listings">
+      <div class="listing-filters">
+        <span class="filter-chip active">Tất cả (12)</span>
+        <span class="filter-chip">Đang rao (6)</span>
+        <span class="filter-chip">Chờ duyệt (3)</span>
+        <span class="filter-chip">Đã bán (2)</span>
+        <span class="filter-chip">Nháp (1)</span>
+        <div class="search-input-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Tìm theo tên sản phẩm...">
+        </div>
+      </div>
+
+      <div class="product-grid">
+        <!-- Card 1 -->
+        <div class="product-card">
+  <div class="product-card-img">
+    <img src="/css/pic/asus.webp" alt="Laptop Asus Vivobook 15">
+
+    <div class="product-status-badge status-approved">
+      ✅ Đang rao
+    </div>
+  </div>
+
+  <div class="product-card-body">
+    <h4>Laptop Asus Vivobook 15</h4>
+
+    <div class="product-card-meta">
+      <span class="cond-tag">90%</span>
+      <span><i class="fas fa-eye"></i> 128 lượt xem</span>
+    </div>
+
+    <div class="product-card-footer">
+      <div class="product-price">4.200.000đ</div>
+
+      <div class="card-actions">
+        <button class="card-btn">
+          <i class="fas fa-edit"></i>
+        </button>
+
+        <button class="card-btn danger">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <!-- Card 2 -->
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/css/pic/gtrinh1.png" alt="Laptop Asus Vivobook 15">
+            <div class="product-status-badge status-pending">⏳ Chờ duyệt</div>
+          </div>
+          <div class="product-card-body">
+            <h4>Bộ sách Kế toán năm 3</h4>
+            <div class="product-card-meta">
+              <span class="cond-tag">Mới</span>
+              <span><i class="fas fa-clock"></i> Đăng 2h trước</span>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">150.000đ</div>
+              <div class="card-actions">
+                <button class="card-btn"><i class="fas fa-edit"></i></button>
+                <button class="card-btn danger"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/css/pic/sony.jpg" alt="Laptop Asus Vivobook 15">
+            <div class="product-status-badge status-sold">💰 Có người mua</div>
+          </div>
+          <div class="product-card-body">
+            <h4>Tai nghe Sony WH-1000XM4</h4>
+            <div class="product-card-meta">
+              <span class="cond-tag">90%</span>
+              <span><i class="fas fa-fire"></i> 3 người quan tâm</span>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">2.100.000đ</div>
+              <div class="card-actions">
+                <button class="card-btn"><i class="fas fa-eye"></i></button>
+                <button class="card-btn danger"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/css/pic/xe.jpeg" alt="Laptop Asus Vivobook 15">
+            <div class="product-status-badge status-shipping">🚚 Đang giao</div>
+          </div>
+          <div class="product-card-body">
+            <h4>Xe đạp Nhật cũ</h4>
+            <div class="product-card-meta">
+              <span class="cond-tag">70%</span>
+              <span><i class="fas fa-truck"></i> Shipper đang lấy</span>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">800.000đ</div>
+              <div class="card-actions">
+                <button class="card-btn"><i class="fas fa-map-marker-alt"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/css/pic/bàn.jpg" alt="Laptop Asus Vivobook 15">
+            <div class="product-status-badge status-draft">📝 Nháp</div>
+          </div>
+          <div class="product-card-body">
+            <h4>Bàn học gấp</h4>
+            <div class="product-card-meta">
+              <span class="cond-tag">Mới</span>
+              <span style="color:#f97316;"><i class="fas fa-images"></i> Thiếu ảnh</span>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">250.000đ</div>
+              <div class="card-actions">
+                <button class="card-btn" onclick="switchTab('post')"><i class="fas fa-edit"></i></button>
+                <button class="card-btn danger"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="product-card">
+          <div class="product-card-img">
+            <img src="/css/pic/ip12.webp" alt="Laptop Asus Vivobook 15">
+            <div class="product-status-badge status-approved">✅ Đang rao</div>
+          </div>
+          <div class="product-card-body">
+            <h4>iPhone 12 – 64GB Đen</h4>
+            <div class="product-card-meta">
+              <span class="cond-tag">90%</span>
+              <span><i class="fas fa-eye"></i> 85 lượt xem</span>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">5.500.000đ</div>
+              <div class="card-actions">
+                <button class="card-btn"><i class="fas fa-edit"></i></button>
+                <button class="card-btn danger"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-listings -->
+
+    <!-- ======================================
+         TAB: ĐƠN HÀNG
+    ====================================== -->
+    <div class="tab-panel" id="tab-orders">
+      <div class="order-table-wrap">
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Người mua</th>
+              <th>Thời gian</th>
+              <th>Giá</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="order-product">
+                  <div class="order-product-thumb">🎧</div>
+                  <div class="order-product-info">
+                    <h5>Tai nghe Sony WH-1000XM4</h5>
+                    <p>90% · Có hộp</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <img src="https://ui-avatars.com/api/?name=Minh+Anh&background=00C9B0&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
+                  <span style="font-weight:600;">Minh Anh</span>
+                </div>
+              </td>
+              <td style="color:var(--text-3); font-size:.82rem;">30 phút trước</td>
+              <td><strong style="color:var(--cyan);">2.100.000đ</strong></td>
+              <td><span class="order-status os-buyer"><i class="fas fa-user"></i> Đã có người mua</span></td>
+              <td>
+                <div style="display:flex;gap:6px;">
+                  <button class="action-btn-sm primary" onclick="confirmOrder()">Xác nhận & Gửi hàng</button>
+                  <button class="action-btn-sm" onclick="openModal()">Chi tiết</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="order-product">
+                  <div class="order-product-thumb">💻</div>
+                  <div class="order-product-info">
+                    <h5>Laptop Asus Vivobook 15</h5>
+                    <p>90% · Kèm túi + sạc</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <img src="https://ui-avatars.com/api/?name=Huu+Duc&background=3b82f6&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
+                  <span style="font-weight:600;">Hữu Đức</span>
+                </div>
+              </td>
+              <td style="color:var(--text-3); font-size:.82rem;">2 giờ trước</td>
+              <td><strong style="color:var(--cyan);">4.200.000đ</strong></td>
+              <td><span class="order-status os-shipping"><i class="fas fa-truck"></i> Đang giao hàng</span></td>
+              <td>
+                <div style="display:flex;gap:6px;">
+                  <button class="action-btn-sm">Theo dõi đơn</button>
+                  <button class="action-btn-sm" onclick="openModal()">Chi tiết</button>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="order-product">
+                  <div class="order-product-thumb">🚲</div>
+                  <div class="order-product-info">
+                    <h5>Xe đạp Nhật cũ</h5>
+                    <p>70% · Gặp mặt trực tiếp</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <img src="https://ui-avatars.com/api/?name=Le+Huong&background=f97316&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
+                  <span style="font-weight:600;">Lê Hương</span>
+                </div>
+              </td>
+              <td style="color:var(--text-3); font-size:.82rem;">Hôm qua</td>
+              <td><strong style="color:var(--cyan);">800.000đ</strong></td>
+              <td><span class="order-status os-done"><i class="fas fa-check-circle"></i> Hoàn thành</span></td>
+              <td>
+                <button class="action-btn-sm primary" onclick="showToast('💰 Tiền đã được chuyển vào ví của bạn!')">Nhận 800.000đ</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="order-product">
+                  <div class="order-product-thumb">📚</div>
+                  <div class="order-product-info">
+                    <h5>Bộ sách giáo trình Kế toán</h5>
+                    <p>Mới · Nguyên seal</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <img src="https://ui-avatars.com/api/?name=Tran+Nam&background=22c55e&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
+                  <span style="font-weight:600;">Trần Nam</span>
+                </div>
+              </td>
+              <td style="color:var(--text-3); font-size:.82rem;">Đang chờ</td>
+              <td><strong style="color:var(--cyan);">150.000đ</strong></td>
+              <td><span class="order-status os-pending"><i class="fas fa-clock"></i> Chờ xác nhận</span></td>
+              <td>
+                <div style="display:flex;gap:6px;">
+                  <button class="action-btn-sm primary" onclick="showToast('✅ Đã xác nhận đơn hàng!')">Xác nhận</button>
+                  <button class="action-btn-sm" style="color:#e03e3e;" onclick="showToast('❌ Đã từ chối đơn hàng')">Từ chối</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /tab-orders -->
+
+    <!-- ======================================
+         TAB: VÍ & THU NHẬP
+    ====================================== -->
+    <div class="tab-panel" id="tab-wallet">
+      <div class="wallet-top">
+        <!-- main wallet -->
+        <div class="wallet-card main">
+          <div class="wc-label"><i class="fas fa-wallet"></i> Số dư khả dụng</div>
+          <div class="wc-amount">1.850.000đ</div>
+          <div class="wc-sub">Cập nhật: vừa xong</div>
+          <button class="withdraw-btn"><i class="fas fa-arrow-down"></i> Rút tiền về ngân hàng</button>
+        </div>
+
+        <!-- pending -->
+        <div class="wallet-card">
+          <div class="wc-label"><i class="fas fa-clock" style="color:#f97316;"></i> Đang chờ giải ngân</div>
+          <div class="wc-amount">4.200.000đ</div>
+          <div class="wc-sub">Giải ngân sau khi người mua xác nhận nhận hàng</div>
+        </div>
+
+        <!-- total -->
+        <div class="wallet-card">
+          <div class="wc-label"><i class="fas fa-chart-line" style="color:#22c55e;"></i> Tổng thu nhập</div>
+          <div class="wc-amount">8.950.000đ</div>
+          <div class="wc-sub">Từ 28 giao dịch thành công</div>
+        </div>
+      </div>
+
+      <!-- Transaction history -->
+      <div class="transaction-list">
+        <div class="tx-header"><i class="fas fa-history"></i> Lịch sử giao dịch</div>
+
+        <div class="tx-item">
+          <div class="tx-icon credit"><i class="fas fa-arrow-down"></i></div>
+          <div class="tx-info">
+            <h5>Nhận tiền – Xe đạp Nhật cũ</h5>
+            <p>Người mua Lê Hương đã xác nhận nhận hàng · Mã đơn #STD2845</p>
+            <div class="notif-time">Hôm nay, 14:32</div>
+          </div>
+          <div class="tx-amount credit">+800.000đ</div>
+        </div>
+
+        <div class="tx-item">
+          <div class="tx-icon pending"><i class="fas fa-clock"></i></div>
+          <div class="tx-info">
+            <h5>Chờ giải ngân – Laptop Asus Vivobook 15</h5>
+            <p>Đang giao hàng – tiền sẽ về sau khi xác nhận · Mã đơn #STD2831</p>
+            <div class="notif-time">Hôm nay, 10:15</div>
+          </div>
+          <div class="tx-amount pending">+4.200.000đ</div>
+        </div>
+
+        <div class="tx-item">
+          <div class="tx-icon credit"><i class="fas fa-arrow-down"></i></div>
+          <div class="tx-info">
+            <h5>Nhận tiền – iPhone 12 64GB</h5>
+            <p>Giao dịch hoàn thành · Mã đơn #STD2799</p>
+            <div class="notif-time">Hôm qua, 16:08</div>
+          </div>
+          <div class="tx-amount credit">+5.500.000đ</div>
+        </div>
+
+        <div class="tx-item">
+          <div class="tx-icon debit"><i class="fas fa-arrow-up"></i></div>
+          <div class="tx-info">
+            <h5>Rút tiền về VCB *1234</h5>
+            <p>Chuyển khoản thành công · Thời gian xử lý: 5 phút</p>
+            <div class="notif-time">26/04/2026, 09:22</div>
+          </div>
+          <div class="tx-amount debit">-2.000.000đ</div>
+        </div>
+
+        <div class="tx-item">
+          <div class="tx-icon credit"><i class="fas fa-arrow-down"></i></div>
+          <div class="tx-info">
+            <h5>Nhận tiền – Bộ sách giáo trình</h5>
+            <p>Giao dịch hoàn thành · Mã đơn #STD2751</p>
+            <div class="notif-time">24/04/2026, 11:40</div>
+          </div>
+          <div class="tx-amount credit">+450.000đ</div>
+        </div>
+      </div>
+    </div><!-- /tab-wallet -->
+
+    <!-- ======================================
+         TAB: THÔNG BÁO
+    ====================================== -->
+    <div class="tab-panel" id="tab-notifs">
+      <div class="notif-list">
+        <div class="notif-item unread" onclick="this.classList.remove('unread')">
+          <div class="notif-icon cyan"><i class="fas fa-shopping-bag"></i></div>
+          <div class="notif-body">
+            <h5>🎉 Có người muốn mua Tai nghe Sony WH-1000XM4!</h5>
+            <p>Minh Anh (Đại học Ngoại Thương) muốn mua với giá 2.100.000đ. Xác nhận ngay để giữ đơn hàng.</p>
+            <div class="notif-time">30 phút trước</div>
+          </div>
+          <div class="notif-dot"></div>
+        </div>
+
+        <div class="notif-item unread" onclick="this.classList.remove('unread')">
+          <div class="notif-icon green"><i class="fas fa-check-circle"></i></div>
+          <div class="notif-body">
+            <h5>✅ Sản phẩm đã được duyệt!</h5>
+            <p>Bộ sách giáo trình Kế toán năm 3 của bạn đã được STD kiểm duyệt và hiển thị trên sàn.</p>
+            <div class="notif-time">2 giờ trước</div>
+          </div>
+          <div class="notif-dot"></div>
+        </div>
+
+        <div class="notif-item unread" onclick="this.classList.remove('unread')">
+          <div class="notif-icon orange"><i class="fas fa-star"></i></div>
+          <div class="notif-body">
+            <h5>⭐ Người mua vừa để lại đánh giá 5 sao!</h5>
+            <p>Lê Hương đánh giá: "Người bán rất nhiệt tình, hàng đúng mô tả, giao hàng nhanh. Rất hài lòng!"</p>
+            <div class="notif-time">3 giờ trước</div>
+          </div>
+          <div class="notif-dot"></div>
+        </div>
+
+        <div class="notif-item unread" onclick="this.classList.remove('unread')">
+          <div class="notif-icon blue"><i class="fas fa-wallet"></i></div>
+          <div class="notif-body">
+            <h5>💰 Tiền đã vào ví!</h5>
+            <p>800.000đ từ giao dịch xe đạp Nhật đã được chuyển vào ví của bạn. Rút về ngân hàng ngay!</p>
+            <div class="notif-time">4 giờ trước</div>
+          </div>
+          <div class="notif-dot"></div>
+        </div>
+
+        <div class="notif-item">
+          <div class="notif-icon cyan"><i class="fas fa-eye"></i></div>
+          <div class="notif-body">
+            <h5>👀 iPhone 12 của bạn đang hot!</h5>
+            <p>Sản phẩm iPhone 12 của bạn vừa đạt 80 lượt xem. Có 2 người đang quan tâm nhắn tin.</p>
+            <div class="notif-time">Hôm qua</div>
+          </div>
+        </div>
+
+        <div class="notif-item">
+          <div class="notif-icon green"><i class="fas fa-bullhorn"></i></div>
+          <div class="notif-body">
+            <h5>📣 Mẹo bán hàng từ STD Marketplace</h5>
+            <p>Thêm video ngắn cho sản phẩm giúp tăng 40% tỉ lệ chốt đơn. Thử ngay tính năng mới!</p>
+            <div class="notif-time">2 ngày trước</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-notifs -->
+
+  </main>
+</div><!-- /page-wrapper -->
+
+<!-- ===================================================
+     MODAL – CHI TIẾT ĐƠN HÀNG
+=================================================== -->
+<div class="modal-overlay" id="orderModal" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3><i class="fas fa-receipt"></i> Chi tiết đơn hàng #STD2845</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-info-row">
+        <span>Sản phẩm</span>
+        <span>Tai nghe Sony WH-1000XM4</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Tình trạng</span>
+        <span>90% – Như mới, kèm hộp</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Người mua</span>
+        <span>Minh Anh (ĐH Ngoại Thương)</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Số điện thoại</span>
+        <span style="color:var(--cyan);">0912 *** 456</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Địa chỉ nhận hàng</span>
+        <span>KTX Mễ Trì, Cầu Giấy, Hà Nội</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Phương thức giao</span>
+        <span>Gặp mặt trực tiếp</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Giá trị đơn</span>
+        <span style="color:var(--cyan); font-size:1.1rem;">2.100.000đ</span>
+      </div>
+      <div class="modal-info-row">
+        <span>Phí nền tảng (2%)</span>
+        <span style="color:#e03e3e;">– 42.000đ</span>
+      </div>
+      <div class="modal-info-row" style="border-bottom:none; background:var(--cyan-light); border-radius:var(--radius-sm); padding:14px; margin-top:6px;">
+        <span style="font-weight:700; color:var(--text);">Bạn nhận được</span>
+        <span style="color:var(--cyan); font-size:1.25rem; font-weight:800;">2.058.000đ</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="action-btn-sm" onclick="closeModal()">Đóng</button>
+      <button class="action-btn-sm primary" onclick="closeModal(); showToast('✅ Đã xác nhận giao hàng!')">Xác nhận giao hàng</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle"></i>
+  <span id="toastMsg">Thành công!</span>
+</div>
+
+<!-- ===================================================
+     JAVASCRIPT
+=================================================== -->
+
+
+    <script src="/js/landing-seller.js"></script>
+</body>
+</html>

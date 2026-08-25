@@ -1,0 +1,591 @@
+<!-- ==================== NAVBAR ==================== -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="/css/pic/marketlogo.png" alt="STD Logo" class="logo-img" />
+    <div class="logo-text">
+      STD <span>Marketplace</span>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a href="#why">Tại sao chọn chúng tôi</a>
+    <a href="#how">Cách hoạt động</a>
+    <a href="#listings">Sản phẩm</a>
+    <a href="#contact">Liên hệ</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="nav-user" id="navUser">
+      <img src="/css/pic/avt.jpg" class="nav-avatar" alt="avatar" />
+      <span class="nav-username">Thành Đạt</span>
+      <i class="fas fa-chevron-down" style="font-size:.75rem; color:var(--text-muted);"></i>
+
+      <div class="user-dropdown">
+        <a href="#"><i class="fas fa-user"></i> Hồ sơ</a>
+        <a href="#"><i class="fas fa-box"></i> Đơn mua</a>
+        <a href="#"><i class="fas fa-store"></i> Kênh người bán</a>
+        <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
+        <div class="divider"></div>
+        <a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-inner">
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-tag">
+        <span class="dot"></span>
+        Nền tảng #1 dành cho sinh viên
+      </div>
+
+      <h1>Thanh lý đồ sinh viên<br /><span class="accent">nhanh – an toàn – giá tốt</span></h1>
+
+      <p class="sub">STD Marketplace là chợ trực tuyến được kiểm duyệt, giúp sinh viên mua bán đồ cũ quanh khu vực trường học một cách dễ dàng và an toàn.</p>
+
+      <div class="hero-cta">
+        <a href="/html/landing-user.html"><button class="btn-hero-main" onclick="goBuyer()"><i class="fas fa-shopping-bag"></i> Mua hàng thanh lý</button></a>
+        <a href="/html/landing-seller.html"><button class="btn-hero-sec" onclick="goSeller()"><i class="fas fa-tag"></i> Bán hàng thanh lý</button></a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="h-stat">
+          <h3>2.400+</h3>
+          <p>Sinh viên tin dùng</p>
+        </div>
+        <div class="h-stat">
+          <h3>1.800+</h3>
+          <p>Sản phẩm đang rao</p>
+        </div>
+        <div class="h-stat">
+          <h3>98%</h3>
+          <p>Giao dịch thành công</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT VISUAL -->
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <!-- main card -->
+        <div class="h-card main">
+          <div class="card-label">🔥 Đang rao bán gần bạn</div>
+
+          <div class="card-product">
+            <div class="card-product-icon a">
+              <img src="/css/pic/lap.jpg" alt="Laptop Dell Inspiron 15" />
+            </div>
+            <div class="card-product-info">
+              <h5>Laptop Dell Inspiron 15</h5>
+              <div>
+                <span class="p-price">3.800.000đ</span>
+                <span class="p-old">7.500.000đ</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-product">
+            <div class="card-product-icon a">
+              <img src="/css/pic/kinhte.webp" alt="Laptop Dell Inspiron 15" />
+            </div>
+            <div class="card-product-info">
+              <h5>Sách giáo trình Kinh tế</h5>
+              <div>
+                <span class="p-price">85.000đ</span> <span class="p-old">220.000đ</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-product">
+            <div class="card-product-icon a">
+              <img src="/css/pic/tainghe.jfif" alt="Laptop Dell Inspiron 15" />
+            </div>
+            <div class="card-product-info">
+              <h5>Tai nghe Sony WH-1000XM4</h5>
+              <div>
+                <span class="p-price">2.100.000đ</span> <span class="p-old">4.500.000đ</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sold-badge">✅ Đã bán 128 sản phẩm hôm nay</div>
+        </div>
+
+        <!-- mini cards -->
+        <div class="h-card mini">
+          <div class="mini-stat">
+            <div class="ms-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="ms-info">
+              <p>Kiểm duyệt</p>
+              <h5>100% an toàn</h5>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-card mini2">
+          <div class="mini-stat">
+            <div class="ms-icon">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="ms-info">
+              <p>Đăng bán trong</p>
+              <h5>30 giây</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TRUST STRIP ==================== -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <!-- duplicated for seamless loop -->
+    <span class="trust-item"><i class="fas fa-check-circle"></i> Kiểm duyệt bởi STD</span>
+    <span class="trust-item"><i class="fas fa-shield-alt"></i> Thanh toán bảo mật</span>
+    <span class="trust-item"><i class="fas fa-map-marker-alt"></i> Gần khu vực trường</span>
+    <span class="trust-item"><i class="fas fa-headset"></i> Hỗ trợ 24/7</span>
+    <span class="trust-item"><i class="fas fa-undo"></i> Hoàn tiền nếu lỗi</span>
+    <span class="trust-item"><i class="fas fa-bolt"></i> Đăng bán trong 30 giây</span>
+    <span class="trust-item"><i class="fas fa-star"></i> 2.400+ sinh viên tin dùng</span>
+    <!-- repeat -->
+    <span class="trust-item"><i class="fas fa-check-circle"></i> Kiểm duyệt bởi STD</span>
+    <span class="trust-item"><i class="fas fa-shield-alt"></i> Thanh toán bảo mật</span>
+    <span class="trust-item"><i class="fas fa-map-marker-alt"></i> Gần khu vực trường</span>
+    <span class="trust-item"><i class="fas fa-headset"></i> Hỗ trợ 24/7</span>
+    <span class="trust-item"><i class="fas fa-undo"></i> Hoàn tiền nếu lỗi</span>
+    <span class="trust-item"><i class="fas fa-bolt"></i> Đăng bán trong 30 giây</span>
+    <span class="trust-item"><i class="fas fa-star"></i> 2.400+ sinh viên tin dùng</span>
+  </div>
+</div>
+
+<!-- ==================== WHY US ==================== -->
+<section class="why-section" id="why">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Tại sao chọn chúng tôi</span>
+      <h2>Được xây dựng dành riêng<br />cho sinh viên Việt Nam</h2>
+      <p>Không phải chợ mạng thông thường. STD Marketplace được thiết kế để đáp ứng đúng nhu cầu của sinh viên: nhanh, tiết kiệm và đáng tin cậy.</p>
+    </div>
+
+    <div class="bento">
+      <div class="bento-card wide">
+        <div class="bento-icon">🛡️</div>
+        <h3>Kiểm duyệt toàn bộ sản phẩm</h3>
+        <p>Mỗi sản phẩm được đội ngũ STD xem xét trước khi đăng lên. Cam kết không có hàng giả, hàng kém chất lượng hay lừa đảo.</p>
+        <div class="bento-big-num">100%</div>
+      </div>
+
+      <div class="bento-card">
+        <div class="bento-icon">📍</div>
+        <h3>Giao dịch gần trường</h3>
+        <p>Lọc sản phẩm theo khu vực ký túc xá, quận, trường đại học để giao dịch tiện nhất.</p>
+      </div>
+
+      <div class="bento-card">
+        <div class="bento-icon">💳</div>
+        <h3>Thanh toán an toàn</h3>
+        <p>Tích hợp ví điện tử MoMo, VNPay, chuyển khoản ngân hàng. Tiền được giữ an toàn cho đến khi giao hàng thành công.</p>
+      </div>
+
+      <div class="bento-card wide">
+        <div class="bento-icon">🎓</div>
+        <h3>Cộng đồng sinh viên rộng lớn</h3>
+        <p>Kết nối hàng nghìn sinh viên trên 50+ trường đại học trên cả nước. Mua bán trong cộng đồng, an tâm hơn với người lạ trên mạng.</p>
+        <div class="bento-big-num">50+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Quy trình</span>
+      <h2>Mua bán đơn giản chỉ 4 bước</h2>
+      <p>Từ khi đăng bán đến khi nhận tiền, toàn bộ quy trình diễn ra nhanh chóng và minh bạch.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>Đăng sản phẩm</h4>
+        <p>Chụp ảnh, điền mô tả và giá bán. Hệ thống hỗ trợ gợi ý giá thị trường cho bạn.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>Được kiểm duyệt</h4>
+        <p>Đội ngũ STD xét duyệt sản phẩm trong vòng 1 giờ để đảm bảo chất lượng.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>Người mua liên hệ</h4>
+        <p>Hệ thống chat tích hợp giúp bạn trao đổi nhanh chóng, không cần chia sẻ số điện thoại.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4>Giao hàng & Nhận tiền</h4>
+        <p>Gặp mặt giao hàng hoặc ship COD. Tiền được chuyển ngay khi người mua xác nhận.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CATEGORIES ==================== -->
+<section class="cats-section">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Danh mục</span>
+      <h2>Tất cả đồ sinh viên cần,<br />đều có tại đây</h2>
+    </div>
+
+    <div class="cats-grid">
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">💻</span>
+        <h4>Laptop & Máy tính</h4>
+        <p>Laptop cũ, máy tính bàn, phụ kiện</p>
+        <div class="cat-count">340 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">📚</span>
+        <h4>Sách & Tài liệu</h4>
+        <p>Giáo trình, sách tham khảo, tài liệu học</p>
+        <div class="cat-count">520 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">🛋️</span>
+        <h4>Đồ nội thất</h4>
+        <p>Bàn ghế, giường, tủ, kệ sách nhỏ</p>
+        <div class="cat-count">215 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">👕</span>
+        <h4>Quần áo & Thời trang</h4>
+        <p>Quần áo secondhand còn mới, giày dép</p>
+        <div class="cat-count">410 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">🎧</span>
+        <h4>Điện tử & Phụ kiện</h4>
+        <p>Tai nghe, loa, chuột, bàn phím, sạc</p>
+        <div class="cat-count">280 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">🚴</span>
+        <h4>Xe cộ</h4>
+        <p>Xe đạp, xe máy cũ, phụ tùng</p>
+        <div class="cat-count">95 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">🍳</span>
+        <h4>Đồ gia dụng</h4>
+        <p>Nồi, chảo, máy nấu ăn mini, đồ bếp</p>
+        <div class="cat-count">160 sản phẩm</div>
+      </div>
+
+      <div class="cat-card" onclick="goBuyer()">
+        <span class="cat-emoji">🎮</span>
+        <h4>Giải trí & Thể thao</h4>
+        <p>Game, thiết bị thể thao, đàn nhạc cụ</p>
+        <div class="cat-count">130 sản phẩm</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== LISTINGS ==================== -->
+<section class="listings-section" id="listings">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Nổi bật hôm nay</span>
+      <h2>Sản phẩm đang được rao bán</h2>
+      <p>Những sản phẩm được xem nhiều nhất trong 24 giờ qua. Cập nhật liên tục mỗi ngày.</p>
+    </div>
+
+    <div class="listings-grid">
+      <div class="listing-card" onclick="goBuyer()">
+        <div class="listing-img">
+          <img src="/css/pic/asus.webp" alt="Laptop Asus Vivobook 15" />
+
+          <div class="listing-tag hot">HOT</div>
+        </div>
+
+        <div class="listing-body">
+          <h4>Laptop Asus Vivobook 15 – SSD 256GB</h4>
+
+          <div class="listing-meta">
+            <span><i class="fas fa-map-marker-alt"></i> Cầu Giấy, HN</span>
+            <span><i class="fas fa-clock"></i> 2 giờ trước</span>
+          </div>
+
+          <div class="listing-price-row">
+            <div>
+              <span class="l-price">4.200.000đ</span>
+              <span class="l-old">8.000.000đ</span>
+            </div>
+
+            <button class="l-btn">Xem ngay</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" onclick="goBuyer()">
+        <div class="listing-img">
+          <img src="/css/pic/gtrinh1.png" alt="Laptop Asus Vivobook 15" />
+          <div class="listing-tag new">MỚI</div>
+        </div>
+        <div class="listing-body">
+          <h4>Bộ giáo trình Kế toán năm 3 – 8 cuốn</h4>
+          <div class="listing-meta">
+            <span><i class="fas fa-map-marker-alt"></i> Đống Đa, HN</span>
+            <span><i class="fas fa-clock"></i> 30 phút trước</span>
+          </div>
+          <div class="listing-price-row">
+            <div>
+              <span class="l-price">150.000đ</span><span class="l-old">400.000đ</span>
+            </div>
+            <button class="l-btn">Xem ngay</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card" onclick="goBuyer()">
+        <div class="listing-img">
+          <img src="/css/pic/air.webp" alt="Laptop Asus Vivobook 15" />
+          <div class="listing-tag hot">HOT</div>
+        </div>
+        <div class="listing-body">
+          <h4>Tai nghe AirPods Pro Gen 2 – Nguyên hộp</h4>
+          <div class="listing-meta">
+            <span><i class="fas fa-map-marker-alt"></i> Thanh Xuân, HN</span>
+            <span><i class="fas fa-clock"></i> 1 giờ trước</span>
+          </div>
+          <div class="listing-price-row">
+            <div>
+              <span class="l-price">3.500.000đ</span><span class="l-old">6.000.000đ</span>
+            </div>
+            <button class="l-btn">Xem ngay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px;">
+      <button class="btn-cta outline" onclick="goBuyer()" style="display:inline-flex; margin:0 auto;"><i class="fas fa-th-large"></i> Xem tất cả sản phẩm</button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DUAL CTA ==================== -->
+<section class="dual-cta">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Bắt đầu ngay hôm nay</span>
+      <h2>Bạn muốn làm gì?</h2>
+    </div>
+
+    <div class="cta-grid">
+      <div class="cta-card buy-card">
+        <h2>🛒 Tôi muốn mua</h2>
+        <p>Tìm kiếm đồ cũ giá tốt xung quanh khu vực của bạn. Tiết kiệm đến 70% so với mua mới.</p>
+        <ul class="cta-list">
+          <li>
+            <i class="fas fa-check"></i> Hơn 1.800 sản phẩm đang rao
+          </li>
+          <li>
+            <i class="fas fa-check"></i> Lọc theo khu vực, danh mục, giá
+          </li>
+          <li>
+            <i class="fas fa-check"></i> Chat trực tiếp với người bán
+          </li>
+          <li>
+            <i class="fas fa-check"></i> Thanh toán an toàn, hoàn tiền nếu lỗi
+          </li>
+        </ul>
+        <button class="btn-cta cyan" onclick="goBuyer()"><i class="fas fa-shopping-bag"></i> Khám phá ngay</button>
+      </div>
+
+      <div class="cta-card sell-card">
+        <h2>📦 Tôi muốn bán</h2>
+        <p>Thanh lý đồ cũ nhàn rỗi, kiếm thêm thu nhập. Đăng bán miễn phí, nhanh chóng và an toàn.</p>
+        <ul class="cta-list">
+          <li>
+            <i class="fas fa-check"></i> Đăng bán miễn phí hoàn toàn
+          </li>
+          <li>
+            <i class="fas fa-check"></i> Tiếp cận 2.400+ sinh viên
+          </li>
+          <li>
+            <i class="fas fa-check"></i> Nhận tiền ngay sau giao dịch
+          </li>
+          <li>
+            <i class="fas fa-check"></i> Hỗ trợ chụp ảnh, định giá sản phẩm
+          </li>
+        </ul>
+        <button class="btn-cta outline" onclick="goSeller()"><i class="fas fa-tag"></i> Đăng bán ngay</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TESTIMONIALS ==================== -->
+<section class="testimonials">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Phản hồi từ cộng đồng</span>
+      <h2>Sinh viên nói gì về STD Marketplace?</h2>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Mình bán được chiếc laptop cũ trong vòng 2 ngày với giá tốt hơn mình nghĩ. Quy trình đơn giản, được hỗ trợ nhiệt tình. Sẽ tiếp tục dùng cho lần sau!"</p>
+        <div class="testi-user">
+          <div class="testi-avatar">👩‍🎓</div>
+          <div class="testi-user-info">
+            <h5>Nguyễn Minh Anh</h5>
+            <p>Sinh viên K15 EAUT</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Mua được bộ sách giáo trình rất rẻ, tiết kiệm được gần 300k so với nhà sách. Người bán cũng rất thân thiện, giao hàng đúng hẹn ngay trong ký túc xá."</p>
+        <div class="testi-user">
+          <div class="testi-avatar">👨‍💻</div>
+          <div class="testi-user-info">
+            <h5>Trần Hữu Đức</h5>
+            <p>Sinh viên K16 EAUT</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★☆</div>
+        <p class="testi-text">"Giao diện dễ dùng, tìm đồ theo khu vực rất tiện. Đặc biệt tính năng chat trong app giúp mình không cần để lộ số điện thoại. Rất an tâm khi giao dịch."</p>
+        <div class="testi-user">
+          <div class="testi-avatar">👩‍💼</div>
+          <div class="testi-user-info">
+            <h5>Lê Thị Hương</h5>
+            <p>Sinh viên K13 EAUT</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CONTACT / FOOTER ==================== -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="sec-head">
+      <span class="section-label">Liên hệ & Hỗ trợ</span>
+      <h2>Chúng tôi luôn sẵn sàng<br />hỗ trợ bạn 24/7</h2>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="c-icon">
+          <i class="fas fa-phone-volume"></i>
+        </div>
+        <h4>Hotline</h4>
+        <div class="c-val">
+          <a href="tel:1900636636">1900 636 636</a>
+        </div>
+        <div class="c-sub">Gọi ngay để được hỗ trợ tức thì</div>
+      </div>
+
+      <div class="contact-card">
+        <div class="c-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h4>Email hỗ trợ</h4>
+        <div class="c-val">
+          <a href="mailto:support@stdmarket.vn">support@stdmarket.vn</a>
+        </div>
+        <div class="c-sub">Phản hồi trong vòng 2 giờ làm việc</div>
+      </div>
+
+      <div class="contact-card">
+        <div class="c-icon">
+          <img src="https://img.icons8.com/color/96/zalo.png" alt="Zalo" width="36" height="36" />
+        </div>
+        <h4>Zalo OA</h4>
+        <div class="c-val">
+          <a href="https://zalo.me/" target="_blank">STDMarketplace Official</a>
+        </div>
+        <div class="c-sub">Chat trực tiếp, phản hồi ngay lập tức</div>
+      </div>
+    </div>
+
+    <!-- FOOTER GRID -->
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-text-lg">
+          STD <span>Marketplace</span>
+        </div>
+        <p>Nền tảng mua bán đồ cũ được kiểm duyệt, kết nối cộng đồng sinh viên trên toàn quốc. An toàn, nhanh chóng và tiết kiệm.</p>
+        <div class="footer-socials">
+          <a class="soc-btn" href="#"><i class="fab fa-facebook-f"></i></a>
+          <a class="soc-btn" href="#"><i class="fab fa-instagram"></i></a>
+          <a class="soc-btn" href="#"><i class="fab fa-tiktok"></i></a>
+          <a class="soc-btn" href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Về chúng tôi</h5>
+        <a href="#">Giới thiệu STD</a>
+        <a href="#">Đội ngũ</a>
+        <a href="#">Blog & Tin tức</a>
+        <a href="#">Tuyển dụng</a>
+      </div>
+
+      <div class="footer-col">
+        <h5>Đối tác</h5>
+        <a href="#">Trở thành người bán</a>
+        <a href="#">Đối tác vận chuyển</a>
+        <a href="#">Hợp tác doanh nghiệp</a>
+      </div>
+
+      <div class="footer-col">
+        <h5>Hỗ trợ</h5>
+        <a href="#">Trung tâm trợ giúp</a>
+        <a href="#">Chính sách hoàn tiền</a>
+        <a href="#">Quy định đăng bán</a>
+        <a href="#">Điều khoản sử dụng</a>
+      </div>
+
+      <div class="footer-col">
+        <h5>Tải ứng dụng</h5>
+        <a href="#"><i class="fab fa-apple" style="margin-right:6px;"></i> App Store</a>
+        <a href="#"><i class="fab fa-google-play" style="margin-right:6px;"></i> Google Play</a>
+        <a href="#">Phiên bản Web</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 STD Marketplace – Dự án nền tảng sinh viên | All rights reserved</span>
+      <span>Giấy phép kinh doanh: 0101234567 – Sở KH&ĐT Hà Nội</span>
+    </div>
+  </div>
+</section>
+
+<!-- FLOATING SELL BUTTON -->
+<button class="fab-sell" onclick="goSeller()"><i class="fas fa-plus"></i> Đăng bán ngay</button>
+
+<script src="/js/landing.js"></script>

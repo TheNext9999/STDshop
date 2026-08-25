@@ -1,0 +1,1326 @@
+﻿<body class="seller-body">
+  <!-- Refresh indicator -->
+  <div class="refresh-indicator" id="refreshIndicator">
+    <i class="fas fa-sync-alt fa-spin"></i> Đang cập nhật...
+  </div>
+
+  <!-- SIDEBAR MENU -->
+
+  <aside class="seller-sidebar" style="padding: 9px; padding-top: 0px;">
+    <div class="sidebar-header">
+      <div class="logo">
+        <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img" /><span class="logo-text">STDSeller</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="#menu-management"><i class="fa-solid fa-basket-shopping"></i> Quản lý sản phẩm</a>
+      <a href="#order-processing"><i class="fas fa-shopping-bag"></i> Quản lý đơn hàng</a>
+      <a href="#inventory"><i class="fas fa-warehouse"></i> Quản lý tồn kho</a>
+      <a href="#finance"><i class="fas fa-wallet"></i> Tài chính & Rút tiền</a>
+      <a href="#marketing"><i class="fas fa-bullhorn"></i> Marketing & Khuyến mãi</a>
+      <a href="#analytics"><i class="fas fa-chart-bar"></i> Báo cáo & Phân tích</a>
+      <a href="#store-profile"><i class="fas fa-store"></i> Cấu hình gian hàng</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="seller-main">
+    <!-- HEADER -->
+    <header class="seller-header">
+      <h2 id="pageTitle" class="page-title">Dashboard Tổng quan</h2>
+      <div class="header-right">
+        <span id="sellerName">Xin chào</span>
+        <button class="btn-primary" onclick="logoutSeller()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+      </div>
+    </header>
+
+    <!-- 1. DASHBOARD - Giao diện nâng cấp với biểu đồ mẫu -->
+    <section id="dashboard" class="seller-section active">
+      <!-- Thống kê nhanh - 4 card lớn -->
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-content">
+            <p>Doanh thu hôm nay</p>
+            <h3 id="revenueToday">126210</h3>
+          </div>
+          <div class="stat-trend up" id="revenueTrend">
+            <!-- <i class="fas fa-arrow-up"></i> -->
+            +18%
+          </div>
+          <div class="stat-footer" id="revenueFooter">So với hôm qua: đang tải...</div>
+        </div>
+
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+          <div class="stat-content">
+            <p>Đơn hàng mới</p>
+            <h3 id="ordersToday">49</h3>
+          </div>
+          <div class="stat-trend up" id="ordersTrend">
+            <!-- <i class="fas fa-arrow-up"></i> -->
+            +12%
+          </div>
+          <div class="stat-footer" id="ordersFooter">Cập nhật tự động mỗi 30s</div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="fa-solid fa-warehouse"></i>
+          </div>
+          <div class="stat-content">
+            <p>Số hàng tồn kho</p>
+            <h3>8</h3>
+          </div>
+          <div class="stat-trend down">Giảm</div>
+          <div class="stat-footer" id="inventoryFooter">Cập nhật tự động mỗi 30s</div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <p>Đơn đang chờ xử lý</p>
+            <h3 id="pendingOrders">6</h3>
+          </div>
+          <div class="stat-trend neutral" id="pendingTrend">
+            <!-- <i class="fas fa-exclamation-circle"></i> -->
+            Cần xử lý
+          </div>
+          <div class="stat-footer" id="pendingFooter">Nhấn để xem danh sách</div>
+        </div>
+
+        <div class="stat-card info">
+          <div class="stat-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="stat-content">
+            <p>Đánh giá trung bình</p>
+            <h3 id="averageRating">4.3★</h3>
+          </div>
+          <div class="stat-trend stable" id="ratingTrend">
+            <!-- <i class="fas fa-minus"></i> -->
+            Ổn định
+          </div>
+          <div class="stat-footer" id="ratingFooter">Tổng lượt đánh giá: —</div>
+        </div>
+      </div>
+
+      <!-- ===== TOP SẢN PHẨM BÁN CHẠY (hiển thị trên cùng, 3 cột) ===== -->
+      <div class="top-products-banner">
+        <div class="top-products-banner-header">
+          <div class="tpb-title-wrap">
+            <i class="fas fa-fire tpb-fire-icon"></i>
+            <h3 class="tpb-title">Sản phẩm bán chạy</h3>
+            <span class="tpb-subtitle">Tuần này</span>
+          </div>
+          <button class="tpb-view-all">Xem tất cả <i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="tpb-grid">
+          <!-- #1 -->
+          <div class="tpb-card tpb-rank-1">
+            <div class="tpb-medal">
+              <span class="tpb-medal-icon">🥇</span>
+              <span class="tpb-rank-num">#1</span>
+            </div>
+            <div class="tpb-product-img-wrap">
+              <img src="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe" alt="Áo Hoodie Oversize" class="tpb-product-img" onerror="this.src='https://via.placeholder.com/80'" />
+            </div>
+            <div class="tpb-product-info">
+              <p class="tpb-product-name">Áo Hoodie Oversize Unisex</p>
+              <div class="tpb-stats-row">
+                <span class="tpb-stat-badge orders"><i class="fas fa-shopping-bag"></i> 120 đơn</span>
+                <span class="tpb-stat-badge revenue"><i class="fas fa-coins"></i> 8.4 triệu</span>
+              </div>
+              <div class="tpb-progress-wrap">
+                <div class="tpb-progress-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- #2 -->
+          <div class="tpb-card tpb-rank-2">
+            <div class="tpb-medal">
+              <span class="tpb-medal-icon">🥈</span>
+              <span class="tpb-rank-num">#2</span>
+            </div>
+            <div class="tpb-product-img-wrap">
+              <img src="https://thoitrangbigsize.vn/wp-content/uploads/2025/01/BSX1518W.jpg" alt="Áo Hoodie Basic" class="tpb-product-img" onerror="this.src='https://via.placeholder.com/80'" />
+            </div>
+            <div class="tpb-product-info">
+              <p class="tpb-product-name">Áo Hoodie Basic Oversize Cotton</p>
+              <div class="tpb-stats-row">
+                <span class="tpb-stat-badge orders"><i class="fas fa-shopping-bag"></i> 95 đơn</span>
+                <span class="tpb-stat-badge revenue"><i class="fas fa-coins"></i> 5.2 triệu</span>
+              </div>
+              <div class="tpb-progress-wrap">
+                <div class="tpb-progress-bar" style="width: 79%;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- #3 -->
+          <div class="tpb-card tpb-rank-3">
+            <div class="tpb-medal">
+              <span class="tpb-medal-icon">🥉</span>
+              <span class="tpb-rank-num">#3</span>
+            </div>
+            <div class="tpb-product-img-wrap">
+              <img src="https://via.placeholder.com/80x80/00C9B0/ffffff?text=3" alt="Áo Hoodie Zip" class="tpb-product-img" onerror="this.src='https://via.placeholder.com/80'" />
+            </div>
+            <div class="tpb-product-info">
+              <p class="tpb-product-name">Áo Hoodie Zip Jacket Unisex</p>
+              <div class="tpb-stats-row">
+                <span class="tpb-stat-badge orders"><i class="fas fa-shopping-bag"></i> 78 đơn</span>
+                <span class="tpb-stat-badge revenue"><i class="fas fa-coins"></i> 4.7 triệu</span>
+              </div>
+              <div class="tpb-progress-wrap">
+                <div class="tpb-progress-bar" style="width: 65%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== BIỂU ĐỒ: 2 biểu đồ trên cùng 1 hàng ===== -->
+      <div class="charts-row">
+        <!-- Biểu đồ doanh thu -->
+        <div class="chart-card charts-row-item">
+          <div class="chart-header">
+            <div>
+              <h3>Biểu đồ doanh thu</h3>
+              <div class="chart-summary" id="chartSummaryRevenue">
+                <span class="summary-label">Tổng kỳ này:</span>
+                <span class="summary-value" id="totalRevenueDisplay">—</span>
+                <span class="summary-change" id="revenueChangeDisplay"></span>
+              </div>
+            </div>
+            <div class="chart-controls">
+              <div class="chart-type-toggle">
+                <button class="chart-type-btn active" data-type="line" title="Biểu đồ đường"><i class="fas fa-chart-line"></i></button>
+                <button class="chart-type-btn" data-type="bar" title="Biểu đồ cột"><i class="fas fa-chart-bar"></i></button>
+              </div>
+              <select id="timeRange">
+                <option value="7">7 ngày gần nhất</option>
+                <option value="30">30 ngày gần nhất</option>
+                <option value="month" selected>Tháng này</option>
+                <option value="12">12 tháng</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 230px;">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Biểu đồ đơn hàng theo ngày -->
+        <div class="chart-card charts-row-item">
+          <div class="chart-header">
+            <div>
+              <h3>Đơn hàng theo ngày</h3>
+              <div class="chart-summary">
+                <span class="summary-label">Tổng đơn kỳ này:</span>
+                <span class="summary-value" id="totalOrdersDisplay">—</span>
+              </div>
+            </div>
+            <div class="chart-controls">
+              <select id="orderTimeRange">
+                <option value="7" selected>7 ngày gần nhất</option>
+                <option value="30">30 ngày gần nhất</option>
+                <option value="month">Tháng này</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-container" style="height: 230px;">
+            <canvas id="ordersBarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ĐƠN HÀNG GẦN ĐÂY & THÔNG BÁO (2 cột) ===== -->
+      <div class="bottom-grid" style="margin-top: 20px;">
+        <!-- Đơn hàng gần đây -->
+        <div class="recent-orders" style="flex:2; min-width:0;">
+          <div class="recent-header">
+            <h3>Đơn hàng gần đây</h3>
+            <button class="btn-primary small">Xem tất cả</button>
+          </div>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Khách hàng</th>
+                <th>Tổng</th>
+                <th>Trạng thái</th>
+                <th>Thời gian</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#12345</td>
+                <td>Thành Đạt</td>
+                <td>189.000đ</td>
+                <td>
+                  <span class="status processing">Chờ vận chuyển</span>
+                </td>
+                <td>09:15 - 08/03</td>
+              </tr>
+              <tr>
+                <td>#12347</td>
+                <td>Quang Việt</td>
+                <td>189.000đ</td>
+                <td>
+                  <span class="status pending">Chờ xác nhận</span>
+                </td>
+                <td>07:30 - 08/03</td>
+              </tr>
+              <tr>
+                <td>#12346</td>
+                <td>Tiến Anh</td>
+                <td>199.000đ</td>
+                <td>
+                  <span class="status completed">Hoàn thành</span>
+                </td>
+                <td>08:45 - 08/03</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Thông báo & Cảnh báo -->
+        <div class="notifications-card" style="flex:1; min-width:280px;">
+          <h3>Thông báo & Cảnh báo</h3>
+          <div class="notification-list">
+            <div class="notification-item urgent">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Đơn #12345 đã bị hoàn trả - Vui lòng kiểm tra ngay</p>
+            </div>
+            <div class="notification-item">
+              <i class="fas fa-bell"></i>
+              <p>Khuyến mãi FLASH SALE sắp hết hạn vào 23:59 hôm nay</p>
+            </div>
+            <div class="notification-item">
+              <i class="fa-solid fa-money-bill-trend-up"></i>
+              <p>Đơn hàng #12112 đã hoàn thành, vui lòng kiểm tra số dư tài khoản</p>
+            </div>
+            <div class="notification-item">
+              <i class="fas fa-star"></i>
+              <p>Khách hàng đánh giá 5★ cho sản phẩm Áo Hoodie Oversize Unisex</p>
+            </div>
+            <div class="notification-item">
+              <i class="fas fa-star"></i>
+              <p>Khách hàng đánh giá 5★ cho sản phẩm Áo Hoodie Zip Jacket Unisex</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. QUẢN LÝ THỰC ĐƠN - ĐÃ CÓ LINK -->
+    <section id="menu-management" class="seller-section">
+      <div class="section-header">
+        <a href="/html/new-dishes.html"><button class="btn-primary add-menu-btn"><i class="fas fa-plus"></i> Thêm sản phẩm mới</button></a>
+      </div>
+
+      <div class="menu-list-card">
+        <h3>Danh sách sản phẩm hiện tại</h3>
+        <div class="table-responsive">
+          <table class="admin-table menu-table">
+            <thead>
+              <tr>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Danh mục</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="window.location.href='seller-detail.html?id=1'" style="cursor:pointer;">
+                <td>
+                  <img src="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe@resize_w900_nl.webp" alt="Món" class="menu-thumb" />
+                </td>
+                <td>Áo Hoodie Oversize Unisex</td>
+                <td>189.000đ</td>
+                <td>Thời Trang Nam</td>
+                <td>
+                  <span class="status active">Đang bán</span>
+                </td>
+                <td>
+                  <button class="btn-edit"><i class="fas fa-edit"></i> Sửa</button>
+                  <button class="btn-disable"><i class="fas fa-power-off"></i> Gỡ</button>
+                </td>
+              </tr>
+
+              <tr onclick="window.location.href='product-detail-seller.html?id=2'" style="cursor:pointer;">
+                <td>
+                  <img src="https://thoitrangbigsize.vn/wp-content/uploads/2025/01/BSX1518W.jpg" alt="Món" class="menu-thumb" />
+                </td>
+                <td>Áo Hoodie Basic Oversize Cotton</td>
+                <td>169.000đ</td>
+                <td>Thời Trang Nam</td>
+                <td>
+                  <span class="status active">Đang bán</span>
+                </td>
+                <td>
+                  <button class="btn-edit"><i class="fas fa-edit"></i> Sửa</button>
+                  <button class="btn-disable"><i class="fas fa-power-off"></i> Gỡ</button>
+                </td>
+              </tr>
+
+              <!-- Thêm các dòng khác tương tự -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. QUẢN LÝ ĐƠN HÀNG - Giao diện nâng cấp chuyên nghiệp -->
+    <section id="order-processing" class="seller-section">
+      <div class="section-header">
+        <div class="header-actions">
+          <button class="btn-primary"><i class="fas fa-print"></i> In tất cả đơn mới</button>
+          <button class="btn-primary"><i class="fas fa-check-double"></i> Xác nhận hàng loạt</button>
+        </div>
+      </div>
+
+      <!-- Thống kê nhanh đơn hàng -->
+      <div class="order-stats-grid">
+        <div class="stat-card new">
+          <div class="stat-icon">
+            <i class="fas fa-bell"></i>
+          </div>
+          <h3>28</h3>
+          <p>Đơn mới</p>
+        </div>
+        <div class="stat-card processing">
+          <div class="stat-icon">
+            <i class="fas fa-spinner" style="color: rgb(0, 80, 253);"></i>
+          </div>
+          <h3>5</h3>
+          <p>Đang chuẩn bị</p>
+        </div>
+        <div class="stat-card shipping">
+          <div class="stat-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <h3>4</h3>
+          <p>Đang giao</p>
+        </div>
+        <div class="stat-card completed">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3>15</h3>
+          <p>Hoàn thành trong tuần qua</p>
+        </div>
+        <div class="stat-card cancelled">
+          <div class="stat-icon">
+            <i class="fas fa-times-circle" style="color: red;"></i>
+          </div>
+          <h3>2</h3>
+          <p>Đã hủy</p>
+        </div>
+      </div>
+
+      <!-- Bộ lọc & Tìm kiếm -->
+      <div class="filter-toolbar">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Tìm theo ID đơn, tên khách, SĐT..." />
+        </div>
+        <select>
+          <option>Tất cả trạng thái</option>
+          <option>Đơn mới</option>
+          <option>Đang chuẩn bị</option>
+          <option>Đang giao</option>
+          <option>Hoàn thành</option>
+          <option>Hủy</option>
+        </select>
+        <select>
+          <option>Hôm nay</option>
+          <option>Tuần này</option>
+          <option>Tháng này</option>
+        </select>
+        <button class="btn-primary"><i class="fas fa-filter"></i> Lọc</button>
+        <button class="btn-secondary"><i class="fas fa-redo"></i> Làm mới</button>
+      </div>
+
+      <!-- Bảng đơn hàng - Giao diện chuyên nghiệp -->
+      <div class="table-responsive">
+        <table class="admin-table order-table">
+          <thead>
+            <tr>
+              <th>
+                <input type="checkbox" />
+              </th>
+              <th>ID Đơn</th>
+              <th>Khách hàng</th>
+              <th>SĐT</th>
+              <th>Tổng tiền</th>
+              <th>Sản phẩm</th>
+              <th>Trạng thái đơn hàng</th>
+              <th>Thời gian đặt</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td>#12325</td>
+              <td>Thành Đạt</td>
+              <td>090xxxxxxx</td>
+              <td>189.000đ</td>
+              <td>Áo Hoodie Oversize Unisex</td>
+              <td>
+                <span class="status processing">Đang vận chuyển</span>
+              </td>
+              <td>09:15 - 08/03</td>
+              <td class="action-buttons">
+                <button class="btn-cancel"><i class="fas fa-times"></i> Hủy</button>
+                <button class="btn-print"><i class="fas fa-print"></i> In</button>
+                <button class="btn-detail"><i class="fas fa-eye"></i> Chi tiết</button>
+                <button class="btn-contact"><i class="fas fa-phone"></i> Liên hệ</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td>#12245</td>
+              <td>Quang Việt</td>
+              <td>093xxxxxxx</td>
+              <td>189.000đ</td>
+              <td>Áo Hoodie Oversize Unisex</td>
+              <td>
+                <span class="status processing">Đang vận chuyển</span>
+              </td>
+              <td>09:15 - 08/03</td>
+              <td class="action-buttons">
+                <button class="btn-cancel"><i class="fas fa-times"></i> Hủy</button>
+                <button class="btn-print"><i class="fas fa-print"></i> In</button>
+                <button class="btn-detail"><i class="fas fa-eye"></i> Chi tiết</button>
+                <button class="btn-contact"><i class="fas fa-phone"></i> Liên hệ</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td>#12345</td>
+              <td>Hoàng Anh</td>
+              <td>094xxxxxxx</td>
+              <td>189.000đ</td>
+              <td>Áo Hoodie Oversize Unisex</td>
+              <td>
+                <span class="status processing">Đang vận chuyển</span>
+              </td>
+              <td>09:15 - 08/03</td>
+              <td class="action-buttons">
+                <button class="btn-cancel"><i class="fas fa-times"></i> Hủy</button>
+                <button class="btn-print"><i class="fas fa-print"></i> In</button>
+                <button class="btn-detail"><i class="fas fa-eye"></i> Chi tiết</button>
+                <button class="btn-contact"><i class="fas fa-phone"></i> Liên hệ</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" />
+              </td>
+              <td>#12346</td>
+              <td>Tiến Anh</td>
+              <td>091xxxxxxx</td>
+              <td>199.000đ</td>
+              <td>Áo Hoodie In Hình Stussy Style</td>
+              <td>
+                <span class="status completed">Hoàn thành</span>
+              </td>
+              <td>08:45 - 08/03</td>
+              <td class="action-buttons">
+                <button class="btn-detail"><i class="fas fa-eye"></i> Chi tiết</button>
+                <button class="btn-contact"><i class="fas fa-phone"></i> Liên hệ</button>
+              </td>
+            </tr>
+            <!-- Thêm dòng khác nếu cần -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phân trang -->
+      <div class="pagination">
+        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+        <span>Trang 1 / 12</span>
+        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+
+    <section id="inventory" class="seller-section">
+      <div class="section-header">
+        <div class="header-actions"></div>
+      </div>
+
+      <!-- Thống kê tồn kho -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>120</h3>
+          <p>Tổng sản phẩm</p>
+        </div>
+        <div class="stat-card">
+          <h3>35</h3>
+          <p>Sắp hết hàng</p>
+        </div>
+        <div class="stat-card">
+          <h3>12</h3>
+          <p>Hết hàng</p>
+        </div>
+      </div>
+
+      <!-- Bảng tồn kho -->
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Ảnh</th>
+              <th>Tên sản phẩm</th>
+              <th>Tồn kho</th>
+              <th>Đã bán</th>
+              <th>Trạng thái</th>
+              <th>Cập nhật</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <img src="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe" style="width:60px;border-radius:8px;" />
+              </td>
+              <td>Áo Hoodie Oversize</td>
+              <td>
+                <strong>15</strong>
+              </td>
+              <td>120</td>
+              <td>
+                <span class="status active">Còn hàng</span>
+              </td>
+              <td>
+                <input type="number" value="15" style="width:70px; padding:5px;" />
+                <button class="btn-primary" style="padding:6px 10px;">Lưu</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <img src="https://thoitrangbigsize.vn/wp-content/uploads/2025/01/BSX1518W.jpg" style="width:60px;border-radius:8px;" />
+              </td>
+              <td>Áo Hoodie Basic</td>
+              <td>
+                <strong style="color:#dc3545;">3</strong>
+              </td>
+              <td>95</td>
+              <td>
+                <span class="status pending">Sắp hết</span>
+              </td>
+              <td>
+                <input type="number" value="3" style="width:70px; padding:5px;" />
+                <button class="btn-primary" style="padding:6px 10px;">Lưu</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <img src="https://via.placeholder.com/60" />
+              </td>
+              <td>Áo Hoodie Zip</td>
+              <td>
+                <strong style="color:#dc3545;">0</strong>
+              </td>
+              <td>78</td>
+              <td>
+                <span class="status cancelled">Hết hàng</span>
+              </td>
+              <td>
+                <input type="number" value="0" style="width:70px; padding:5px;" />
+                <button class="btn-primary" style="padding:6px 10px;">Lưu</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. TÀI CHÍNH & RÚT TIỀN - Giao diện nâng cấp chuyên nghiệp -->
+    <section id="finance" class="seller-section">
+      <div class="section-header">
+        <div class="header-actions">
+          <button class="btn-primary withdraw-btn"><i class="fas fa-money-bill-wave"></i> Yêu cầu rút tiền</button>
+        </div>
+      </div>
+
+      <!-- Số dư ví & Thống kê nhanh -->
+      <div class="wallet-overview">
+        <div class="wallet-card">
+          <div class="wallet-header">
+            <h3>Số dư ví hiện tại</h3>
+            <span class="wallet-balance">5.280.000đ</span>
+          </div>
+          <div class="wallet-info">
+            <div class="info-item">
+              <label>Số dư khả dụng</label>
+              <span class="value">5.200.000đ</span>
+            </div>
+            <div class="info-item">
+              <label>Đang chờ xử lý</label>
+              <span class="value pending">80.000đ</span>
+            </div>
+            <div class="info-item">
+              <label>Phí rút tiền</label>
+              <span class="value">0.5% (tối thiểu 10.000đ)</span>
+            </div>
+          </div>
+          <div class="wallet-warning" style="margin-top: 20px; color: var(--danger); font-size: 0.95rem;">
+            <i class="fas fa-exclamation-triangle"></i> Số dư khả dụng phải ≥ 500.000đ để rút
+          </div>
+        </div>
+
+        <!-- Thống kê nhanh -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-arrow-up"></i>
+            </div>
+            <h3>12.4 triệu</h3>
+            <p>Thu nhập tháng này</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-arrow-down"></i>
+            </div>
+            <h3>980.000đ</h3>
+            <p>Phí sàn & chi phí</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <h3>4 lần</h3>
+            <p>Lần rút thành công</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ thu nhập theo tháng -->
+      <div class="chart-card" style="margin-top: 40px;">
+        <div class="chart-header">
+          <h3>Thu nhập theo tháng (năm 2026)</h3>
+          <select>
+            <option>Năm 2026</option>
+            <option>Năm 2025</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="incomeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Lịch sử giao dịch -->
+      <div class="transaction-history">
+        <h3>Lịch sử giao dịch</h3>
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Ngày</th>
+                <th>Loại</th>
+                <th>Số tiền</th>
+                <th>Ghi chú</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01/03/2026</td>
+                <td>
+                  <span class="trans-type income">Thu</span>
+                </td>
+                <td class="amount positive">+120.000đ</td>
+                <td>Thu từ đơn #12345</td>
+                <td>
+                  <span class="status success">Hoàn tất</span>
+                </td>
+              </tr>
+              <tr>
+                <td>28/02/2026</td>
+                <td>
+                  <span class="trans-type fee">Phí sàn</span>
+                </td>
+                <td class="amount negative">-8.000đ</td>
+                <td>Phí hoa hồng 10%</td>
+                <td>
+                  <span class="status success">Hoàn tất</span>
+                </td>
+              </tr>
+              <tr>
+                <td>25/02/2026</td>
+                <td>
+                  <span class="trans-type withdraw">Rút tiền</span>
+                </td>
+                <td class="amount negative">-2.000.000đ</td>
+                <td>Rút về Vietcombank ****1234</td>
+                <td>
+                  <span class="status processing">Đang xử lý</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" style="margin-top: 25px;">
+          <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+          <span>Trang 1 / 8</span>
+          <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MARKETING & KHUYẾN MÃI - Giao diện nâng cấp chuyên nghiệp -->
+    <section id="marketing" class="seller-section">
+      <div class="section-header">
+        <div class="header-actions">
+          <button class="btn-primary create-promo-btn"><i class="fas fa-plus"></i> Tạo mã giảm giá mới</button>
+          <button class="btn-primary flash-sale-btn"><i class="fas fa-bolt"></i> Đăng ký Flash Sale</button>
+          <button class="btn-primary advertise-btn"><i class="fas fa-bullhorn"></i> Quảng cáo sản</button>
+        </div>
+      </div>
+
+      <!-- Thống kê nhanh hiệu quả khuyến mãi -->
+      <div class="promo-stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-ticket-alt"></i>
+          </div>
+          <h3>12</h3>
+          <p>Mã giảm giá đang hoạt động</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>2.450</h3>
+          <p>Lượt sử dụng mã</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>320 triệu</h3>
+          <p>Doanh thu từ khuyến mãi</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-percentage"></i>
+          </div>
+          <h3>18%</h3>
+          <p>Tỷ lệ chuyển đổi</p>
+        </div>
+      </div>
+
+      <!-- Danh sách mã giảm giá & chiến dịch -->
+      <div class="promo-list-card">
+        <h3>Danh sách mã giảm giá & chiến dịch</h3>
+        <div class="table-responsive">
+          <table class="admin-table promo-table">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Loại</th>
+                <th>Giá trị giảm</th>
+                <th>Điều kiện</th>
+                <th>Lượt dùng</th>
+                <th>Hết hạn</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FIRST50</td>
+                <td>Giảm cố định</td>
+                <td>50.000đ</td>
+                <td>Đơn từ 200.000đ</td>
+                <td>1.820</td>
+                <td>31/03/2026</td>
+                <td>
+                  <span class="status active">Đang hoạt động</span>
+                </td>
+                <td>
+                  <button class="btn-edit"><i class="fas fa-edit"></i> Sửa</button>
+                  <button class="btn-disable"><i class="fas fa-power-off"></i> Tắt</button>
+                  <button class="btn-stats"><i class="fas fa-chart-bar"></i> Thống kê</button>
+                </td>
+              </tr>
+              <tr>
+                <td>FLASH20</td>
+                <td>Giảm %</td>
+                <td>20%</td>
+                <td>Đơn từ 150.000đ</td>
+                <td>950</td>
+                <td>10/03/2026</td>
+                <td>
+                  <span class="status expired">Hết hạn</span>
+                </td>
+                <td>
+                  <button class="btn-edit"><i class="fas fa-edit"></i> Sửa</button>
+                  <button class="btn-activate"><i class="fas fa-power-off"></i> Kích hoạt lại</button>
+                </td>
+              </tr>
+              <!-- Thêm dòng khác nếu cần -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Phân trang -->
+        <div class="pagination" style="margin-top: 25px; text-align: center;">
+          <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+          <span>Trang 1 / 5</span>
+          <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Form tạo mã giảm giá mới - Giao diện đẹp -->
+      <div class="create-promo-card" style="margin-top: 40px;">
+        <h3>Tạo mã giảm giá mới</h3>
+        <form class="promo-form">
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Mã giảm giá <span class="required">*</span></label>
+              <input type="text" placeholder="VD: GIAM20K" required />
+            </div>
+            <div class="form-group half">
+              <label>Loại giảm giá <span class="required">*</span></label>
+              <select required>
+                <option>Giảm cố định (VND)</option>
+                <option>Giảm phần trăm (%)</option>
+                <option>Miễn phí giao hàng</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Giá trị giảm <span class="required">*</span></label>
+              <input type="number" placeholder="20000" min="1000" required />
+            </div>
+            <div class="form-group half">
+              <label>Đơn tối thiểu (VND)</label>
+              <input type="number" placeholder="150000" min="0" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Ngày bắt đầu</label>
+              <input type="date" />
+            </div>
+            <div class="form-group half">
+              <label>Ngày kết thúc</label>
+              <input type="date" />
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label>Áp dụng cho</label>
+            <select multiple size="4">
+              <option>Tất cả sản phẩm</option>
+              <option>Thời trang nam</option>
+              <option>Thời trang nữ</option>
+              <option>Giày dép</option>
+            </select>
+          </div>
+
+          <div class="form-actions" style="margin-top: 30px; display: flex; gap: 15px; justify-content: flex-end;">
+            <button type="button" class="btn-secondary">Hủy</button>
+            <button type="submit" class="btn-primary">Tạo mã giảm giá</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 6. BÁO CÁO & PHÂN TÍCH - Nâng cấp toàn diện -->
+    <section id="analytics" class="seller-section">
+      <!-- Toolbar lọc thời gian & xuất báo cáo -->
+      <div class="analytics-toolbar">
+        <div class="analytics-period-tabs">
+          <button class="period-tab active" data-period="7">7 ngày</button>
+          <button class="period-tab" data-period="30">30 ngày</button>
+          <button class="period-tab" data-period="month">Tháng này</button>
+          <button class="period-tab" data-period="12">12 tháng</button>
+        </div>
+        <div class="analytics-actions">
+          <button class="btn-primary export-btn" onclick="exportAnalyticsCSV()"><i class="fas fa-file-csv"></i> Xuất CSV</button>
+          <button class="btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> In báo cáo</button>
+        </div>
+      </div>
+
+      <!-- KPI Cards – 4 chỉ số chính -->
+      <div class="analytics-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon revenue">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="kpi-body">
+            <p class="kpi-label">Doanh thu kỳ này</p>
+            <h3 class="kpi-value" id="ana-revenue">12.4 triệu</h3>
+            <div class="kpi-compare">
+              <span class="kpi-badge up"><i class="fas fa-arrow-up"></i> +15%</span>
+              so với kỳ trước
+            </div>
+          </div>
+          <div class="kpi-sparkline">
+            <canvas id="sparkRevenue"></canvas>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon orders">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+          <div class="kpi-body">
+            <p class="kpi-label">Đơn hàng kỳ này</p>
+            <h3 class="kpi-value" id="ana-orders">285</h3>
+            <div class="kpi-compare">
+              <span class="kpi-badge up"><i class="fas fa-arrow-up"></i> +22%</span>
+              so với kỳ trước
+            </div>
+          </div>
+          <div class="kpi-sparkline">
+            <canvas id="sparkOrders"></canvas>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon rating">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="kpi-body">
+            <p class="kpi-label">Đánh giá trung bình</p>
+            <h3 class="kpi-value" id="ana-rating">4.8★</h3>
+            <div class="kpi-compare">
+              <span class="kpi-badge stable"><i class="fas fa-minus"></i> Ổn định</span> so với kỳ trước
+            </div>
+          </div>
+          <div class="kpi-sparkline">
+            <canvas id="sparkRating"></canvas>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon aov">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <div class="kpi-body">
+            <p class="kpi-label">Giá trị đơn TB</p>
+            <h3 class="kpi-value" id="ana-aov">189.000đ</h3>
+            <div class="kpi-compare">
+              <span class="kpi-badge up"><i class="fas fa-arrow-up"></i> +5%</span>
+              so với kỳ trước
+            </div>
+          </div>
+          <div class="kpi-sparkline">
+            <canvas id="sparkAOV"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hàng 1: Biểu đồ Doanh thu & Cơ cấu đơn hàng -->
+      <div class="ana-row">
+        <!-- Biểu đồ doanh thu theo thời gian (line + bar kết hợp) -->
+        <div class="chart-card ana-wide">
+          <div class="chart-header">
+            <div>
+              <h3>Doanh thu & Đơn hàng theo thời gian</h3>
+              <p class="chart-sub">So sánh doanh thu (đường) và số đơn (cột)</p>
+            </div>
+          </div>
+          <div class="chart-container" style="height:280px;">
+            <canvas id="anaRevenueOrderChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Biểu đồ tròn: Cơ cấu trạng thái đơn hàng -->
+        <div class="chart-card ana-narrow">
+          <div class="chart-header">
+            <h3>Cơ cấu đơn hàng</h3>
+            <p class="chart-sub">Phân loại theo trạng thái</p>
+          </div>
+          <div class="chart-container" style="height:200px;">
+            <canvas id="anaOrderStatusChart"></canvas>
+          </div>
+          <div class="donut-legend" id="orderStatusLegend"></div>
+        </div>
+      </div>
+
+      <!-- Hàng 2: Top sản phẩm & Phân phối theo danh mục -->
+      <div class="ana-row">
+        <!-- Top 5 sản phẩm bán chạy với progress bar -->
+        <div class="chart-card ana-half">
+          <div class="chart-header">
+            <h3>Top 5 sản phẩm bán chạy</h3>
+            <p class="chart-sub">Kỳ đang chọn</p>
+          </div>
+          <div class="top-products-list" id="topProductsList">
+            <!-- render by JS -->
+          </div>
+        </div>
+
+        <!-- Biểu đồ: Doanh thu theo danh mục (horizontal bar) -->
+        <div class="chart-card ana-half">
+          <div class="chart-header">
+            <h3>Doanh thu theo danh mục</h3>
+            <p class="chart-sub">Phần trăm đóng góp</p>
+          </div>
+          <div class="chart-container" style="height:240px;">
+            <canvas id="anaCategoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hàng 3: Đánh giá & Phân tích khung giờ -->
+      <div class="ana-row">
+        <!-- Đánh giá gần đây -->
+        <div class="chart-card ana-half">
+          <div class="chart-header">
+            <h3>Đánh giá & Phản hồi</h3>
+            <div class="rating-summary">
+              <span class="big-star">4.8★</span>
+              <div class="star-bars" id="starBarsContainer">
+                <!-- render by JS -->
+              </div>
+            </div>
+          </div>
+          <div class="reviews-list" id="reviewsList">
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <span class="avatar-circle">T</span>
+                  <div>
+                    <span class="reviewer-name">Thành Đạt</span>
+                    <span class="review-product">Áo Hoodie Oversize Unisex</span>
+                  </div>
+                </div>
+                <div class="review-meta">
+                  <span class="star-rating">★★★★★</span>
+                  <span class="review-time">1 giờ trước</span>
+                </div>
+              </div>
+              <p class="review-text">Sản phẩm khá dày dặn, mặc rất ấm. Shop giao hàng nhanh, đóng gói cẩn thận.</p>
+              <div class="review-reply-btn">
+                <i class="fas fa-reply"></i> Phản hồi
+              </div>
+            </div>
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <span class="avatar-circle" style="background:#e67e22;">N</span>
+                  <div>
+                    <span class="reviewer-name">Nguyễn Hương</span>
+                    <span class="review-product">Áo Hoodie Basic Oversize Cotton</span>
+                  </div>
+                </div>
+                <div class="review-meta">
+                  <span class="star-rating">★★★★<span style="color:#ddd;">★</span></span>
+                  <span class="review-time">3 giờ trước</span>
+                </div>
+              </div>
+              <p class="review-text">Sản phẩm khá đẹp, chất vải mềm mịn. Size hơi nhỏ hơn mình tưởng, nên order size lớn hơn 1 bậc.</p>
+              <div class="review-reply-btn">
+                <i class="fas fa-reply"></i> Phản hồi
+              </div>
+            </div>
+            <div class="review-item">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <span class="avatar-circle" style="background:#8e44ad;">Q</span>
+                  <div>
+                    <span class="reviewer-name">Quang Việt</span>
+                    <span class="review-product">Áo Hoodie Zip Jacket Unisex</span>
+                  </div>
+                </div>
+                <div class="review-meta">
+                  <span class="star-rating">★★★★★</span>
+                  <span class="review-time">Hôm qua</span>
+                </div>
+              </div>
+              <p class="review-text">Mặc thử thấy rất ưng, màu đẹp y hình. Sẽ ủng hộ shop dài dài!</p>
+              <div class="review-reply-btn">
+                <i class="fas fa-reply"></i> Phản hồi
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Biểu đồ đơn hàng theo khung giờ trong ngày -->
+        <div class="chart-card ana-half">
+          <div class="chart-header">
+            <h3>Đơn hàng theo khung giờ</h3>
+            <p class="chart-sub">Giờ cao điểm trong ngày</p>
+          </div>
+          <div class="chart-container" style="height:240px;">
+            <canvas id="anaHourlyChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CẤU HÌNH GIAN HÀNG - Giao diện nâng cấp chuyên nghiệp -->
+    <section id="store-profile" class="seller-section">
+      <div class="section-header">
+        <div class="header-actions">
+          <button class="btn-primary save-all-btn"><i class="fas fa-save"></i> Lưu tất cả thay đổi</button>
+        </div>
+      </div>
+
+      <!-- Thông báo thành công (ẩn mặc định) -->
+      <div class="alert alert-success" style="display: none; margin-bottom: 30px;">
+        <i class="fas fa-check-circle"></i> Đã lưu cấu hình gian hàng thành công!
+      </div>
+
+      <!-- Form cấu hình - Chia thành các tab/card rõ ràng -->
+      <div class="profile-tabs">
+        <!-- Tab 1: Thông tin cơ bản -->
+        <div class="profile-card">
+          <h3>Thông tin cơ bản</h3>
+          <form class="profile-form">
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Tên gian hàng <span class="required">*</span></label>
+                <input type="text" value="Thời trang Sinh Viên" required />
+              </div>
+              <div class="form-group half">
+                <label>Tên chủ gian hàng</label>
+                <input type="text" value="Nguyễn Văn A" />
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label>Mô tả gian hàng</label>
+              <textarea rows="5" placeholder="Mô tả ngắn gọn về quán, đặc sản, phong cách phục vụ...">Shop thời trang với nhiều phong cách trẻ trung, phù hợp với sinh viên</textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Số điện thoại liên hệ <span class="required">*</span></label>
+                <input type="tel" value="0905123456" required />
+              </div>
+              <div class="form-group half">
+                <label>Email liên hệ</label>
+                <input type="email" value="fashionstudent@gmail.com" />
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tab 2: Ảnh đại diện & Bìa -->
+        <div class="profile-card">
+          <h3>Ảnh đại diện & Ảnh bìa</h3>
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Logo shop (vuông, khuyến nghị 200x200)</label>
+              <input type="file" accept="image/*" id="logoUpload" />
+              <div class="image-preview">
+                <img src="https://via.placeholder.com/200" alt="Logo hiện tại" id="logoPreview" />
+              </div>
+            </div>
+            <div class="form-group half">
+              <label>Ảnh bìa shop (ngang, khuyến nghị 1200x400)</label>
+              <input type="file" accept="image/*" id="coverUpload" />
+              <div class="image-preview">
+                <img src="https://via.placeholder.com/600x200" alt="Ảnh bìa hiện tại" id="coverPreview" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Giờ mở cửa -->
+        <div class="profile-card">
+          <h3>Giờ mở cửa</h3>
+          <div class="hours-table">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Ngày</th>
+                  <th>Giờ mở</th>
+                  <th>Giờ đóng</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Thứ 2</td>
+                  <td>
+                    <input type="time" value="08:00" />
+                  </td>
+                  <td>
+                    <input type="time" value="22:00" />
+                  </td>
+                  <td>
+                    <label class="switch"><input type="checkbox" checked /><span class="slider round"></span></label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Thứ 3</td>
+                  <td>
+                    <input type="time" value="08:00" />
+                  </td>
+                  <td>
+                    <input type="time" value="22:00" />
+                  </td>
+                  <td>
+                    <label class="switch"><input type="checkbox" checked /><span class="slider round"></span></label>
+                  </td>
+                </tr>
+                <!-- Thêm các ngày khác tương tự -->
+                <tr>
+                  <td>Chủ nhật</td>
+                  <td>
+                    <input type="time" value="07:00" />
+                  </td>
+                  <td>
+                    <input type="time" value="23:00" />
+                  </td>
+                  <td>
+                    <label class="switch"><input type="checkbox" checked /><span class="slider round"></span></label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-group toggle-group" style="margin-top: 20px;">
+            <label>Tự động đóng cửa vào ngày lễ</label>
+            <label class="switch"><input type="checkbox" /><span class="slider round"></span></label>
+          </div>
+        </div>
+
+        <!-- Nút lưu toàn bộ -->
+        <div class="save-footer">
+          <button class="btn-primary save-all-btn large"><i class="fas fa-save"></i> Lưu tất cả thay đổi</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Script chuyển tab (giữ nguyên như bạn đã có) -->
+  <!-- Script biểu đồ mẫu Chart.js - Nâng cấp -->
+  <!-- Script biểu đồ mẫu cho phần Tài chính (cột nhỏ hơn, khoảng cách rộng hơn, dài hơn) -->
+  <!-- ===== ANALYTICS SECTION SCRIPTS ===== -->
+  <!--  -->
+  <!-- NÚT CHAT NỔI DÀNH CHO NGƯỜI BÁN -->
+  <a href="chat-seller.html" class="floating-seller-chat-btn">
+    <i class="fas fa-comments"></i>
+    <span class="chat-badge">3</span>
+    <span class="chat-label">Chat</span>
+  </a>
+
+  <script src="/js/seller-dashboard.js?v=20260822"></script>
+</body>

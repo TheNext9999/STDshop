@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STDShop-Mua bán dễ dàng</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/customer-order.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+    <link rel="stylesheet" href="/css/cart.css" />
+    <link rel="stylesheet" href="/css/chat-seller.css" />
+    <link rel="stylesheet" href="/css/chat.css" />
+    <link rel="stylesheet" href="/css/chatbot.css" />
+    <link rel="stylesheet" href="/css/dish-detail.css" />
+    <link rel="stylesheet" href="/css/flash-sale.css" />
+    <link rel="stylesheet" href="/css/landing-seller.css">
+    <link rel="stylesheet" href="/css/landing.css">
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/seller-dashboard.css">
+
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/html/customer-order.html" style="text-decoration: none;">
+          <!-- Logo bên trái -->
+          <div class="logo">
+            <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
+          </div>
+        </a>
+
+        <!-- Thanh tìm kiếm ở giữa -->
+        <div class="search-bar">
+          <div class="search-wrapper">
+            <i class="fas fa-search search-icon" id="searchIcon"></i>
+            <input type="text" id="searchInput" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off" />
+            <button type="submit" class="search-submit-btn"><i class="fas fa-arrow-right"></i></button>
+          </div>
+          <!-- Kết quả tìm kiếm -->
+          <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <!-- Phần bên phải: location + cart + auth -->
+        <div class="nav-right">
+          <button id="openCartBtn" id="cartBtn" class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cartCount" class="cart-count">0</span>
+          </button>
+          <a href="/html/auth.html" style="text-decoration-line: none;">
+            <div class="user-menu">
+              <div class="auth-link" id="authLink">
+                <i class="fas fa-user-circle"></i>
+                <span class="auth-text" id="authText">Đăng nhập / Đăng ký</span>
+                <i class="fas fa-caret-down"></i>
+              </div>
+              <div class="user-dropdown" id="userDropdown">
+                <button id="logoutBtn">Đăng xuất</button>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO BANNER giống GrabFood - thêm ngay sau navbar -->
+    <section class="hero-banner" id="heroBanner">
+      <!-- Slide 1 -->
+      <div class="hero-slide active" style="background-image: url('/css/pic/banner22.png');"></div>
+      <!-- Slide 2 -->
+      <div class="hero-slide" style="background-image: url('/css/pic/Ảnh\ chụp\ màn\ hình\ 2026-04-01\ 142221.png');"></div>
+      <!-- Slide 3 -->
+      <div class="hero-slide" style="background-image: url('/css/pic/banner3.png');"></div>
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <h1>Xin chào bạn</h1>
+          <p>Hãy để AI hỗ trợ bạn tìm sản phẩm nhé!</p>
+          <div class="location-input">
+            <i class="fa-brands fa-bots location-icon"></i>
+            <input type="text" placeholder="Nhập nhu cầu sử dụng của bạn" />
+          </div>
+        </div>
+      </div>
+      <!-- Nút chuyển slide -->
+      <button class="hero-nav left" id="heroLeft">‹</button>
+      <button class="hero-nav right" id="heroRight">›</button>
+    </section>
+    <!-- DANH MỤC - Thiết kế giống Shopee, dành cho đồ sinh viên -->
+    <section class="category-section">
+      <div class="container">
+        <h2 class="section-title">DANH MỤC SẢN PHẨM</h2>
+
+        <div class="category-grid">
+          <!-- Item 1 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-tshirt"></i>
+            </div>
+            <p>Thời Trang Nam</p>
+          </a>
+
+          <!-- Item 2 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-female"></i>
+            </div>
+            <p>Thời Trang Nữ</p>
+          </a>
+
+          <!-- Item 3 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-shoe-prints"></i>
+            </div>
+            <p>Giày Dép</p>
+          </a>
+
+          <!-- Item 4 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-briefcase"></i> <!-- Đã sửa icon Balo & Túi Xách -->
+            </div>
+            <p>Balo & Túi Xách</p>
+          </a>
+
+          <!-- Item 5 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-laptop"></i>
+            </div>
+            <p>Laptop & Phụ Kiện</p>
+          </a>
+
+          <!-- Item 6 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <p>Điện Thoại & Phụ Kiện</p>
+          </a>
+
+          <!-- Item 7 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-book"></i>
+            </div>
+            <p>Sách & Văn Phòng Phẩm</p>
+          </a>
+
+          <!-- Item 8 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <p>Đồ Ăn Vặt Sinh Viên</p>
+          </a>
+
+          <!-- Item 9 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-bicycle"></i>
+            </div>
+            <p>Xe Đạp & Xe Điện</p>
+          </a>
+
+          <!-- Item 10 -->
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-home"></i>
+            </div>
+            <p>Đồ Gia Dụng & Nhà Ở</p>
+          </a>
+
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-dumbbell"></i>
+            </div>
+            <p>Thể Thao & Fitness</p>
+          </a>
+
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <p>Đèn & Decor Phòng</p>
+          </a>
+
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-headphones"></i>
+            </div>
+            <p>Âm Nhạc & Tai Nghe</p>
+          </a>
+
+          <a href="#" class="category-card">
+            <div class="icon-wrapper">
+              <i class="fas fa-spa"></i> <!-- Icon đẹp và ổn định -->
+            </div>
+            <p>Mỹ Phẩm & Chăm Sóc</p>
+          </a>
+
+          <!-- Bạn có thể thêm tiếp các danh mục khác ở đây -->
+        </div>
+      </div>
+    </section>
+    <!-- ==================== FLASH SALE SECTION (Có nút chuyển tiếp) ==================== -->
+
+    <section class="flash-sale-section">
+      <div class="container">
+        <div class="flash-sale-header">
+          <div class="flash-title">
+            <span class="flash-badge">FLASH SALE</span>
+            <div class="countdown" id="countdown">
+              <span id="hours">00</span> :
+              <span id="minutes">15</span> :
+              <span id="seconds">59</span>
+            </div>
+          </div>
+          <a href="/html/flash-sale.html" class="view-all" style="text-decoration: none; color: inherit;">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="flash-sale-wrapper">
+          <button class="flash-nav-btn left" id="flashLeft">‹</button>
+
+          <div class="flash-sale-grid" id="flashSaleGrid">
+            <!-- JS sẽ render sản phẩm -->
+          </div>
+
+          <button class="flash-nav-btn right" id="flashRight">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRENDING / GỢI Ý HÔM NAY -->
+    <section class="trending-section">
+      <div class="container">
+        <h2 class="section-title">Gợi ý hôm nay</h2>
+        <div class="product-grid" id="trendingGrid">
+          <!-- JS render -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ALL PRODUCTS -->
+    <section class="dishes-section">
+      <div class="container">
+        <div class="product-grid" id="dishGrid">
+          <!-- JS render tất cả sản phẩm -->
+        </div>
+      </div>
+    </section>
+    <div class="see-more-container">
+      <a href="/html/more-dishes.html" class="see-more-btn"><i class="fas fa-arrow-right"></i> Hiển thị thêm sản phẩm khuyến mãi</a>
+    </div>
+
+    <!-- DTA VIP BANNER -->
+    <section class="vip-banner">
+      <div class="container">
+        <h2>Trở thành <span class="highlight">STD VIP</span> – Tiết kiệm đến 30% mỗi tuần!</h2>
+        <p>Phí chỉ 49k/tháng • Miễn phí giao • Ưu đãi độc quyền</p><br />
+        <button class="btn-primary">Đăng ký STD VIP ngay</button>
+      </div>
+    </section>
+
+    <!-- FLOATING CART (góc phải dưới) -->
+    <a href="chat.html" class="floating-chat-btn">
+      <i class="fas fa-comments"></i>
+      <span class="chat-badge">3</span>
+    </a>
+
+    <!-- CART SIDEBAR -->
+    <div id="cartSidebar" class="cart-sidebar">
+      <div class="cart-header">
+        <h3>Giỏ hàng của bạn</h3>
+        <button id="closeCart">✕</button>
+      </div>
+
+      <div id="cartItems" class="cart-items"></div>
+
+      <div class="cart-total">
+        <p>
+          Tổng cộng: <strong id="cartTotal">0đ</strong>
+        </p>
+        <button class="btn-primary full-width">Thanh toán</button>
+      </div>
+    </div>
+
+    <!-- VỀ STDShop - phiên bản bổ sung nội dung -->
+    <section class="about-brand">
+      <div class="container">
+        <h2 class="section-title">Về STDShop</h2>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              STDShop là nền tảng mua sắm dành riêng cho học sinh, sinh viên tại Việt Nam, được thành lập năm 2024 tại Hà Nội với sứ mệnh <strong>“Mang đến những sản phẩm chất lượng – giá sinh viên”</strong>.
+            </p>
+
+            <p>
+              Hiện nay STDShop đã có mặt tại <strong>15 tỉnh thành</strong>, hợp tác với hơn <strong>800 thương hiệu</strong> và phục vụ hơn <strong>1.200.000 sinh viên</strong> mỗi tháng. Chúng tôi cam kết:
+            </p>
+
+            <ul class="about-features">
+              <li>
+                <i class="fas fa-check-circle"></i> Sản phẩm chất lượng – Giá cả phải chăng
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i> Minh bạch giá – Không phí ẩn, không hàng kém chất lượng
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i> Hỗ trợ 24/7 – Đội ngũ tư vấn tận tâm với sinh viên
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i> Đa dạng sản phẩm – Từ thời trang, học tập đến phụ kiện công nghệ
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i> Ưu đãi liên tục – Giảm giá sâu, freeship cho sinh viên
+              </li>
+            </ul>
+
+            <p>Với đội ngũ hơn 500 nhân viên và hệ thống vận chuyển nhanh chóng, STDShop không chỉ là một cửa hàng online, mà còn là người bạn đồng hành đáng tin cậy trên hành trình học tập và cuộc sống sinh viên của bạn.</p>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <h3>15+</h3>
+              <p>Tỉnh thành</p>
+            </div>
+            <div class="stat-item">
+              <h3>800+</h3>
+              <p>Thương hiệu đối tác</p>
+            </div>
+            <div class="stat-item">
+              <h3>1.2 triệu</h3>
+              <p>Sinh viên sử dụng</p>
+            </div>
+            <div class="stat-item">
+              <h3>48h</h3>
+              <p>Giao hàng toàn quốc</p>
+            </div>
+            <div class="stat-item">
+              <h3>4.8★</h3>
+              <p>Đánh giá trung bình</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HỆ THỐNG CƠ SỞ -->
+    <section class="locations-section">
+      <div class="container">
+        <h2 class="section-title">Hệ thống cơ sở STDShop</h2>
+        <div class="locations-grid">
+          <div class="location-card">
+            <h4>Hà Nội (Trụ sở chính)</h4>
+            <p>
+              45 Trần Duy Hưng, Cầu Giấy<br />Hotline: 1900 636 636
+            </p>
+          </div>
+          <div class="location-card">
+            <h4>Hải Phòng</h4>
+            <p>
+              123 Nguyễn Bỉnh Khiêm, Quận Hồng Bàng<br />Hotline: 1900 636 637
+            </p>
+          </div>
+          <div class="location-card">
+            <h4>TP. Hồ Chí Minh</h4>
+            <p>
+              278 Nguyễn Thị Minh Khai, Quận 3<br />Hotline: 1900 636 638
+            </p>
+          </div>
+          <div class="location-card">
+            <h4>Đà Nẵng</h4>
+            <p>
+              89 Nguyễn Văn Linh, Quận Hải Châu<br />Hotline: 1900 636 639
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER ĐẦY ĐỦ -->
+    <footer class="main-footer">
+      <div class="container">
+        <h2 class="section-title" style="color: white;">Liên hệ & Hỗ trợ 24/7</h2>
+
+        <div class="contact-grid">
+          <!-- Hotline -->
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-phone-volume"></i>
+            </div>
+            <h4>Hotline</h4>
+            <p class="contact-value">
+              <a href="tel:1900636636">1900 636 636</a>
+            </p>
+            <span class="contact-label">Gọi ngay để được hỗ trợ</span>
+          </div>
+
+          <!-- Email -->
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <h4>Email</h4>
+            <p class="contact-value">
+              <a href="mailto:support@stdshop.vn">support@STDShop.vn</a>
+            </p>
+            <span class="contact-label">Phản hồi trong 24h</span>
+          </div>
+
+          <!-- Zalo OA -->
+          <div class="contact-item">
+            <div class="contact-icon zalo-icon">
+              <!-- Dùng hình ảnh thay vì font icon vì FA không có Zalo -->
+              <img src="https://img.icons8.com/color/96/zalo.png" alt="Zalo" width="48" height="48" />
+            </div>
+            <h4>Zalo OA</h4>
+            <p class="contact-value">
+              <a href="https://zalo.me/..." target="_blank">STDShop Official</a>
+            </p>
+            <span class="contact-label">Chat trực tiếp nhanh chóng</span>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="footer-grid" style="padding-top: 30px;">
+          <div style="color: rgb(255, 255, 255);">
+            <h3>STDShop</h3>
+            <p>Nền tảng cung cấp sản phẩm cho sinh viên</p>
+          </div>
+          <div>
+            <h4>Về chúng tôi</h4>
+            <a href="#">Giới thiệu</a><br />
+            <a href="#">Blog</a><br />
+            <a href="#">Tuyển dụng</a>
+          </div>
+          <div>
+            <h4>Dành cho đối tác</h4>
+            <a href="#">Trở thành nhà bán hàng</a><br />
+            <a href="#">Trở thành tài xế</a>
+          </div>
+          <div>
+            <h4>Hỗ trợ</h4>
+            <a href="#">Trung tâm trợ giúp</a><br />
+            <a href="#">Chính sách hoàn tiền</a><br />
+            <a href="#">Điều khoản sử dụng</a>
+          </div>
+          <div>
+            <h4>Theo dõi chúng tôi</h4>
+            <a href="#"><i class="fab fa-facebook"></i> Facebook</a><br />
+            <a href="#"><i class="fab fa-instagram"></i> Instagram</a><br />
+            <a href="#"><i class="fab fa-tiktok"></i> TikTok</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 STDShop - Dự án trang web bán hàng STDShop| All rights reserved</p>
+          <p>Giấy phép kinh doanh: 0101234567 do Sở Kế hoạch & Đầu tư Hà Nội cấp</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/js/order-script.js"></script>
+    <!-- Script ẩn icon kính lúp khi nhập text -->
+
+    <script src="/js/customer-order.js"></script>
+  </body>
+</html>

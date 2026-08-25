@@ -1,0 +1,88 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/html/customer-order.html" style="text-decoration: none;">
+      <div class="logo">
+        <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
+      </div>
+    </a>
+    <!-- Thanh tìm kiếm ở giữa -->
+    <div class="search-bar">
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon" id="searchIcon"></i>
+        <input type="text" id="searchInput" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off" />
+        <button type="submit" class="search-submit-btn"><i class="fas fa-arrow-right"></i></button>
+      </div>
+      <!-- Kết quả tìm kiếm -->
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <button id="cartBtn" class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount" class="cart-count">0</span>
+        </button>
+
+        <div class="cart-dropdown" id="cartDropdown">
+          <h4 class="cart-dropdown-title">Sản phẩm mới thêm</h4>
+          <div class="cart-items-list" id="cartItemsList">
+            <p class="empty-cart-msg">Chưa có sản phẩm</p>
+          </div>
+          <div class="cart-dropdown-footer">
+            <span id="cartStatusText">0 sản phẩm trong giỏ</span>
+            <button class="btn-view-cart" onclick="location.href='cart.html'">Xem Giỏ Hàng</button>
+          </div>
+        </div>
+      </div>
+      <a href="auth.html" class="auth-link">
+        <i class="fas fa-user-circle"></i>
+        <span class="auth-text">Đăng nhập / Đăng ký</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- FLASH SALE -->
+  <section class="flash-sale">
+    <!-- Banner -->
+    <div class="flash-banner">
+      <img src="/css/pic/banner3.png" alt="banner" />
+    </div>
+
+    <!-- Time -->
+    <div class="flash-time">
+      <div class="time-item active">
+        21:00<br /><span>Đang diễn ra</span>
+      </div>
+      <div class="time-item">
+        00:00<br /><span>Tomorrow</span>
+      </div>
+      <div class="time-item">
+        02:00<br /><span>Tomorrow</span>
+      </div>
+      <div class="time-item">
+        09:00<br /><span>Tomorrow</span>
+      </div>
+      <div class="time-item">
+        12:00<br /><span>Tomorrow</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DANH MỤC -->
+  <section class="category-tabs">
+    <div class="tab active">Top sản phẩm nổi bật</div>
+    <div class="tab">Thời trang & phụ kiện</div>
+    <div class="tab">Shopee siêu rẻ</div>
+    <div class="tab">Deal giá sốc</div>
+    <div class="tab">Shop yêu thích</div>
+    <div class="tab">Shop nổi bật</div>
+  </section>
+
+  <!-- SẢN PHẨM -->
+  <div class="flash-sale-grid" id="flashSaleGrid">
+    <!-- JS sẽ render sản phẩm -->
+  </div>
+</div>
+
+<script src="/js/flash-sale.js"></script>=

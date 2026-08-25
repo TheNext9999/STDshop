@@ -1,0 +1,267 @@
+<!-- ==================== PHẦN BẠN ĐÃ CÓ (GIỮ NGUYÊN) ==================== -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/html/customer-order.html" style="text-decoration: none;">
+      <div class="logo">
+        <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
+      </div>
+    </a>
+    <!-- Thanh tìm kiếm ở giữa -->
+    <div class="search-bar">
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon" id="searchIcon"></i>
+        <input type="text" id="searchInput" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off" />
+        <button type="submit" class="search-submit-btn"><i class="fas fa-arrow-right"></i></button>
+      </div>
+      <!-- Kết quả tìm kiếm -->
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="nav-right">
+      <div class="cart-wrapper">
+        <button id="cartBtn" class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cartCount" class="cart-count">0</span>
+        </button>
+
+        <div class="cart-dropdown" id="cartDropdown">
+          <h4 class="cart-dropdown-title">Sản phẩm mới thêm</h4>
+          <div class="cart-items-list" id="cartItemsList">
+            <p class="empty-cart-msg">Chưa có sản phẩm</p>
+          </div>
+          <div class="cart-dropdown-footer">
+            <span id="cartStatusText">0 sản phẩm trong giỏ</span>
+            <button class="btn-view-cart" onclick="location.href='cart.html'">Xem Giỏ Hàng</button>
+          </div>
+        </div>
+      </div>
+      <a href="auth.html" class="auth-link">
+        <i class="fas fa-user-circle"></i>
+        <span class="auth-text">Đăng nhập / Đăng ký</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="product-container">
+  <!-- Ảnh sản phẩm -->
+  <div class="product-image">
+    <div class="main-image">
+      <img id="mainImage" src="" alt="Sản phẩm" />
+    </div>
+
+    <div class="thumbnail-list" id="thumbnailList"></div>
+  </div>
+
+  <!-- Thông tin sản phẩm -->
+  <div class="product-info">
+    <h1 id="productName" class="product-title"></h1>
+
+    <div class="rating">
+      <span id="rating">4.8 ★★★★☆</span>
+      <span style="color:#888;">(324 đánh giá)</span>
+    </div>
+
+    <div class="price">
+      <span id="price"></span>
+      <span id="oldPrice" class="old-price"></span>
+    </div>
+
+    <div class="info-row">
+      <span class="info-label">Người bán:</span>
+      <strong id="sellerName"></strong>
+    </div>
+
+    <div class="variant-section">
+      <!-- MÀU -->
+      <div class="variant-group">
+        <p class="variant-label">Màu sắc</p>
+        <div class="color-options">
+          <div class="color-item active" data-image="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe.webp">
+            <img src="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7tsxdp9xfe.webp" />
+            <span>Trắng in đen</span>
+          </div>
+
+          <div class="color-item" data-image="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja7vmyp2d1f9.webp">
+            <img src="/css/pic/Trắng hồng.webp" />
+            <span>Trắng in hồng</span>
+          </div>
+
+          <div class="color-item" data-image="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja828h1hyt19@resize_w450_nl.webp">
+            <img src="/css/pic/đen.webp" />
+            <span>Đen in trắng</span>
+          </div>
+
+          <div class="color-item" data-image="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja82y004rzed@resize_w450_nl.webp">
+            <img src="/css/pic/đen hồng.webp" />
+            <span>Đen in hồng</span>
+          </div>
+
+          <div class="color-item" data-image="https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lpja80sb5u0lc0.webp">
+            <img src="/css/pic/Xám đen.webp" />
+            <span>Xám in đen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIZE -->
+      <div class="variant-group">
+        <p class="variant-label">Size</p>
+        <div class="size-options">
+          <button class="size-item active">M</button>
+          <button class="size-item">L</button>
+          <button class="size-item">XL</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <span class="info-label">Số lượng</span>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button onclick="changeQuantity(-1)" style="width:38px;height:38px;border:1px solid #ddd;border-radius:8px;">−</button>
+        <span id="quantity" style="font-size:1.4rem; font-weight:600; width:40px; text-align:center;">1</span>
+        <button onclick="changeQuantity(1)" style="width:38px;height:38px;border:1px solid #ddd;border-radius:8px;">+</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-add-cart" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+      <button class="btn-buy-now" onclick="buyNow()" style="font-size: 100%;">Mua ngay</button>
+    </div>
+  </div>
+</div>
+
+<div class="combo-section">
+  <div class="combo-header">
+    <h3>Mua thêm deal sốc</h3>
+    <a href="#">Xem thêm ></a>
+  </div>
+
+  <div class="combo-container">
+    <div class="combo-products" id="comboList"></div>
+
+    <div class="combo-summary">
+      <p>
+        Tổng cộng: <strong id="comboTotal">0đ</strong>
+      </p>
+      <p class="save">
+        Tiết kiệm: <span id="comboSave">0đ</span>
+      </p>
+      <button class="btn-combo">Mua Deal Sốc</button>
+    </div>
+  </div>
+</div>
+
+<div class="shop-section">
+  <div class="shop-left">
+    <img src="https://insacmau.com/wp-content/uploads/2024/11/logo-shop-quan-ao-nam-9.jpg" class="shop-avatar" />
+    <div>
+      <h4>ShopDunk Official Store</h4>
+      <span class="online">Online 8 phút trước</span>
+      <div class="shop-actions">
+        <button class="chat-btn">Chat ngay</button>
+        <button class="view-btn">Xem shop</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shop-right">
+    <div>
+      <p>Đánh giá</p>
+      <strong>45,6k</strong>
+    </div>
+    <div>
+      <p>Sản phẩm</p>
+      <strong>1,2k</strong>
+    </div>
+    <div>
+      <p>Tỉ lệ phản hồi</p>
+      <strong>100%</strong>
+    </div>
+    <div>
+      <p>Người theo dõi</p>
+      <strong>436,6k</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PHẦN MỚI ĐƯỢC THÊM ==================== -->
+
+<!-- MÔ TẢ SẢN PHẨM -->
+<div class="description-section">
+  <div class="shopee-desc">
+    <h2 class="desc-title">MÔ TẢ SẢN PHẨM</h2>
+
+    <div class="desc-box">
+      <p class="desc-highlight">Thời gian giao hàng ước tính cho sản phẩm này là 7-9 ngày</p>
+
+      <div class="desc-section">
+        <h4>Thông tin chi tiết</h4>
+        <ul>
+          <li>Loại sản phẩm: Áo hoodie unisex</li>
+          <li>Chất liệu: Nỉ cotton cao cấp, mềm mại, giữ ấm tốt</li>
+          <li>Form áo: Oversize rộng rãi, thoải mái</li>
+          <li>Kiểu dáng: Có mũ, túi kangaroo phía trước</li>
+          <li>Độ dày: Trung bình - phù hợp mùa thu đông</li>
+          <li>Màu sắc: Nhiều màu (đen, trắng, be, xanh,...)</li>
+          <li>Size: M, L, XL (phù hợp cả nam và nữ)</li>
+        </ul>
+      </div>
+
+      <div class="desc-section">
+        <h4>Hướng dẫn sử dụng</h4>
+        <ol>
+          <li>Giặt máy hoặc giặt tay với nước lạnh</li>
+          <li>Không sử dụng chất tẩy mạnh để tránh phai màu</li>
+          <li>Lộn trái áo khi giặt để giữ hình in bền hơn</li>
+          <li>Phơi ở nơi thoáng mát, tránh ánh nắng gắt</li>
+          <li>Ủi ở nhiệt độ thấp nếu cần thiết</li>
+        </ol>
+      </div>
+
+      <div class="desc-section">
+        <h4>Lưu ý</h4>
+        <p>Tai nghe cần được sạc trước khi sử dụng lần đầu. Nếu không kết nối được, vui lòng thử lại các bước trên.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-section">
+    <h2 class="review-title">ĐÁNH GIÁ SẢN PHẨM</h2>
+
+    <div class="review-box">
+      <!-- Tổng quan -->
+      <div class="review-summary">
+        <div class="review-score">
+          <span class="big-score">4.5</span>
+          <span class="out-of">trên 5</span>
+          <div class="stars">★★★★★</div>
+        </div>
+
+        <!-- Filter -->
+        <div class="review-filters">
+          <button class="filter-btn active">Tất Cả</button>
+          <button class="filter-btn">5 Sao (158)</button>
+          <button class="filter-btn">4 Sao (20)</button>
+          <button class="filter-btn">3 Sao (9)</button>
+          <button class="filter-btn">2 Sao (3)</button>
+          <button class="filter-btn">1 Sao (12)</button>
+          <button class="filter-btn">Có Bình Luận (37)</button>
+          <button class="filter-btn">Có Hình Ảnh / Video (8)</button>
+        </div>
+      </div>
+
+      <!-- Danh sách review -->
+      <div id="reviewsContainer"></div>
+    </div>
+  </div>
+  <!-- ==================== PHẦN GỢI Ý SẢN PHẨM (Giống Shopee) ==================== -->
+  <section class="recommended-section">
+    <div class="container">
+      <h2 class="section-title">CÓ THỂ BẠN CŨNG THÍCH</h2>
+      <div class="recommended-grid" id="recommendedGrid">
+        <!-- JS sẽ render sản phẩm vào đây -->
+      </div>
+    </div>
+  </section>
+  <script src="/js/dish-detail.js"></script>
+</div>

@@ -1,0 +1,483 @@
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-container">
+
+    <!-- LOGO -->
+    <div class="logo">
+      
+      <!-- Hình ảnh logo -->
+      <img src="/css/pic/marketlogo.png" alt="STD Logo" class="logo-img">
+
+      <!-- Text logo -->
+      <div class="logo-text" style="padding-right: 10px;">
+        <span>STD Market</span>
+        <span class="logo-badge">THANH LÝ</span>
+      </div>
+
+    </div>
+
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Tìm laptop, áo, sách, tai nghe... cũ giá rẻ"
+      >
+    </div>
+
+    <div class="nav-right">
+      <div class="cart-icon" onclick="showToast('Giỏ hàng của bạn đang trống','warning')">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">2</span>
+      </div>
+
+      <button class="nav-btn btn-orders" onclick="openOrders()">
+        <i class="fas fa-box"></i> Đơn hàng
+      </button>
+
+      <a href="/html/landing-seller.html"><button class="nav-btn btn-sell">
+        <i class="fas fa-plus"></i> Thanh lý
+      </button></a>
+
+      <button class="nav-btn btn-login">
+        <i class="fas fa-user-circle"></i> Thành Đạt
+      </button>
+    </div>
+
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-banner">
+  <img src="/css/pic/banmar1.png" alt="Banner" class="hero-bg">
+</section>
+
+
+
+<!-- CATEGORIES -->
+<div class="cat-section">
+  <h2 class="section-title">📦 Danh Mục Thanh Lý</h2>
+  <div class="cat-grid" id="catGrid">
+    <div class="cat-card active" onclick="filterCat('all',this)"><div class="cat-icon">🏠</div>Tất cả</div>
+    <div class="cat-card" onclick="filterCat('laptop',this)"><div class="cat-icon">💻</div>Laptop</div>
+    <div class="cat-card" onclick="filterCat('phone',this)"><div class="cat-icon">📱</div>Điện thoại</div>
+    <div class="cat-card" onclick="filterCat('clothes',this)"><div class="cat-icon">👕</div>Thời trang</div>
+    <div class="cat-card" onclick="filterCat('shoes',this)"><div class="cat-icon">👟</div>Giày dép</div>
+    <div class="cat-card" onclick="filterCat('books',this)"><div class="cat-icon">📚</div>Sách vở</div>
+    <div class="cat-card" onclick="filterCat('bag',this)"><div class="cat-icon">🎒</div>Balo & Túi</div>
+    <div class="cat-card" onclick="filterCat('audio',this)"><div class="cat-icon">🎧</div>Tai nghe</div>
+    <div class="cat-card" onclick="filterCat('furniture',this)"><div class="cat-icon">🪑</div>Nội thất</div>
+    <div class="cat-card" onclick="filterCat('sport',this)"><div class="cat-icon">⚽</div>Thể thao</div>
+    <div class="cat-card" onclick="filterCat('beauty',this)"><div class="cat-icon">💄</div>Mỹ phẩm</div>
+    <div class="cat-card" onclick="filterCat('camera',this)"><div class="cat-icon">📷</div>Máy ảnh</div>
+    <div class="cat-card" onclick="filterCat('tablet',this)">
+  <div class="cat-icon">📱</div>
+  Tablet
+</div>
+
+<div class="cat-card" onclick="filterCat('bike',this)">
+  <div class="cat-icon">🚲</div>
+  Xe đạp
+</div>
+
+<div class="cat-card" onclick="filterCat('keyboard',this)">
+  <div class="cat-icon">⌨️</div>
+  Bàn phím
+</div>
+
+<div class="cat-card" onclick="filterCat('gaming',this)">
+  <div class="cat-icon">🎮</div>
+  Gaming
+</div>
+
+<div class="cat-card" onclick="filterCat('dorm',this)">
+  <div class="cat-icon">🛏️</div>
+  Đồ ký túc
+</div>
+
+<div class="cat-card" onclick="filterCat('course',this)">
+  <div class="cat-icon">📝</div>
+  Tài liệu học
+</div>
+
+<div class="cat-card" onclick="filterCat('kitchen',this)">
+  <div class="cat-icon">🍳</div>
+  Đồ nhà bếp
+</div>
+
+<div class="cat-card" onclick="filterCat('parttime',this)">
+  <div class="cat-icon">💼</div>
+  Tài liệu thực tập
+</div>
+<div class="cat-card" onclick="filterCat('study',this)">
+  <div class="cat-icon">🎓</div>
+  Đồ học tập
+</div>
+
+<div class="cat-card" onclick="filterCat('hostel',this)">
+  <div class="cat-icon">🏡</div>
+  Đồ phòng trọ
+</div>
+
+<div class="cat-card" onclick="filterCat('exam',this)">
+  <div class="cat-icon">📖</div>
+  Tài liệu ôn thi
+</div>
+
+<div class="cat-card" onclick="filterCat('accessory',this)">
+  <div class="cat-icon">🧢</div>
+  Phụ kiện
+</div>
+
+<div class="cat-card" onclick="filterCat('electric',this)">
+  <div class="cat-icon">🔌</div>
+  Đồ điện tử
+</div>
+
+<div class="cat-card" onclick="filterCat('food',this)">
+  <div class="cat-icon">🍔</div>
+  Đồ ăn & Thức uống
+</div>
+  </div>
+</div>
+
+
+
+<!-- MAIN PRODUCT SECTION -->
+<div class="section">
+  <h2 class="section-title">🔥 Sản Phẩm Nổi Bật</h2>
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <span class="filter-label">Lọc:</span>
+    <div class="filter-tags">
+      <span class="filter-tag active" onclick="toggleFilter(this,'condition','all')">Tất cả</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'condition','new')">Mới 100%</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'condition','like-new')">Như mới (95%+)</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'condition','used')">Đã dùng</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'price','cheap')">Dưới 200k</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'price','mid')">200k–1 triệu</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'price','high')">Trên 1 triệu</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'special','verified')">✅ Đã xác minh</span>
+      <span class="filter-tag" onclick="toggleFilter(this,'special','flash')">⚡ Flash Sale</span>
+    </div>
+    <select class="sort-select">
+      <option>Mới nhất</option>
+      <option>Giá thấp → cao</option>
+      <option>Giá cao → thấp</option>
+      <option>Phổ biến nhất</option>
+      <option>Đánh giá cao</option>
+    </select>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+  <div style="text-align:center;margin-top:28px">
+    <button class="nav-btn btn-sell" style="padding:12px 32px;font-size:1rem" onclick="showToast('Đang tải thêm sản phẩm...','')"><i class="fas fa-plus"></i> Hiển thị thêm sản phẩm</button>
+  </div>
+</div>
+<!-- HOW IT WORKS -->
+<div class="how-section section" style="margin-top:40px">
+  <h2 class="section-title">🛡️ Cách Giao Dịch An Toàn</h2>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-icon"><i class="fas fa-search"></i></div>
+      <h4>Tìm sản phẩm</h4>
+      <p>Duyệt hàng nghìn sản phẩm được kiểm duyệt từ sinh viên</p>
+    </div>
+    <div class="step">
+      <div class="step-icon"><i class="fas fa-comments"></i></div>
+      <h4>Chat & thỏa thuận</h4>
+      <p>Nhắn tin trực tiếp, hỏi thêm chi tiết, deal giá tốt hơn</p>
+    </div>
+    <div class="step">
+      <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+      <h4>Thanh toán escrow</h4>
+      <p>STDShop giữ tiền an toàn cho đến khi bạn nhận được hàng</p>
+    </div>
+    <div class="step">
+      <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+      <h4>Xác nhận & đánh giá</h4>
+      <p>Nhận hàng ổn → xác nhận → tiền trả cho người bán</p>
+    </div>
+  </div>
+  <div class="escrow-note">
+    <i class="fas fa-lock"></i>
+    <div>
+      <strong>Bảo vệ Escrow – Tiền không đến tay người bán cho đến khi bạn xác nhận nhận hàng!</strong> Nếu hàng không đúng mô tả, bạn có thể mở khiếu nại trong 48h. Tiền tự động giải phóng sau <strong>5 ngày</strong> nếu bạn không phản hồi.
+    </div>
+  </div>
+</div>
+
+<!-- VIP BANNER -->
+<div class="vip-banner">
+  <h2>🌟 Trở thành STD VIP – Bảo vệ & ưu đãi tối đa!</h2>
+  <p>Phí chỉ 49k/tháng • Ưu tiên giải quyết khiếu nại • Đăng tối đa 50 sản phẩm • Badge "VIP Seller"</p>
+  <button class="vip-btn">Đăng ký STD VIP ngay</button>
+</div>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">STD Market</div>
+      <p>Sàn mua bán đồ cũ an toàn nhất dành cho sinh viên Việt Nam. Bảo vệ người mua 100% với escrow.</p>
+    </div>
+    <div><h4>Mua hàng</h4><a href="#">Cách mua an toàn</a><a href="#">Chính sách hoàn tiền</a><a href="#">Escrow là gì?</a><a href="#">Báo cáo sản phẩm</a></div>
+    <div><h4>Bán hàng</h4><a href="#">Hướng dẫn đăng bán</a><a href="#">Quy định sản phẩm</a><a href="#">STD VIP Seller</a><a href="#">Rút tiền</a></div>
+    <div><h4>Hỗ trợ</h4><a href="#">Hotline: 1900 636 636</a><a href="#">support@stdshop.vn</a><a href="#">Trung tâm trợ giúp</a><a href="#">Điều khoản sử dụng</a></div>
+  </div>
+  <div class="footer-bottom">© 2026 STDShop – Dự án Sàn Thanh Lý Sinh Viên | All rights reserved</div>
+</footer>
+
+<!-- FLOATING BUTTONS -->
+<div class="floating-btns">
+  <div style="position:relative">
+    <button class="float-btn float-chat-btn" onclick="openModal('chatModal')"><i class="fas fa-comments"></i></button>
+    <span class="float-badge">3</span>
+  </div>
+  <button class="float-btn float-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" id="productModalContent">
+    <div class="modal-header">
+      <h3 id="modalTitle">Chi tiết sản phẩm</h3>
+      <button class="modal-close" onclick="closeModal&#40;'productModal'&#41;"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="product-detail-grid">
+        <div>
+          <div class="product-detail-imgs">
+            <img id="modalImg" src="" alt="">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px" id="modalThumbRow"></div>
+        </div>
+        <div class="product-detail-info">
+          <h2 id="modalName"></h2>
+          <div class="price-big" id="modalPrice"></div>
+          <span class="old-price-big" id="modalOldPrice"></span>
+          <div id="modalConditionTag"></div>
+          <div class="product-meta" id="modalMeta"></div>
+          <div class="action-btns">
+            <button class="btn-primary-full btn-buy" onclick="openModal('payModal')"><i class="fas fa-shield-alt"></i> Mua qua STDShop (Escrow) ★ Khuyên dùng</button>
+            <button class="btn-primary-full btn-chat" onclick="openModal('chatModal')"><i class="fas fa-comments"></i> Nhắn tin với người bán</button>
+            <button class="btn-primary-full btn-cod"><i class="fas fa-handshake"></i> Gặp trực tiếp (COD sinh viên)</button>
+          </div>
+          <div class="seller-card" id="modalSellerCard"></div>
+          <div class="report-link" onclick="openModal('reportModal')"><i class="fas fa-flag"></i> Báo cáo sản phẩm / người bán</div>
+        </div>
+      </div>
+      <!-- Escrow Tracker -->
+      <div class="escrow-tracker">
+        <h4>🔒 Trạng thái giao dịch (Escrow)</h4>
+        <div class="tracker-steps" id="trackerSteps">
+          <div class="tracker-progress" id="trackerBar"></div>
+          <div class="tracker-step done"><div class="tracker-icon"><i class="fas fa-check"></i></div><div class="tracker-step-label">Đã thanh toán</div></div>
+          <div class="tracker-step done"><div class="tracker-icon"><i class="fas fa-check"></i></div><div class="tracker-step-label">Người bán gửi hàng</div></div>
+          <div class="tracker-step current"><div class="tracker-icon"><i class="fas fa-truck"></i></div><div class="tracker-step-label">Đang vận chuyển</div></div>
+          <div class="tracker-step"><div class="tracker-icon"><i class="fas fa-box"></i></div><div class="tracker-step-label">Đã nhận hàng</div></div>
+          <div class="tracker-step"><div class="tracker-icon"><i class="fas fa-star"></i></div><div class="tracker-step-label">Đánh giá</div></div>
+        </div>
+        <button class="confirm-delivery-btn" onclick="openModal('reviewModal')"><i class="fas fa-check-circle"></i> Xác nhận đã nhận hàng → Giải phóng tiền cho người bán</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <h3>💳 Chọn phương thức thanh toán</h3>
+      <button class="modal-close" onclick="closeModal('payModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="pay-option selected" id="optA" onclick="selectPay('A')">
+        <div class="pay-option-title"><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Thanh toán qua STDShop Escrow <span class="pay-recommended">★ KHUYÊN DÙNG</span></div>
+        <div class="pay-option-desc">Tiền được giữ an toàn. Chỉ trả cho người bán khi bạn xác nhận nhận hàng ổn.</div>
+      </div>
+      <div class="escrow-flow" id="escrowFlow">
+        <div class="escrow-step"><div class="escrow-step-num">1</div><span>Bạn thanh toán → STDShop giữ tiền trong escrow</span></div>
+        <div class="escrow-step"><div class="escrow-step-num">2</div><span>Người bán giao hàng trong 48h</span></div>
+        <div class="escrow-step"><div class="escrow-step-num">3</div><span>Bạn xác nhận nhận hàng ổn</span></div>
+        <div class="escrow-step"><div class="escrow-step-num">4</div><span>STDShop chuyển tiền cho người bán</span></div>
+        <div style="font-size:.8rem;color:var(--text-muted);margin-top:8px;padding-left:32px">⏰ Tự động giải phóng sau <strong>5 ngày</strong> nếu không phản hồi. Khiếu nại trong vòng 48h.</div>
+      </div>
+      <div class="pay-option" id="optB" onclick="selectPay('B')" style="margin-top:12px">
+        <div class="pay-option-title"><i class="fas fa-handshake" style="color:var(--warning)"></i> Gặp trực tiếp (COD)</div>
+        <div class="pay-option-desc">Tự thỏa thuận & gặp gỡ. Không có bảo vệ từ STDShop. Chỉ dùng với người bán đã quen.</div>
+      </div>
+      <button class="btn-primary-full btn-buy" style="margin-top:20px" onclick="closeModal('payModal');showToast('Thanh toán thành công! Tiền đang được giữ bởi STDShop.','success')">
+        <i class="fas fa-lock"></i> Xác nhận thanh toán an toàn
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div class="modal-overlay" id="chatModal">
+  <div class="modal chat-modal">
+    <div class="modal-header">
+      <h3><i class="fas fa-comments" style="color:var(--primary)"></i> Chat với người bán</h3>
+      <button class="modal-close" onclick="closeModal('chatModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--primary-light);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:.85rem;color:var(--accent);display:flex;align-items:center;gap:8px">
+        <i class="fas fa-shield-alt"></i> Giao dịch qua STDShop để được bảo vệ. Không chuyển tiền trực tiếp ngoài sàn!
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div>
+          <div class="msg-sender">Minh Tuấn (Người bán)</div>
+          <div class="msg msg-seller">Chào bạn! Laptop mình còn bảo hành 8 tháng, pin còn 85%. Bạn muốn xem thêm ảnh không? 😊</div>
+          <div class="msg-time">10:30</div>
+        </div>
+        <div>
+          <div class="msg msg-buyer">Cho mình hỏi máy có bị lỗi gì không? Mình cần dùng để code và chạy máy ảo</div>
+          <div class="msg-time">10:32</div>
+        </div>
+        <div>
+          <div class="msg-sender">Minh Tuấn (Người bán)</div>
+          <div class="msg msg-seller">Máy chạy tốt lắm bạn ơi! RAM 16GB, SSD 512GB, mình dùng dev cả năm không vấn đề. Có thể deal thêm 200k nha!</div>
+          <div class="msg-time">10:33</div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Nhập tin nhắn hoặc đề nghị giá..." onkeypress="if(event.key==='Enter')sendMsg()">
+        <button onclick="sendImg()" style="background:var(--primary-light);color:var(--primary);border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1rem"><i class="fas fa-image"></i></button>
+        <button class="chat-send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+        <button onclick="quickMsg('Bạn có thể giảm thêm không?')" class="tip-tag">💬 Deal giá</button>
+        <button onclick="quickMsg('Sản phẩm còn không? Mình muốn mua ngay.')" class="tip-tag">✅ Còn hàng?</button>
+        <button onclick="quickMsg('Cho mình xem thêm ảnh thực tế nhé!')" class="tip-tag">📷 Xem ảnh</button>
+        <button onclick="quickMsg('Mình ở Hải Phòng, mình có thể gặp trực tiếp không?')" class="tip-tag">📍 Gặp trực tiếp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <h3><i class="fas fa-flag" style="color:var(--danger)"></i> Báo cáo / Khiếu nại</h3>
+      <button class="modal-close" onclick="closeModal('reportModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:16px">Chọn lý do báo cáo:</p>
+      <div class="report-option"><input type="radio" name="rpt" checked> <div><div style="font-weight:600">🏷️ Sản phẩm không đúng mô tả</div><div style="font-size:.82rem;color:var(--text-muted)">Hàng thực tế khác với hình ảnh / thông tin</div></div></div>
+      <div class="report-option"><input type="radio" name="rpt"> <div><div style="font-weight:600">⚠️ Hàng giả / hàng nhái</div><div style="font-size:.82rem;color:var(--text-muted)">Sản phẩm không rõ nguồn gốc hoặc giả mạo</div></div></div>
+      <div class="report-option"><input type="radio" name="rpt"> <div><div style="font-weight:600">🚫 Người bán lừa đảo</div><div style="font-size:.82rem;color:var(--text-muted)">Lấy tiền nhưng không giao hàng hoặc chặn liên lạc</div></div></div>
+      <div class="report-option"><input type="radio" name="rpt"> <div><div style="font-weight:600">💬 Nội dung không phù hợp</div><div style="font-size:.82rem;color:var(--text-muted)">Ảnh / nội dung vi phạm quy định</div></div></div>
+      <div class="report-option"><input type="radio" name="rpt"> <div><div style="font-weight:600">⚖️ Mở tranh chấp (Dispute)</div><div style="font-size:.82rem;color:var(--text-muted)">Yêu cầu STDShop can thiệp & hoàn tiền</div></div></div>
+      <textarea class="review-textarea" placeholder="Mô tả chi tiết (tuỳ chọn)..." style="margin-top:12px"></textarea>
+      <div class="dispute-note"><i class="fas fa-info-circle"></i> Tranh chấp sẽ được xem xét trong <strong>24–48h</strong>. Đội ngũ STDShop sẽ liên hệ để giải quyết. Tiền escrow sẽ tạm giữ trong thời gian này.</div>
+      <button class="btn-primary-full btn-buy" style="margin-top:16px" onclick="closeModal('reportModal');showToast('Báo cáo đã được gửi! Chúng tôi sẽ xem xét trong 24h.','success')"><i class="fas fa-paper-plane"></i> Gửi báo cáo</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <h3>⭐ Đánh giá sau giao dịch</h3>
+      <button class="modal-close" onclick="closeModal('reviewModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-weight:600;margin-bottom:6px">Đánh giá uy tín người bán:</p>
+      <div class="star-select" id="sellerStars">
+        <span onclick="setStars('sellerStars',1)">★</span><span onclick="setStars('sellerStars',2)">★</span><span onclick="setStars('sellerStars',3)">★</span><span onclick="setStars('sellerStars',4)" class="active">★</span><span onclick="setStars('sellerStars',5)">★</span>
+      </div>
+      <p style="font-weight:600;margin:12px 0 6px">Đánh giá sản phẩm:</p>
+      <div class="star-select" id="productStars">
+        <span onclick="setStars('productStars',1)">★</span><span onclick="setStars('productStars',2)">★</span><span onclick="setStars('productStars',3)">★</span><span onclick="setStars('productStars',4)" class="active">★</span><span onclick="setStars('productStars',5)">★</span>
+      </div>
+      <textarea class="review-textarea" placeholder="Nhận xét về sản phẩm và người bán..." style="margin-top:12px"></textarea>
+      <div style="margin-top:12px;font-size:.85rem;color:var(--text-muted)">Tags nhanh:</div>
+      <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">
+        <span class="tip-tag" onclick="this.classList.toggle('selected')" style="cursor:pointer">✅ Đúng mô tả</span>
+        <span class="tip-tag" onclick="this.classList.toggle('selected')" style="cursor:pointer">📦 Đóng gói tốt</span>
+        <span class="tip-tag" onclick="this.classList.toggle('selected')" style="cursor:pointer">💬 Phản hồi nhanh</span>
+        <span class="tip-tag" onclick="this.classList.toggle('selected')" style="cursor:pointer">🤝 Đáng tin cậy</span>
+        <span class="tip-tag" onclick="this.classList.toggle('selected')" style="cursor:pointer">💰 Giá hợp lý</span>
+      </div>
+      <button class="btn-primary-full btn-buy" style="margin-top:18px" onclick="closeModal('reviewModal');showToast('Cảm ơn bạn đã đánh giá! Tiền đã được giải phóng cho người bán ✓','success')"><i class="fas fa-star"></i> Gửi đánh giá & Giải phóng tiền</button>
+    </div>
+  </div>
+</div>
+
+<!-- SELL MODAL -->
+<div class="modal-overlay" id="sellModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h3><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Đăng sản phẩm thanh lý</h3>
+      <button class="modal-close" onclick="closeModal('sellModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="img-upload"><i class="fas fa-camera"></i><p style="font-size:.9rem">Nhấn để tải ảnh sản phẩm (tối đa 10 ảnh)</p><p style="font-size:.78rem;margin-top:4px">JPG, PNG, max 5MB/ảnh</p></div>
+      <div class="form-group" style="margin-top:16px"><label>Tên sản phẩm *</label><input type="text" placeholder="VD: Laptop Dell XPS 13 2022 – 16GB RAM, SSD 512GB"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label>Danh mục *</label><select><option>Laptop & Máy tính</option><option>Điện thoại</option><option>Thời trang</option><option>Sách & Học tập</option><option>Balo & Túi xách</option><option>Tai nghe & Âm thanh</option><option>Đồ gia dụng</option><option>Thể thao</option><option>Khác</option></select></div>
+        <div class="form-group"><label>Tình trạng *</label><select><option>Mới 100% (chưa dùng)</option><option>Như mới (95%+)</option><option>Đã dùng – còn tốt</option><option>Cần sửa nhỏ</option></select></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label>Giá bán (VNĐ) *</label><input type="number" placeholder="VD: 3500000"></div>
+        <div class="form-group"><label>Giá gốc (không bắt buộc)</label><input type="number" placeholder="VD: 8000000"></div>
+      </div>
+      <div class="form-group"><label>Mô tả chi tiết *</label><textarea rows="4" placeholder="Mô tả tình trạng, lý do bán, những điểm cần lưu ý..."></textarea></div>
+      <div class="form-group"><label>Địa điểm giao hàng *</label><input type="text" placeholder="VD: Đại học Hải Phòng, Lê Chân, Hải Phòng"></div>
+      <div style="background:var(--primary-xlight);border-radius:var(--radius-sm);padding:12px;font-size:.85rem;margin-bottom:16px;border:1px solid var(--border)">
+        💡 <strong>Tips đăng bán nhanh:</strong> Ảnh rõ ràng từ 4+ góc độ · Ghi rõ tình trạng · Giá hợp lý · Phản hồi nhanh = bán nhanh hơn 3×
+      </div>
+      <button class="btn-primary-full btn-buy" onclick="closeModal('sellModal');showToast('Sản phẩm đã được đăng thành công! 🎉','success')"><i class="fas fa-check"></i> Đăng sản phẩm ngay</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDERS PANEL -->
+<div class="orders-modal-overlay" id="ordersOverlay" onclick="if(event.target===this)closeOrders()">
+  <div class="orders-panel">
+    <div class="orders-panel-header">
+      <h3><i class="fas fa-box" style="color:var(--primary)"></i> Quản lý đơn hàng</h3>
+      <button class="modal-close" onclick="closeOrders()"><i class="fas fa-times"></i></button>
+    </div>
+    <!-- Tabs -->
+    <div class="orders-tabs">
+      <div class="orders-tab active" onclick="switchTab('all',this)">Tất cả <span id="tabAllCount" style="background:var(--primary);color:white;font-size:.65rem;padding:1px 6px;border-radius:10px;margin-left:4px">6</span></div>
+      <div class="orders-tab" onclick="switchTab('pending',this)">Chờ xác nhận</div>
+      <div class="orders-tab" onclick="switchTab('shipping',this)">Đang vận chuyển</div>
+      <div class="orders-tab" onclick="switchTab('delivered',this)">Đã nhận hàng</div>
+      <div class="orders-tab" onclick="switchTab('cancelled',this)">Đã huỷ</div>
+    </div>
+    <div class="orders-body">
+      <!-- Summary row -->
+      <div class="orders-summary-row">
+        <div class="orders-summary-card" onclick="switchTabById('pending')">
+          <div class="count" id="sumPending">2</div>
+          <div class="label">⏳ Chờ xác nhận</div>
+        </div>
+        <div class="orders-summary-card" onclick="switchTabById('shipping')">
+          <div class="count" id="sumShipping">2</div>
+          <div class="label">🚚 Đang giao</div>
+        </div>
+        <div class="orders-summary-card" onclick="switchTabById('delivered')">
+          <div class="count" id="sumDelivered">1</div>
+          <div class="label">✅ Đã nhận</div>
+        </div>
+        <div class="orders-summary-card" onclick="switchTabById('cancelled')">
+          <div class="count" id="sumCancelled">1</div>
+          <div class="label">❌ Đã huỷ</div>
+        </div>
+      </div>
+      <!-- Order list -->
+      <div id="ordersList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toastEl"></div>
+
+
+<script src="/js/landing-user.js"></script>

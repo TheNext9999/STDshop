@@ -1,0 +1,64 @@
+<div class="chat-container">
+  <!-- Danh sách chat -->
+  <div class="chat-list">
+    <div class="chat-header">
+      <i class="fas fa-comments"></i> Chat (3)
+    </div>
+
+    <div class="search-chat">
+      <input type="text" placeholder="Tìm theo tên..." />
+    </div>
+
+    <!-- Danh sách cuộc trò chuyện -->
+    <div class="chat-item active" onclick="openChat(1)">
+      <img src="https://picsum.photos/id/64/80/80" alt="" />
+      <div class="chat-info">
+        <div class="chat-name">Nguyễn Thị Lan</div>
+        <div class="chat-lastmsg">Cảm ơn bạn nha</div>
+      </div>
+      <div class="chat-time">14:32</div>
+    </div>
+
+    <div class="chat-item" onclick="openChat(2)">
+      <img src="https://picsum.photos/id/201/80/80" alt="" />
+      <div class="chat-info">
+        <div class="chat-name">Trần Minh Quân</div>
+        <div class="chat-lastmsg">Hãy đánh giá sản phẩm nha bạn</div>
+      </div>
+      <div class="chat-time">11:05</div>
+    </div>
+
+    <div class="chat-item" onclick="openChat(3)">
+      <img src="https://picsum.photos/id/237/80/80" alt="" />
+      <div class="chat-info">
+        <div class="chat-name">Lê Hoàng Việt</div>
+        <div class="chat-lastmsg">Đơn hàng của bạn đã hoàn thành</div>
+      </div>
+      <div class="chat-time">Hôm qua</div>
+    </div>
+  </div>
+
+  <!-- Phần chat chính -->
+  <div class="chat-main">
+    <!-- Màn hình chào mừng khi chưa chọn chat -->
+    <div class="chat-welcome" id="welcomeScreen">
+      <img src="/css/pic/logochat.png" alt="Chat" />
+      <h2>Chào mừng đến với STDShop Chat</h2>
+      <p>Bắt đầu trò chuyện với người bán ngay bây giờ!</p>
+    </div>
+
+    <!-- Khu vực chat thực tế -->
+    <div class="chat-box" id="chatBox">
+      <!-- Tin nhắn sẽ được thêm bằng JS -->
+    </div>
+
+    <!-- Ô nhập tin nhắn -->
+    <div class="chat-input-area">
+      <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." />
+        <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/js/chat.js"></script>
