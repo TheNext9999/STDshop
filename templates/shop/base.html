@@ -42,20 +42,41 @@
         <div class="nav-right">
           <button id="openCartBtn" id="cartBtn" class="cart-icon">
             <i class="fas fa-shopping-cart"></i>
-            <span id="cartCount" class="cart-count">0</span>
+            <span id="cartCount" class="cart-count">{{ cartItems|default:0 }}</span>
           </button>
-          <a href="/html/auth.html" style="text-decoration-line: none;">
+
+          {% if user.is_authenticated %}
+          <div class="user-menu" id="navUser">
+            <div class="auth-link" id="authLink">
+              <i class="fas fa-user-circle"></i>
+              <span class="auth-text">{{ user.first_name|default:user.username }}</span>
+              <i class="fas fa-caret-down"></i>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+              <p style="padding:8px 16px 4px;color:#999;font-size:.85rem;margin:0;">Đăng nhập với</p>
+              <p style="padding:0 16px 10px;font-weight:600;margin:0;">{{ user.first_name|default:user.username }}</p>
+              <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Hồ sơ cá nhân</a>
+              <a href="{% url 'order_history' %}"><i class="fas fa-box"></i> Đơn hàng của tôi</a>
+              <a href="{% url 'wishlist' %}"><i class="fas fa-heart"></i> Yêu thích</a>
+              <a href="{% url 'post_product' %}"><i class="fas fa-store"></i> Đăng bán sản phẩm</a>
+              <a href="{% url 'my_products' %}"><i class="fas fa-boxes"></i> Sản phẩm tôi đã đăng</a>
+              <a href="{% url 'voucher' %}"><i class="fas fa-ticket-alt"></i> Voucher &amp; Điểm</a>
+              {% if user.is_staff %}
+              <a href="{% url 'admin_dashboard' %}" style="color:#7c3aed;"><i class="fas fa-shield-alt"></i> Admin Panel</a>
+              {% endif %}
+              <a href="{% url 'logout' %}" style="color:#e74c3c;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+            </div>
+          </div>
+          {% else %}
+          <a href="{% url 'login' %}" style="text-decoration-line: none;">
             <div class="user-menu">
-              <div class="auth-link" id="authLink">
+              <div class="auth-link">
                 <i class="fas fa-user-circle"></i>
-                <span class="auth-text" id="authText">Đăng nhập / Đăng ký</span>
-                <i class="fas fa-caret-down"></i>
-              </div>
-              <div class="user-dropdown" id="userDropdown">
-                <button id="logoutBtn">Đăng xuất</button>
+                <span class="auth-text">Đăng nhập / Đăng ký</span>
               </div>
             </div>
           </a>
+          {% endif %}
         </div>
       </div>
     </nav>

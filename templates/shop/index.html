@@ -168,7 +168,27 @@
           <button class="flash-nav-btn left" id="flashLeft">‹</button>
 
           <div class="flash-sale-grid" id="flashSaleGrid">
-            <!-- JS sẽ render sản phẩm -->
+            {% load shop_filters %}
+            {% for product in products|flash_sale_only %}
+            <div class="flash-card">
+                <div style="position:relative;">
+                    <img src="{{ product.ImageURL }}" alt="{{ product.name }}">
+                    {% if product.discount_percent %}
+                    <div class="discount-badge">-{{ product.discount_percent }}%</div>
+                    {% endif %}
+                </div>
+                <div class="flash-info">
+                    <div class="flash-name" style="font-size:.82rem;font-weight:600;color:#222;margin-bottom:4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ product.name }}</div>
+                    <div class="flash-price">{{ product.sale_price|vnd }}</div>
+                    {% if product.discount_percent %}
+                    <div class="flash-old-price">{{ product.price|vnd }}</div>
+                    {% endif %}
+                    <div class="sold-badge">BÁN CHẠY • {{ product.sold }}</div>
+                </div>
+            </div>
+            {% empty %}
+            <p style="color:white;">Chưa có sản phẩm Flash Sale nào.</p>
+            {% endfor %}
           </div>
 
           <button class="flash-nav-btn right" id="flashRight">›</button>
@@ -176,12 +196,16 @@
       </div>
     </section>
 
-    <!-- TRENDING / GỢI Ý HÔM NAY -->
+    <!-- TRENDING / GỢI Ý HÔM NAY (5 sản phẩm bán chạy nhất) -->
     <section class="trending-section">
       <div class="container">
         <h2 class="section-title">Gợi ý hôm nay</h2>
         <div class="product-grid" id="trendingGrid">
-          <!-- JS render -->
+            {% for product in products|top_sold:5 %}
+                {% include "shop/partials/product_card.html" %}
+            {% empty %}
+                <p>Chưa có sản phẩm nào trong cửa hàng.</p>
+            {% endfor %}
         </div>
       </div>
     </section>
@@ -190,7 +214,11 @@
     <section class="dishes-section">
       <div class="container">
         <div class="product-grid" id="dishGrid">
-          <!-- JS render tất cả sản phẩm -->
+            {% for product in products %}
+                {% include "shop/partials/product_card.html" %}
+            {% empty %}
+                <p>Chưa có sản phẩm nào trong cửa hàng.</p>
+            {% endfor %}
         </div>
       </div>
     </section>

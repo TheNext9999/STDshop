@@ -1,0 +1,103 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}STDShop - Đăng nhập / Đăng ký{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <!-- Bên trái Logo -->
+    <div class="left-panel">
+        <div class="logo-box">
+            <img src="{% static 'css/pic/STDLogo2.png' %}" alt="STDShop Logo">
+            <h1>STDShop</h1>
+            <p>Nền tảng mua sắm dành riêng cho sinh viên<br>Trường Đại học Công Nghệ Đông Á</p>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div style="padding-left: 200px;">
+        <div class="form-panel">
+            <div class="tab-header">
+                <div class="tab {% if active_tab != 'register' %}active{% endif %}" id="tab-login">Đăng nhập</div>
+                <div class="tab {% if active_tab == 'register' %}active{% endif %}" id="tab-register">Đăng ký</div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color:#e74c3c; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <!-- ===== FORM ĐĂNG NHẬP ===== -->
+            <form id="form-login" method="post" action="{% url 'login' %}"
+                  style="{% if active_tab == 'register' %}display:none;{% endif %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Tên đăng nhập</label>
+                    <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <button type="submit" class="btn-login">ĐĂNG NHẬP</button>
+            </form>
+
+            <!-- ===== FORM ĐĂNG KÝ ===== -->
+            <form id="form-register" method="post" action="{% url 'register' %}"
+                  style="{% if active_tab != 'register' %}display:none;{% endif %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Tên đăng nhập</label>
+                    <input type="text" name="username" placeholder="Đặt tên đăng nhập" required>
+                    {% if form.username.errors %}<p style="color:#e74c3c;font-size:.85rem;">{{ form.username.errors|striptags }}</p>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" name="first_name" placeholder="Nhập họ tên">
+                </div>
+                <div class="form-group">
+                    <label>Email sinh viên</label>
+                    <input type="email" name="email" placeholder="ví dụ: ten.sinhvien@sinhvien.edu.vn">
+                    {% if form.email.errors %}<p style="color:#e74c3c;font-size:.85rem;">{{ form.email.errors|striptags }}</p>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password1" placeholder="Tạo mật khẩu" required>
+                    {% if form.password1.errors %}<p style="color:#e74c3c;font-size:.85rem;">{{ form.password1.errors|striptags }}</p>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu</label>
+                    <input type="password" name="password2" placeholder="Nhập lại mật khẩu" required>
+                    {% if form.password2.errors %}<p style="color:#e74c3c;font-size:.85rem;">{{ form.password2.errors|striptags }}</p>{% endif %}
+                </div>
+                <button type="submit" class="btn-login">ĐĂNG KÝ</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Chuyển tab hiển thị (thuần giao diện) - việc xử lý đăng nhập/đăng ký thật
+    // đã do Django xử lý qua action="{% url 'login' %}" / "{% url 'register' %}"
+    document.getElementById('tab-login').addEventListener('click', () => {
+        document.getElementById('tab-login').classList.add('active');
+        document.getElementById('tab-register').classList.remove('active');
+        document.getElementById('form-login').style.display = '';
+        document.getElementById('form-register').style.display = 'none';
+    });
+    document.getElementById('tab-register').addEventListener('click', () => {
+        document.getElementById('tab-register').classList.add('active');
+        document.getElementById('tab-login').classList.remove('active');
+        document.getElementById('form-register').style.display = '';
+        document.getElementById('form-login').style.display = 'none';
+    });
+</script>
+{% endblock %}
