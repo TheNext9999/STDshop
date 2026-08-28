@@ -84,6 +84,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ block.super }}
 <script>
     // Chuyển tab hiển thị (thuần giao diện) - việc xử lý đăng nhập/đăng ký thật
     // đã do Django xử lý qua action="{% url 'login' %}" / "{% url 'register' %}"

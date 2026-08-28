@@ -134,6 +134,13 @@
     display: flex;
     gap: 12px;
     margin-top: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.action-buttons form {
+    margin: 0;
+    display: inline-flex;
 }
 
 .btn-add-cart,
@@ -861,3 +868,144 @@
     color: #666;
 }
 
+/* ==================== BỔ SUNG - THIẾU TRONG BẢN GỐC ==================== */
+
+/* Hàng thông tin: Người bán / Kho / Số lượng */
+.info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-label {
+    color: #777;
+    font-size: 0.95rem;
+}
+
+/* Form gửi đánh giá mới */
+.review-form {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+
+.review-form-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.review-form-row label {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.review-form select {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+}
+
+/* 5 ngôi sao bấm chọn trực tiếp, thay cho <select> */
+.star-input {
+    display: inline-flex;
+    gap: 6px;
+}
+
+.star-input i {
+    font-size: 1.5rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.star-input i.active {
+    color: #f5a623;
+}
+
+.review-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.review-form textarea:focus,
+.review-form select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.review-form .btn-buy-now {
+    margin-top: 14px;
+    width: auto;
+    padding: 10px 28px;
+}
+
+/* Nút hành động nhỏ trong review (thích / trả lời / xóa) */
+.review-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    font-size: 0.88rem;
+}
+
+.review-actions button,
+.review-actions span.reply-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 0.88rem;
+    padding: 0;
+}
+
+.review-actions span.reply-toggle {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.reply-form {
+    margin-top: 12px;
+}
+
+.reply-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.reply-item {
+    margin-top: 14px;
+    padding-left: 20px;
+    border-left: 2px solid #eee;
+}
+
+.review-badge {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+
+.no-review-msg,
+.no-recommend-msg {
+    padding: 20px 0;
+    color: #888;
+}

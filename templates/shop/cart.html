@@ -1,67 +1,148 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
 
-<nav class="navbar cart-navbar">
-    <div class="nav-container">
+{% block title %}Giỏ hàng - STDShop{% endblock %}
 
-        <!-- Bên trái: Logo + Tiêu đề Giỏ Hàng -->
-        <div class="cart-nav-left">
-            <a href="index.html" class="logo-link">
-                <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img">
-                <span class="logo-text">STDShop</span>
-            </a>
-            <div class="nav-divider">|</div>
-            <span class="cart-title">Giỏ Hàng</span>
-        </div>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}" />
+{% endblock %}
 
-        <!-- Thanh tìm kiếm bên phải -->
-        <div class="cart-search-bar">
-            <div class="search-wrapper">
-                <input type="text" id="cartSearchInput"
-                       placeholder="Tìm sản phẩm trong giỏ hàng..." 
-                       autocomplete="off">
-                <button type="button" class="search-submit-btn">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-        </div>
+{% block content %}
+<div class="cart-page">
 
+  {% if not user.is_authenticated %}
+    <div class="empty-cart">
+      <p>Vui lòng <a href="{% url 'login' %}">đăng nhập</a> để xem giỏ hàng của bạn.</p>
     </div>
-</nav>
 
-    <div class="cart-page">
-
+  {% elif items %}
     <!-- Header cột -->
     <div class="cart-table-header">
-        <div class="cart-table-header-row">
-            <input type="checkbox" id="selectAll" checked>
-            <span>Sản Phẩm</span>
-            <span>Đơn Giá</span>
-            <div style="padding-left: 30px;"><span>Số lượng</span></div>
-            <div style="padding-left: 20px;"><span>Số tiền</span></div>
-            <div style="padding-left: 15px;"><span>Thao tác</span></div>
-        </div>
+      <div class="cart-table-header-row">
+        <input type="checkbox" id="selectAll" checked>
+        <span>Sản Phẩm</span>
+        <span>Đơn Giá</span>
+        <div style="padding-left: 30px;"><span>Số lượng</span></div>
+        <div style="padding-left: 20px;"><span>Số tiền</span></div>
+        <div style="padding-left: 15px;"><span>Thao tác</span></div>
+      </div>
     </div>
 
     <!-- Danh sách sản phẩm -->
-    <div id="cartItemsContainer"></div>
+    <div id="cartItemsContainer">
+      {% for item in items %}
+      <div class="cart-item" data-product-id="{{ item.product.id }}" data-qty="{{ item.quantity }}">
+        <input type="checkbox" class="item-checkbox" checked>
+
+        <div class="product-col">
+          <img src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}">
+          <div class="cart-item-info">
+            <a href="{% url 'detail' %}?id={{ item.product.id }}" class="cart-item-name" style="text-decoration:none; color:inherit;">{{ item.product.name }}</a>
+            <div class="cart-item-shop">{% if item.product.seller %}{{ item.product.seller.username }}{% else %}STDShop{% endif %}</div>
+          </div>
+        </div>
+
+        <span>{{ item.product.sale_price|vnd }}</span>
+
+        <div class="quantity-control">
+          <button type="button" onclick="changeQty({{ item.product.id }}, -1)">−</button>
+          <span>{{ item.quantity }}</span>
+          <button type="button" onclick="changeQty({{ item.product.id }}, 1)">+</button>
+        </div>
+
+        <strong>{{ item.get_total|vnd }}</strong>
+
+        <button class="remove-btn" onclick="removeItem({{ item.product.id }}, {{ item.quantity }})">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
 
     <!-- Phần dưới -->
     <div class="cart-bottom">
-        <div class="cart-bottom-left">
-            <input type="checkbox" id="selectAllBottom" checked>
-            <label for="selectAllBottom">Chọn tất cả</label>
-            <button onclick="removeSelected()" class="remove-all-btn">Xóa</button>
-        </div>
+      <div class="cart-bottom-left">
+        <input type="checkbox" id="selectAllBottom" checked>
+        <label for="selectAllBottom">Chọn tất cả</label>
+        <button onclick="removeSelected()" class="remove-all-btn">Xóa</button>
+      </div>
 
-        <div class="cart-total-right">
-            <p>Tổng cộng (<span id="totalItems">0</span> sản phẩm): 
-               <strong id="totalPrice">0đ</strong>
-            </p>
-            <div style="padding: 10px; padding-left: 75px;">
-            <button class="btn-buy" onclick="checkout()">
-                Mua Hàng
-            </button></div>
+      <div class="cart-total-right">
+        <p>Tổng cộng (<span id="totalItems">{{ order.get_cart_items }}</span> sản phẩm):
+           <strong id="totalPrice">{{ order.get_cart_total|vnd }}</strong>
+        </p>
+        <div style="padding: 10px; padding-left: 75px;">
+          <button class="btn-buy" onclick="window.location.href='{% url 'checkout' %}'">
+            Mua Hàng
+          </button>
         </div>
+      </div>
     </div>
-</div>
-<script src="/js/cart.js"></script>
 
+  {% else %}
+    <div class="empty-cart">
+      <p>Giỏ hàng của bạn đang trống.</p>
+      <a href="{% url 'home' %}" class="btn-buy" style="display:inline-block; text-decoration:none; margin-top:15px;">Tiếp tục mua sắm</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+const csrftoken = getCookie('csrftoken');
+
+function callUpdateItem(productId, action) {
+    return fetch('/update_item/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        body: JSON.stringify({ productID: productId, action: action })
+    });
+}
+
+function changeQty(productId, delta) {
+    callUpdateItem(productId, delta > 0 ? 'add' : 'remove').then(() => location.reload());
+}
+
+function removeItem(productId, qty) {
+    if (!confirm('Xóa sản phẩm này khỏi giỏ hàng?')) return;
+    let calls = [];
+    for (let i = 0; i < qty; i++) {
+        calls.push(callUpdateItem(productId, 'remove'));
+    }
+    Promise.all(calls).then(() => location.reload());
+}
+
+function removeSelected() {
+    const checked = document.querySelectorAll('.item-checkbox:checked');
+    if (checked.length === 0) { alert('Chưa chọn sản phẩm nào.'); return; }
+    if (!confirm(`Xóa ${checked.length} sản phẩm đã chọn?`)) return;
+
+    let calls = [];
+    checked.forEach(cb => {
+        const row = cb.closest('.cart-item');
+        const productId = row.dataset.productId;
+        const qty = parseInt(row.dataset.qty);
+        for (let i = 0; i < qty; i++) {
+            calls.push(callUpdateItem(productId, 'remove'));
+        }
+    });
+    Promise.all(calls).then(() => location.reload());
+}
+
+// Chọn tất cả (2 checkbox trên/dưới đồng bộ với nhau)
+document.querySelectorAll('#selectAll, #selectAllBottom').forEach(master => {
+    master.addEventListener('change', function () {
+        document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = master.checked);
+        document.querySelectorAll('#selectAll, #selectAllBottom').forEach(el => el.checked = master.checked);
+    });
+});
+</script>
+{% endblock %}

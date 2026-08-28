@@ -40,10 +40,10 @@
 
         <!-- Phần bên phải: location + cart + auth -->
         <div class="nav-right">
-          <button id="openCartBtn" id="cartBtn" class="cart-icon">
+          <a id="cartBtn" class="cart-icon" href="{% url 'cart' %}">
             <i class="fas fa-shopping-cart"></i>
             <span id="cartCount" class="cart-count">{{ cartItems|default:0 }}</span>
-          </button>
+          </a>
 
           {% if user.is_authenticated %}
           <div class="user-menu" id="navUser">

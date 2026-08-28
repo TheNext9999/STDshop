@@ -1,18 +1,14 @@
 /* ===== USER DROPDOWN (nav giờ render thật từ Django, JS chỉ lo hiệu ứng bật/tắt) ===== */
 (function () {
     const navUser = document.getElementById("navUser");
-    const navDropdown = document.getElementById("userDropdown");
-    if (!navUser || !navDropdown) return;
+    if (!navUser) return;
 
-    navUser.style.cursor = "pointer";
     navUser.addEventListener("click", function (e) {
         e.stopPropagation();
-        const isOpen = navDropdown.classList.toggle("open");
-        navDropdown.style.display = isOpen ? "block" : "none";
+        navUser.classList.toggle("open");
     });
     document.addEventListener("click", function () {
-        navDropdown.classList.remove("open");
-        navDropdown.style.display = "none";
+        navUser.classList.remove("open");
     });
 })();
 
@@ -29,8 +25,6 @@ document.addEventListener('click', (e) => {
 
 /* ================= MAIN APP ================= */
 document.addEventListener('DOMContentLoaded', () => {
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     /* ==================== SETUP SEARCH BAR ====================
        Lưu ý: phần "gợi ý tìm kiếm trực tiếp" (live search dropdown) đã bị bỏ vì
@@ -86,64 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==================== CART MANAGEMENT ==================== */
-    function saveCart() {
-        localStorage.setItem("cart", JSON.stringify(cart));
-    }
-
-    function updateCartCount() {
-        const totalItems = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-        document.querySelectorAll('#cartCount').forEach(el => el.textContent = totalItems);
-        updateCartUI();
-        saveCart();
-    }
-
-    function updateCartUI() {
-        const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        const statusEl = document.getElementById('cartStatusText');
-        if (statusEl) statusEl.textContent = `${currentCart.length} sản phẩm`;
-
-        const listContainer = document.getElementById('cartItemsList');
-        if (!listContainer) return;
-
-        if (currentCart.length === 0) {
-            listContainer.innerHTML = `<p class="empty-cart-msg">Chưa có sản phẩm</p>`;
-            return;
-        }
-
-        const displayItems = [...currentCart].reverse().slice(0, 5);
-        listContainer.innerHTML = displayItems.map(item => `
-            <div class="cart-mini-item">
-                <img src="${item.img}" alt="${item.name}">
-                <div class="cart-mini-info">
-                    <p class="cart-mini-name">${item.name}</p>
-                    <small class="cart-mini-qty">x${item.qty || 1}</small>
-                </div>
-                <span class="cart-mini-price">${(item.price * (item.qty || 1)).toLocaleString('vi-VN')}đ</span>
-            </div>
-        `).join('');
-    }
-
-    /* ==================== CART DROPDOWN - HOVER ==================== */
-    const cartBtn = document.getElementById('openCartBtn');
-    const cartDropdown = document.getElementById('cartDropdown');
-
-    if (cartBtn && cartDropdown) {
-        cartBtn.addEventListener('mouseenter', () => {
-            cartDropdown.style.display = 'block';
-            updateCartUI();
-        });
-        cartBtn.addEventListener('mouseleave', () => {
-            setTimeout(() => { if (!cartDropdown.matches(':hover')) cartDropdown.style.display = 'none'; }, 200);
-        });
-        cartDropdown.addEventListener('mouseenter', () => { cartDropdown.style.display = 'block'; });
-        cartDropdown.addEventListener('mouseleave', () => { cartDropdown.style.display = 'none'; });
-    }
-
     /* ==================== INITIALIZE ==================== */
     setupSearchBar();
     setupCategoryFilters();
-    updateCartCount();
 });
 
 /* ==================== GO TO CHECKOUT ==================== */

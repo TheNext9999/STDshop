@@ -129,21 +129,22 @@
 
       <!-- FORM GỬI ĐÁNH GIÁ MỚI -->
       {% if user.is_authenticated and not user_has_reviewed %}
-      <form method="post" style="margin:20px 0; padding:16px; background:#fafafa; border-radius:10px;">
+      <form method="post" class="review-form" id="new-review-form">
         {% csrf_token %}
         <input type="hidden" name="action" value="submit_review">
-        <div style="margin-bottom:10px;">
-          <label>Số sao: </label>
-          <select name="rating">
-            <option value="5">5 - Tuyệt vời</option>
-            <option value="4">4 - Tốt</option>
-            <option value="3">3 - Bình thường</option>
-            <option value="2">2 - Tệ</option>
-            <option value="1">1 - Rất tệ</option>
-          </select>
+        <div class="review-form-row">
+          <label>Đánh giá của bạn:</label>
+          <div class="star-input" id="star-input">
+            <i class="fas fa-star" data-value="1"></i>
+            <i class="fas fa-star" data-value="2"></i>
+            <i class="fas fa-star" data-value="3"></i>
+            <i class="fas fa-star" data-value="4"></i>
+            <i class="fas fa-star" data-value="5"></i>
+          </div>
+          <input type="hidden" name="rating" id="rating-input" value="5">
         </div>
-        <textarea name="comment" rows="3" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" required></textarea>
-        <button type="submit" class="btn-buy-now" style="margin-top:10px;">Gửi đánh giá</button>
+        <textarea name="comment" rows="3" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." required></textarea>
+        <button type="submit" class="btn-buy-now">Gửi đánh giá</button>
       </form>
       {% elif user_has_reviewed %}
         <p style="color:#888; margin:15px 0;">Bạn đã đánh giá sản phẩm này. Cảm ơn bạn!</p>
@@ -162,19 +163,19 @@
             <strong>{{ review.user.username }}</strong>
             {% if review.is_pinned %}<span style="color:#f59e0b; font-size:.8rem;"> 📌 Ghim</span>{% endif %}
             {% for ub in review.user.user_badges.all %}
-              <span style="background:{{ ub.badge.color }}; color:{{ ub.badge.text_color }}; font-size:.72rem; padding:2px 8px; border-radius:10px; margin-left:4px;">{{ ub.badge.icon }} {{ ub.badge.name }}</span>
+              <span class="review-badge" style="background:{{ ub.badge.color }}; color:{{ ub.badge.text_color }};">{{ ub.badge.icon }} {{ ub.badge.name }}</span>
             {% endfor %}
             <div class="stars">{{ review.rating|star_rating }}</div>
             <p>{{ review.comment }}</p>
             <small style="color:#999;">{{ review.created_at|date:"d/m/Y H:i" }}{% if review.edited_at %} (đã chỉnh sửa){% endif %}</small>
 
-            <div style="margin-top:8px; display:flex; gap:15px; align-items:center; font-size:.85rem;">
+            <div class="review-actions">
               {% if user.is_authenticated %}
               <form method="post" style="display:inline;">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="like">
                 <input type="hidden" name="review_id" value="{{ review.id }}">
-                <button type="submit" style="background:none;border:none;cursor:pointer;color:{% if review.user_reaction == 'like' %}var(--primary){% else %}#888{% endif %};">
+                <button type="submit" style="{% if review.user_reaction == 'like' %}color:var(--primary);{% endif %}">
                   <i class="fas fa-thumbs-up"></i> {{ review.like_count }}
                 </button>
               </form>
@@ -182,36 +183,36 @@
                 {% csrf_token %}
                 <input type="hidden" name="action" value="dislike">
                 <input type="hidden" name="review_id" value="{{ review.id }}">
-                <button type="submit" style="background:none;border:none;cursor:pointer;color:{% if review.user_reaction == 'dislike' %}#e74c3c{% else %}#888{% endif %};">
+                <button type="submit" style="{% if review.user_reaction == 'dislike' %}color:#e74c3c;{% endif %}">
                   <i class="fas fa-thumbs-down"></i> {{ review.dislike_count }}
                 </button>
               </form>
-              <span onclick="toggleReplyForm({{ review.id }})" style="cursor:pointer; color:var(--primary);">Trả lời</span>
+              <span class="reply-toggle" onclick="toggleReplyForm({{ review.id }})">Trả lời</span>
               {% endif %}
               {% if review.user == user %}
               <form method="post" style="display:inline;" onsubmit="return confirm('Xóa bình luận này?');">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="delete_comment">
                 <input type="hidden" name="review_id" value="{{ review.id }}">
-                <button type="submit" style="background:none;border:none;cursor:pointer;color:#e74c3c;">Xóa</button>
+                <button type="submit" style="color:#e74c3c;">Xóa</button>
               </form>
               {% endif %}
             </div>
 
             <!-- FORM TRẢ LỜI (ẩn mặc định) -->
             {% if user.is_authenticated %}
-            <form method="post" id="reply-form-{{ review.id }}" style="display:none; margin-top:10px;">
+            <form method="post" id="reply-form-{{ review.id }}" class="reply-form" style="display:none;">
               {% csrf_token %}
               <input type="hidden" name="action" value="reply">
               <input type="hidden" name="parent_id" value="{{ review.id }}">
-              <textarea name="comment" rows="2" placeholder="Viết trả lời..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:8px;" required></textarea>
+              <textarea name="comment" rows="2" placeholder="Viết trả lời..." required></textarea>
               <button type="submit" class="btn-add-cart" style="margin-top:6px; padding:6px 14px; height:auto;">Gửi</button>
             </form>
             {% endif %}
 
             <!-- REPLIES -->
             {% for reply in review.reply_list %}
-            <div style="margin-top:12px; padding-left:20px; border-left:2px solid #eee;">
+            <div class="reply-item">
               <strong>{{ reply.user.username }}</strong>
               <p>{{ reply.comment }}</p>
               <small style="color:#999;">{{ reply.created_at|date:"d/m/Y H:i" }}</small>
@@ -228,7 +229,7 @@
           </div>
         </div>
         {% empty %}
-        <p style="padding:20px 0; color:#888;">Chưa có đánh giá nào cho sản phẩm này.</p>
+        <p class="no-review-msg">Chưa có đánh giá nào cho sản phẩm này.</p>
         {% endfor %}
       </div>
 
@@ -260,7 +261,7 @@
         </div>
       </a>
       {% empty %}
-      <p>Chưa có sản phẩm liên quan.</p>
+      <p class="no-recommend-msg">Chưa có sản phẩm liên quan.</p>
       {% endfor %}
     </div>
   </section>
@@ -276,6 +277,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ block.super }}
 <script>
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -315,5 +317,33 @@ function toggleReplyForm(reviewId) {
     const form = document.getElementById('reply-form-' + reviewId);
     if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
+
+// ==================== CHỌN SAO ĐÁNH GIÁ (bấm trực tiếp) ====================
+(function () {
+    const starInput = document.getElementById('star-input');
+    if (!starInput) return;
+
+    const stars = starInput.querySelectorAll('i');
+    const ratingField = document.getElementById('rating-input');
+
+    function paintStars(value) {
+        stars.forEach(star => {
+            star.classList.toggle('active', parseInt(star.dataset.value) <= value);
+        });
+    }
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const value = parseInt(star.dataset.value);
+            ratingField.value = value;
+            paintStars(value);
+        });
+        star.addEventListener('mouseenter', () => paintStars(parseInt(star.dataset.value)));
+    });
+
+    starInput.addEventListener('mouseleave', () => paintStars(parseInt(ratingField.value)));
+
+    paintStars(parseInt(ratingField.value)); // mặc định 5 sao khi mới mở form
+})();
 </script>
 {% endblock %}
