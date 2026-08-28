@@ -1,0 +1,319 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}{% for product in products %}{{ product.name }}{% endfor %} - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dish-detail.css' %}" />
+{% endblock %}
+
+{% block content %}
+{% for product in products %}
+
+<div class="product-container">
+  <!-- Ảnh sản phẩm -->
+  <div class="product-image">
+    <div class="main-image">
+      <img src="{{ product.ImageURL }}" alt="{{ product.name }}" />
+    </div>
+  </div>
+
+  <!-- Thông tin sản phẩm -->
+  <div class="product-info">
+    <h1 class="product-title">{{ product.name }}</h1>
+
+    <div class="rating">
+      <span class="rating-score">{{ product.average_rating|star_rating }} {{ product.average_rating }}</span>
+      <span style="color:#888;">({{ product.review_count }} đánh giá · Đã bán {{ product.sold }})</span>
+    </div>
+
+    <div class="price-area">
+      <span class="current-price">{{ product.sale_price|vnd }}</span>
+      {% if product.discount_percent %}
+        <span class="old-price">{{ product.price|vnd }}</span>
+        <span style="color:#f0334c; font-weight:600; margin-left:8px;">-{{ product.discount_percent }}%</span>
+      {% endif %}
+    </div>
+
+    <div class="info-row">
+      <span class="info-label">Người bán:</span>
+      <strong>{% if product.seller %}{{ product.seller.username }}{% else %}STDShop{% endif %}</strong>
+    </div>
+
+    <div class="info-row">
+      <span class="info-label">Kho:</span>
+      <strong>{{ product.stock }} sản phẩm</strong>
+    </div>
+
+    <div class="info-row" style="margin-top:20px;">
+      <span class="info-label">Số lượng</span>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button type="button" onclick="changeQuantity(-1)" style="width:38px;height:38px;border:1px solid #ddd;border-radius:8px;background:white;cursor:pointer;">−</button>
+        <span id="quantity" style="font-size:1.4rem; font-weight:600; width:40px; text-align:center;">1</span>
+        <button type="button" onclick="changeQuantity(1)" style="width:38px;height:38px;border:1px solid #ddd;border-radius:8px;background:white;cursor:pointer;">+</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      {% if user.is_authenticated %}
+        <button class="btn-add-cart" onclick="addToCart({{ product.id }})"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+        <button class="btn-buy-now" onclick="buyNow({{ product.id }})">Mua ngay</button>
+        <form method="post" action="{% url 'wishlist' %}" style="margin:0;">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ product.id }}">
+          <input type="hidden" name="action" value="{% if in_wishlist %}remove{% else %}add{% endif %}">
+          <button type="submit" class="btn-add-cart" style="{% if in_wishlist %}color:#e74c3c;border-color:#e74c3c;{% endif %}">
+            <i class="fas fa-heart"></i> {% if in_wishlist %}Đã yêu thích{% else %}Yêu thích{% endif %}
+          </button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn-buy-now" style="text-decoration:none; text-align:center;">Đăng nhập để mua hàng</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="shop-section">
+  <div class="shop-left">
+    <div class="shop-avatar" style="display:flex;align-items:center;justify-content:center;background:var(--primary);color:white;font-weight:700;font-size:1.4rem;">
+      {% if product.seller %}{{ product.seller.username|first|upper }}{% else %}S{% endif %}
+    </div>
+    <div>
+      <h4>{% if product.seller %}{{ product.seller.username }}{% else %}STDShop{% endif %}</h4>
+      <span class="online">Tham gia từ {{ product.seller.date_joined|date:"m/Y"|default:"—" }}</span>
+    </div>
+  </div>
+  <div class="shop-right">
+    <div>
+      <p>Sản phẩm</p>
+      <strong>{{ seller_product_count }}</strong>
+    </div>
+    <div>
+      <p>Đánh giá SP này</p>
+      <strong>{{ product.review_count }}</strong>
+    </div>
+  </div>
+</div>
+
+<!-- MÔ TẢ SẢN PHẨM -->
+<div class="description-section">
+  <div class="shopee-desc">
+    <h2 class="desc-title">MÔ TẢ SẢN PHẨM</h2>
+    <div class="desc-box">
+      {% if product.detail %}
+        {{ product.detail|linebreaks }}
+      {% else %}
+        <p>Người bán chưa cập nhật mô tả cho sản phẩm này.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ĐÁNH GIÁ -->
+  <div class="review-section" id="reviews-section">
+    <h2 class="review-title">ĐÁNH GIÁ SẢN PHẨM</h2>
+
+    <div class="review-box">
+      <div class="review-summary">
+        <div class="review-score">
+          <span class="big-score">{{ product.average_rating }}</span>
+          <span class="out-of">trên 5</span>
+          <div class="stars">{{ product.average_rating|star_rating }}</div>
+        </div>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color:#00a68f; font-weight:600; margin:10px 0;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+      <!-- FORM GỬI ĐÁNH GIÁ MỚI -->
+      {% if user.is_authenticated and not user_has_reviewed %}
+      <form method="post" style="margin:20px 0; padding:16px; background:#fafafa; border-radius:10px;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="submit_review">
+        <div style="margin-bottom:10px;">
+          <label>Số sao: </label>
+          <select name="rating">
+            <option value="5">5 - Tuyệt vời</option>
+            <option value="4">4 - Tốt</option>
+            <option value="3">3 - Bình thường</option>
+            <option value="2">2 - Tệ</option>
+            <option value="1">1 - Rất tệ</option>
+          </select>
+        </div>
+        <textarea name="comment" rows="3" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" required></textarea>
+        <button type="submit" class="btn-buy-now" style="margin-top:10px;">Gửi đánh giá</button>
+      </form>
+      {% elif user_has_reviewed %}
+        <p style="color:#888; margin:15px 0;">Bạn đã đánh giá sản phẩm này. Cảm ơn bạn!</p>
+      {% else %}
+        <p style="color:#888; margin:15px 0;"><a href="{% url 'login' %}">Đăng nhập</a> để đánh giá sản phẩm này.</p>
+      {% endif %}
+
+      <!-- DANH SÁCH ĐÁNH GIÁ -->
+      <div id="reviewsContainer">
+        {% for review in reviews %}
+        <div class="review-item" id="review-{{ review.id }}">
+          <div class="review-avatar">
+            <img src="https://ui-avatars.com/api/?name={{ review.user.username }}&background=00C9B0&color=fff" alt="{{ review.user.username }}">
+          </div>
+          <div class="review-content">
+            <strong>{{ review.user.username }}</strong>
+            {% if review.is_pinned %}<span style="color:#f59e0b; font-size:.8rem;"> 📌 Ghim</span>{% endif %}
+            {% for ub in review.user.user_badges.all %}
+              <span style="background:{{ ub.badge.color }}; color:{{ ub.badge.text_color }}; font-size:.72rem; padding:2px 8px; border-radius:10px; margin-left:4px;">{{ ub.badge.icon }} {{ ub.badge.name }}</span>
+            {% endfor %}
+            <div class="stars">{{ review.rating|star_rating }}</div>
+            <p>{{ review.comment }}</p>
+            <small style="color:#999;">{{ review.created_at|date:"d/m/Y H:i" }}{% if review.edited_at %} (đã chỉnh sửa){% endif %}</small>
+
+            <div style="margin-top:8px; display:flex; gap:15px; align-items:center; font-size:.85rem;">
+              {% if user.is_authenticated %}
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="like">
+                <input type="hidden" name="review_id" value="{{ review.id }}">
+                <button type="submit" style="background:none;border:none;cursor:pointer;color:{% if review.user_reaction == 'like' %}var(--primary){% else %}#888{% endif %};">
+                  <i class="fas fa-thumbs-up"></i> {{ review.like_count }}
+                </button>
+              </form>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="dislike">
+                <input type="hidden" name="review_id" value="{{ review.id }}">
+                <button type="submit" style="background:none;border:none;cursor:pointer;color:{% if review.user_reaction == 'dislike' %}#e74c3c{% else %}#888{% endif %};">
+                  <i class="fas fa-thumbs-down"></i> {{ review.dislike_count }}
+                </button>
+              </form>
+              <span onclick="toggleReplyForm({{ review.id }})" style="cursor:pointer; color:var(--primary);">Trả lời</span>
+              {% endif %}
+              {% if review.user == user %}
+              <form method="post" style="display:inline;" onsubmit="return confirm('Xóa bình luận này?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_comment">
+                <input type="hidden" name="review_id" value="{{ review.id }}">
+                <button type="submit" style="background:none;border:none;cursor:pointer;color:#e74c3c;">Xóa</button>
+              </form>
+              {% endif %}
+            </div>
+
+            <!-- FORM TRẢ LỜI (ẩn mặc định) -->
+            {% if user.is_authenticated %}
+            <form method="post" id="reply-form-{{ review.id }}" style="display:none; margin-top:10px;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="reply">
+              <input type="hidden" name="parent_id" value="{{ review.id }}">
+              <textarea name="comment" rows="2" placeholder="Viết trả lời..." style="width:100%; padding:8px; border:1px solid #ddd; border-radius:8px;" required></textarea>
+              <button type="submit" class="btn-add-cart" style="margin-top:6px; padding:6px 14px; height:auto;">Gửi</button>
+            </form>
+            {% endif %}
+
+            <!-- REPLIES -->
+            {% for reply in review.reply_list %}
+            <div style="margin-top:12px; padding-left:20px; border-left:2px solid #eee;">
+              <strong>{{ reply.user.username }}</strong>
+              <p>{{ reply.comment }}</p>
+              <small style="color:#999;">{{ reply.created_at|date:"d/m/Y H:i" }}</small>
+              {% if reply.user == user %}
+              <form method="post" style="display:inline; margin-left:10px;" onsubmit="return confirm('Xóa trả lời này?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_comment">
+                <input type="hidden" name="review_id" value="{{ reply.id }}">
+                <button type="submit" style="background:none;border:none;cursor:pointer;color:#e74c3c;font-size:.8rem;">Xóa</button>
+              </form>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% empty %}
+        <p style="padding:20px 0; color:#888;">Chưa có đánh giá nào cho sản phẩm này.</p>
+        {% endfor %}
+      </div>
+
+      {% if has_more_reviews %}
+      <div style="text-align:center; margin-top:15px;">
+        <a href="?id={{ product.id }}&reviews_limit={{ reviews_limit|add:5 }}#reviews-section" class="btn-add-cart" style="display:inline-block; text-decoration:none;">Xem thêm đánh giá</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SẢN PHẨM GỢI Ý -->
+  <section class="recommended-section">
+    <h2 class="section-title">CÓ THỂ BẠN CŨNG THÍCH</h2>
+    <div class="recommended-grid">
+      {% for rp in related_products %}
+      <a href="{% url 'detail' %}?id={{ rp.id }}" class="recommended-card" style="text-decoration:none; color:inherit;">
+        <img src="{{ rp.ImageURL }}" alt="{{ rp.name }}">
+        <div class="recommended-info">
+          <div class="recommended-name">{{ rp.name }}</div>
+          <div>
+            <span class="recommended-price">{{ rp.sale_price|vnd }}</span>
+            {% if rp.discount_percent %}<span class="old-price">{{ rp.price|vnd }}</span>{% endif %}
+          </div>
+          <div class="recommended-meta">
+            <span class="rating">★ {{ rp.average_rating }}</span>
+            <span class="sold">Đã bán {{ rp.sold }}</span>
+          </div>
+        </div>
+      </a>
+      {% empty %}
+      <p>Chưa có sản phẩm liên quan.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+{% empty %}
+<div style="max-width:600px; margin:80px auto; text-align:center;">
+  <h2>Không tìm thấy sản phẩm</h2>
+  <p style="color:#888; margin-top:10px;">Sản phẩm này có thể đã bị gỡ hoặc không tồn tại.</p>
+  <a href="{% url 'home' %}" class="btn-buy-now" style="display:inline-block; margin-top:20px; text-decoration:none;">Về trang chủ</a>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+const csrftoken = getCookie('csrftoken');
+
+let quantity = 1;
+function changeQuantity(delta) {
+    quantity = Math.max(1, quantity + delta);
+    document.getElementById('quantity').textContent = quantity;
+}
+
+function addToCart(productId) {
+    let calls = [];
+    for (let i = 0; i < quantity; i++) {
+        calls.push(fetch('/update_item/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ productID: productId, action: 'add' })
+        }));
+    }
+    Promise.all(calls).then(() => {
+        alert('Đã thêm vào giỏ hàng!');
+        const countEl = document.getElementById('cartCount');
+        if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + quantity;
+    });
+}
+
+function buyNow(productId) {
+    addToCart(productId);
+    setTimeout(() => { window.location.href = '/cart/'; }, 300);
+}
+
+function toggleReplyForm(reviewId) {
+    const form = document.getElementById('reply-form-' + reviewId);
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

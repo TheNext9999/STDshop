@@ -28,6 +28,10 @@ def top_sold(products, count=5):
     except (TypeError, ValueError):
         count = 5
     return sorted(products, key=lambda p: p.sold or 0, reverse=True)[:count]
+
+
+@register.filter
+def star_rating(rating):
     """Trả về HTML chuỗi sao (★) khớp với thiết kế .product-card__stars / .star-half"""
     try:
         rating = float(rating)

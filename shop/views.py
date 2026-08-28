@@ -425,6 +425,10 @@ def detail(request):
             extra = Product.objects.filter(is_approved=True).exclude(id__in=existing_ids)[:extra_needed]
             related_products = list(related_products) + list(extra)
 
+    seller_product_count = 0
+    if product and product.seller:
+        seller_product_count = Product.objects.filter(seller=product.seller, is_approved=True).count()
+
     context = {
         'items': items, 'order': order, 'cartItems': cartItems,
         'user_login': user_login, 'user_notlogin': user_notlogin,
@@ -436,6 +440,7 @@ def detail(request):
         'user_has_reviewed': user_has_reviewed,
         'related_products': related_products,
         'wishlisted_ids': _get_wishlisted_ids(request),
+        'seller_product_count': seller_product_count,
     }
     return render(request, 'shop/detail.html', context)
 

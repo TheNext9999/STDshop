@@ -239,7 +239,7 @@
         .hero-nav:hover {
             background: rgba(255,255,255,0.6);
         }
-/* ==================== PRODUCT CARD – MỚI ==================== */
+/* ==================== PRODUCT CARD - MỚI (thiết kế card sản phẩm) ==================== */
 
 /* Grid chứa cards */
 .product-grid {
@@ -250,176 +250,154 @@
 
 /* Card tổng thể */
 .product-card {
-    background: #fff;
-    border-radius: 14px;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #eceef1;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #e8f7f4;
-    position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 14px 34px rgba(0, 201, 176, 0.18);
+    box-shadow: 0 6px 16px rgba(16, 24, 40, 0.1);
+    transform: translateY(-2px);
 }
 
 /* ---- Vùng ảnh ---- */
-.product-card__img-wrap {
+.product-card__image-wrap {
     position: relative;
     width: 100%;
-    height: 190px;
+    height: 160px;
     overflow: hidden;
-    background: #f3fafa;
+    background: #f2f2f2;
 }
 
-.product-card__img-wrap img {
+.product-card__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.35s ease;
     display: block;
 }
 
-.product-card:hover .product-card__img-wrap img {
-    transform: scale(1.06);
-}
-
-/* Badge giảm giá – góc trái trên */
-.product-card__discount {
+/* ---- Badges ---- */
+.badge {
     position: absolute;
     top: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 9px;
+    border-radius: 999px;
+    color: #ffffff;
+    line-height: 1.3;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.badge--discount {
     left: 10px;
-    background: #ff4757;
-    color: #fff;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 20px;
-    letter-spacing: 0.3px;
-    z-index: 2;
-    box-shadow: 0 2px 6px rgba(255,71,87,0.35);
+    background: #f0334c;
 }
 
-/* Badge "Bán chạy" – góc phải trên */
-.product-card__hot {
-    position: absolute;
-    top: 10px;
+.badge--bestseller {
     right: 10px;
-    background: linear-gradient(135deg, #00C9B0, #007969);
-    color: #fff;
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 20px;
-    z-index: 2;
-}
-
-/* ---- Vùng thông tin ---- */
-.product-card__body {
-    padding: 13px 14px 14px;
+    background: #0fb98f;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
+    align-items: center;
+    gap: 3px;
 }
 
-/* Tên sản phẩm */
-.product-card__name {
-    font-size: 0.88rem;
+/* ---- Body ---- */
+.product-card__body {
+    padding: 12px;
+}
+
+.product-card__title {
+    font-size: 14px;
     font-weight: 600;
-    color: #1a2a27;
     line-height: 1.4;
+    color: #1a1f36;
+    min-height: 39px;
+    margin-bottom: 8px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 2.45em;
 }
 
-/* Đánh giá sao */
-.product-card__rating {
+/* ---- Rating meta ---- */
+.product-card__meta {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.8rem;
+    gap: 4px;
+    font-size: 12.5px;
+    color: #6b7280;
+    margin-bottom: 8px;
 }
 
 .product-card__stars {
     color: #f5a623;
     letter-spacing: 1px;
-    font-size: 0.82rem;
+    font-size: 12px;
 }
 
-.product-card__rating-score {
-    color: #444;
+.star-half {
+    position: relative;
+    display: inline-block;
+    color: #e2e5ea;
+}
+
+.star-half::before {
+    content: "★";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+    color: #f5a623;
+}
+
+.product-card__rating {
+    color: #1a1f36;
     font-weight: 600;
 }
 
+.product-card__divider {
+    color: #d1d5db;
+}
+
 .product-card__sold {
-    color: #888;
-    font-size: 0.78rem;
+    color: #6b7280;
 }
 
-.product-card__rating-divider {
-    color: #ccc;
-}
-
-/* Dải giá */
-.product-card__price-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 2px;
-}
-
+/* ---- Price ---- */
 .product-card__price {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: #00C9B0;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-.product-card__price-original {
-    font-size: 0.8rem;
-    color: #aaa;
+.product-card__price-current {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0fb98f;
+}
+
+.product-card__price-old {
+    font-size: 13px;
+    color: #a3a9b4;
     text-decoration: line-through;
 }
 
-/* Thanh lượt bán nhỏ phía dưới */
-.product-card__sold-bar-wrap {
-    margin-top: 4px;
-}
-
-.product-card__sold-bar-label {
-    font-size: 0.72rem;
-    color: #888;
-    margin-bottom: 3px;
-}
-
-.product-card__sold-bar {
-    height: 4px;
-    background: #e0f5f1;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.product-card__sold-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00C9B0, #007969);
-    border-radius: 10px;
-    transition: width 0.5s ease;
-}
 /* Responsive */
 @media (max-width: 640px) {
     .product-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
-    .product-card__img-wrap {
+    .product-card__image-wrap {
         height: 155px;
     }
 }
