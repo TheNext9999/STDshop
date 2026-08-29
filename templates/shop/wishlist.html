@@ -1,0 +1,137 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Danh sách yêu thích - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/wishlist.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="wishlist-page">
+  <div class="container">
+
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / Yêu thích
+    </div>
+
+    <h1 class="section-heading">Danh sách yêu thích</h1>
+    <p class="section-sub">Những sản phẩm bạn đã lưu lại</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:#00a68f; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Tóm tắt & nút thêm tất cả vào giỏ -->
+    <div class="wish-summary">
+      <div class="wish-count"><strong>{{ wishlist|length }}</strong> sản phẩm trong danh sách</div>
+      {% if wishlist %}
+      <button class="btn-wish-cart" id="addAllBtn" onclick="addAllToCart()">
+        <i class="fas fa-shopping-cart"></i> Thêm tất cả vào giỏ
+      </button>
+      {% endif %}
+    </div>
+
+    <!-- Danh sách sản phẩm yêu thích -->
+    {% if wishlist %}
+      {% for item in wishlist %}
+      <div class="wish-card">
+        <a href="{% url 'detail' %}?id={{ item.product.id }}">
+          <img src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}">
+        </a>
+        <div class="wish-card-info">
+          <a href="{% url 'detail' %}?id={{ item.product.id }}" class="wish-card-name" style="text-decoration:none;">{{ item.product.name }}</a>
+          {% if item.product.discount_percent > 0 %}
+          <div class="wish-card-price">
+            {{ item.product.sale_price|vnd }}
+            <span class="wish-card-price-original">{{ item.product.price|vnd }}</span>
+          </div>
+          {% else %}
+          <div class="wish-card-price">{{ item.product.price|vnd }}</div>
+          {% endif %}
+          <div class="wish-card-stock {% if item.product.stock <= 0 %}out{% endif %}">
+            <i class="fas fa-check-circle"></i> {% if item.product.stock > 0 %}Còn hàng{% else %}Hết hàng{% endif %}
+          </div>
+        </div>
+        <div class="wish-actions">
+          <button class="btn-wish-cart add-to-cart-btn" data-product="{{ item.product.id }}" {% if item.product.stock <= 0 %}disabled{% endif %}>
+            <i class="fas fa-cart-plus"></i> Thêm giỏ
+          </button>
+          <!-- Form xóa khỏi yêu thích — submit POST thật tới views.wishlist -->
+          <form method="post" action="{% url 'wishlist' %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="remove">
+            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+            <button type="submit" class="btn-wish-remove">
+              <i class="fas fa-trash-alt"></i> Xóa
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <!-- Trạng thái trống thật — không còn dữ liệu demo giả -->
+      <div class="empty-wish">
+        <i class="fas fa-heart-broken"></i>
+        <p>Bạn chưa lưu sản phẩm yêu thích nào.</p>
+        <a href="{% url 'home' %}" class="btn-shop-now">Khám phá sản phẩm ngay</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+const csrftoken = getCookie('csrftoken');
+
+function callUpdateItem(productId) {
+    return fetch('/update_item/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        body: JSON.stringify({ productID: productId, action: 'add' })
+    });
+}
+
+document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const productId = btn.dataset.product;
+        btn.disabled = true;
+        callUpdateItem(productId).then(() => {
+            const countEl = document.getElementById('cartCount');
+            if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + 1;
+            btn.innerHTML = '<i class="fas fa-check"></i> Đã thêm';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-cart-plus"></i> Thêm giỏ';
+            }, 1500);
+        });
+    });
+});
+
+function addAllToCart() {
+    const buttons = document.querySelectorAll('.add-to-cart-btn:not(:disabled)');
+    if (buttons.length === 0) return;
+
+    const addAllBtn = document.getElementById('addAllBtn');
+    addAllBtn.disabled = true;
+
+    const calls = Array.from(buttons).map(btn => callUpdateItem(btn.dataset.product));
+    Promise.all(calls).then(() => {
+        const countEl = document.getElementById('cartCount');
+        if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + buttons.length;
+        alert(`Đã thêm ${buttons.length} sản phẩm vào giỏ hàng!`);
+        addAllBtn.disabled = false;
+    });
+}
+</script>
+{% endblock %}
