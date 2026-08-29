@@ -1,0 +1,154 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}Hồ sơ cá nhân - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="profile-page">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <div class="profile-breadcrumb">
+      <a href="{% url 'home' %}">Trang chủ</a> / Hồ sơ cá nhân
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:{% if message.tags == 'error' %}#e74c3c{% else %}#00a68f{% endif %}; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <div class="profile-layout">
+
+      <!-- ── CỘT TRÁI: Sidebar ── -->
+      <div class="profile-col-left">
+        <div class="profile-sidebar">
+
+          <!-- Avatar và tên người dùng -->
+          <div class="profile-header">
+            <div class="avatar-circle">{{ request.user.username|first|upper }}</div>
+            <h5>{{ request.user.get_full_name|default:request.user.username }}</h5>
+            <p>{{ request.user.email }}</p>
+            <!-- Huy hiệu — hiển thị huy hiệu thật do admin gán qua /admin-panel/badges/.
+                 Nếu chưa được gán huy hiệu nào, mặc định hiện "Thành viên". -->
+            <div class="profile-badges-wrapper">
+              {% for ub in user_badges %}
+              <span class="real-badge-pill" style="background:{{ ub.badge.color }};color:{{ ub.badge.text_color }};">
+                {% if ub.badge.icon %}{{ ub.badge.icon }}{% endif %} {{ ub.badge.name }}
+              </span>
+              {% empty %}
+              <div class="account-badge"><i class="fas fa-check-circle"></i> Thành viên</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Menu điều hướng -->
+          <nav class="profile-nav">
+            <a href="{% url 'profile' %}" class="profile-nav-item active">
+              <i class="fas fa-user"></i> Thông tin cá nhân
+            </a>
+            <a href="{% url 'order_history' %}" class="profile-nav-item">
+              <i class="fas fa-box"></i> Lịch sử đơn hàng
+            </a>
+            <a href="{% url 'wishlist' %}" class="profile-nav-item">
+              <i class="fas fa-heart"></i> Danh sách yêu thích
+            </a>
+            <a href="{% url 'voucher' %}" class="profile-nav-item">
+              <i class="fas fa-ticket-alt"></i> Voucher của tôi
+            </a>
+            <a href="{% url 'notifications' %}" class="profile-nav-item">
+              <i class="fas fa-bell"></i> Thông báo
+            </a>
+            <div class="profile-nav-divider"></div>
+            <a href="{% url 'logout' %}" class="profile-nav-item" style="color:#DC2626;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </nav>
+
+        </div>
+      </div>
+
+      <!-- ── CỘT PHẢI: Nội dung ── -->
+      <div class="profile-col-right">
+
+        <!-- Thống kê nhanh — dữ liệu thật từ views.profile() -->
+        <div class="profile-stats">
+          <div class="stat-card">
+            <div class="stat-num">{{ total_orders }}</div>
+            <div class="stat-label">Đơn hàng</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">{{ total_wishlist }}</div>
+            <div class="stat-label">Yêu thích</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">{{ total_vouchers }}</div>
+            <div class="stat-label">Voucher</div>
+          </div>
+        </div>
+
+        <!-- Form chỉnh sửa thông tin -->
+        <div class="profile-panel">
+          <div class="panel-title">Thông tin cá nhân</div>
+          <p class="panel-subtitle">Cập nhật thông tin tài khoản của bạn</p>
+
+          <form class="profile-form" method="post" action="">
+            {% csrf_token %}
+
+            <!-- Thông tin cơ bản -->
+            <div class="field-section-title"><i class="fas fa-user"></i> Thông tin cơ bản</div>
+            <div class="field-row">
+              <div class="field-col-6">
+                <label>Tên</label>
+                <input class="form-control" type="text" name="first_name" value="{{ request.user.first_name }}" placeholder="Nhập tên...">
+              </div>
+              <div class="field-col-6">
+                <label>Họ</label>
+                <input class="form-control" type="text" name="last_name" value="{{ request.user.last_name }}" placeholder="Nhập họ...">
+              </div>
+              <div class="field-col-6">
+                <label>Tên đăng nhập</label>
+                <input class="form-control" type="text" value="{{ request.user.username }}" readonly>
+              </div>
+              <div class="field-col-6">
+                <label>Email</label>
+                <input class="form-control" type="email" name="email" value="{{ request.user.email }}" placeholder="email@example.com">
+              </div>
+            </div>
+
+            <!-- Đổi mật khẩu -->
+            <div class="field-section-title"><i class="fas fa-lock"></i> Đổi mật khẩu</div>
+            <div class="field-row">
+              <div class="field-col-4">
+                <label>Mật khẩu hiện tại</label>
+                <input class="form-control" type="password" name="old_password" placeholder="••••••••">
+              </div>
+              <div class="field-col-4">
+                <label>Mật khẩu mới</label>
+                <input class="form-control" type="password" name="new_password" placeholder="••••••••">
+              </div>
+              <div class="field-col-4">
+                <label>Xác nhận mật khẩu mới</label>
+                <input class="form-control" type="password" name="confirm_password" placeholder="••••••••">
+              </div>
+            </div>
+
+            <!-- Nút lưu -->
+            <div class="profile-form-footer">
+              <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Lưu thay đổi
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

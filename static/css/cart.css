@@ -1,9 +1,4 @@
-﻿:root {
-            --primary: #00C9B0;
-            --primary-dark: #00a68f;
-        }
-
-.cart-page {
+﻿.cart-page {
     max-width: 1250px;
     margin: 30px auto;
     background: white;
@@ -59,7 +54,7 @@
     height: 36px;
     background: white;
     border: none;
-    color: var(--primary);           /* Màu Cyan */
+    color: var(--primary);
     font-size: 1.35rem;
     font-weight: bold;
     cursor: pointer;
@@ -116,103 +111,12 @@
     cursor: pointer;
 }
 
-        .empty-cart {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-        }
-        /* ==================== NAVBAR GIỎ HÀNG (Giống Shopee) ==================== */
-.cart-navbar {
-    background: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    padding: 12px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+.empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
 }
 
-.nav-container {
-    max-width: 1250px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* Bên trái */
-.cart-nav-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.logo-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-}
-
-.logo-img {
-    height: 42px;
-    margin-right: 8px;
-}
-
-.logo-text {
-    font-size: 1.65rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.nav-divider {
-    color: #ddd;
-    font-size: 1.6rem;
-    margin: 0 10px;
-}
-
-.cart-title {
-    font-size: 1.35rem;
-    font-weight: 500;
-    color: #00C9B0;
-
-}
-
-/* Thanh tìm kiếm */
-.cart-search-bar {
-    width: 420px;
-}
-
-.search-wrapper {
-    display: flex;
-    align-items: center;
-    background: #f8f9fa;
-    border: 2px solid var(--primary);
-    border-radius: 50px;
-    padding: 8px 12px;
-}
-
-#cartSearchInput {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 1rem;
-    padding: 6px 0;
-}
-
-.search-submit-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 /* === PHẦN TÊN SẢN PHẨM - SÁT SHOPEE === */
 .product-col {
     display: flex;

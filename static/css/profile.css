@@ -1,0 +1,197 @@
+/* ── Trang hồ sơ ── */
+.profile-page { padding: 2.5rem 0 5rem; }
+
+/* Layout 2 cột thuần CSS (thay cho Bootstrap row/col) */
+.profile-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+.profile-layout .profile-col-left {
+    width: 280px;
+    flex-shrink: 0;
+}
+.profile-layout .profile-col-right {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 800px) {
+    .profile-layout { flex-direction: column; }
+    .profile-layout .profile-col-left { width: 100%; }
+}
+
+/* Breadcrumb đơn giản */
+.profile-breadcrumb {
+    font-size: .85rem;
+    color: #888;
+    margin-bottom: 20px;
+}
+.profile-breadcrumb a { color: var(--primary); text-decoration: none; }
+.profile-breadcrumb a:hover { text-decoration: underline; }
+
+/* Sidebar bên trái */
+.profile-sidebar {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    overflow: hidden;
+    position: sticky;
+    top: 90px;
+}
+
+/* Vùng avatar + tên người dùng */
+.profile-header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: #fff;
+}
+.avatar-circle {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    border: 3px solid rgba(255,255,255,.5);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+}
+.profile-header h5 {
+    font-size: 1.1rem; font-weight: 700;
+    color: #fff; margin: 0 0 .25rem;
+}
+.profile-header p { font-size: .82rem; color: rgba(255,255,255,.85); margin: 0; }
+
+/* Menu điều hướng tài khoản */
+.profile-nav { padding: .6rem 0; }
+.profile-nav-item {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .75rem 1.4rem;
+    font-size: .88rem; font-weight: 500;
+    color: #222;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+.profile-nav-item:hover { background: #e8f7f4; color: var(--primary-dark); border-left-color: var(--primary); }
+.profile-nav-item.active { background: #e8f7f4; color: var(--primary-dark); border-left-color: var(--primary); font-weight: 600; }
+.profile-nav-item i { width: 16px; text-align: center; font-size: .9rem; }
+.profile-nav-divider { height: 1px; background: rgba(128,128,128,.18); margin: .4rem 0; }
+
+/* Badge trạng thái tài khoản — mặc định khi chưa được admin gán gì */
+.account-badge {
+    display: inline-flex; align-items: center; gap: .3rem;
+    background: #e8f7f4;
+    color: var(--primary-dark);
+    font-size: .72rem; font-weight: 700;
+    padding: .2rem .6rem;
+    border-radius: 30px;
+    margin-top: .4rem;
+}
+.profile-badges-wrapper {
+    display: flex; flex-wrap: wrap;
+    justify-content: center; gap: .35rem;
+    margin-top: .4rem;
+}
+.real-badge-pill {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .72rem; font-weight: 700;
+    padding: .2rem .6rem;
+    border-radius: 30px;
+    white-space: nowrap;
+}
+
+/* Thống kê nhanh */
+.profile-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    flex: 1;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid #eee;
+}
+.stat-card .stat-num {
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--primary-dark);
+}
+.stat-card .stat-label { font-size: .78rem; color: #666; margin-top: .2rem; }
+
+/* Panel nội dung bên phải */
+.profile-panel {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2rem;
+}
+.panel-title {
+    font-size: 1.25rem; font-weight: 700;
+    color: #222;
+    margin-bottom: .3rem;
+}
+.panel-subtitle { font-size: .85rem; color: #666; margin-bottom: 1.5rem; }
+
+/* Nhãn section bên trong panel */
+.field-section-title {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 1.5rem 0 .8rem;
+    display: flex; align-items: center; gap: .5rem;
+}
+.field-section-title::after { content:''; flex:1; height:1px; background:#e8f7f4; }
+.field-section-title:first-child { margin-top: 0; }
+
+/* Layout hàng field thuần CSS (thay cho Bootstrap row/col-md) */
+.field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.field-col-6 { flex: 1 1 calc(50% - 8px); min-width: 200px; }
+.field-col-4 { flex: 1 1 calc(33.333% - 11px); min-width: 160px; }
+.field-col-12 { flex: 1 1 100%; }
+
+/* Input chỉnh sửa */
+.profile-form label { font-size: .82rem; font-weight: 600; color: #222; margin-bottom: .3rem; display: block; }
+.profile-form .form-control {
+    width: 100%;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 8px;
+    padding: .65rem 1rem;
+    font-size: .9rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.profile-form .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,201,176,.12);
+    outline: none;
+}
+.profile-form .form-control[readonly] { background: #f8f9fa; color: #999; cursor: not-allowed; }
+
+/* Nút lưu */
+.btn-save {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 8px;
+    padding: .7rem 2rem; font-size: .9rem; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s;
+}
+.btn-save:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.profile-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
