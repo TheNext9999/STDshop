@@ -651,7 +651,7 @@ def order_history(request):
         'status_counts': status_counts,
         'page_title': 'Lịch sử đơn hàng',
     })
-    return render(request, 'shop/order_history.html', ctx)
+    return render(request, 'shop/order/order_history.html', ctx)
 
 
 @login_required(login_url='login')
@@ -676,7 +676,7 @@ def order_detail(request, pk):
         'shipping': shipping,
         'page_title': f'Đơn hàng #{pk}',
     })
-    return render(request, 'shop/order_detail.html', ctx)
+    return render(request, 'shop/order/order_detail.html', ctx)
 
 
 def order_tracking(request):
@@ -700,7 +700,7 @@ def order_tracking(request):
             shipping = ShippingAddress.objects.filter(order=order).first()
 
     ctx.update({'order': order, 'shipping': shipping, 'searched': searched, 'page_title': 'Theo dõi đơn hàng'})
-    return render(request, 'shop/order_tracking.html', ctx)
+    return render(request, 'shop/order/order_tracking.html', ctx)
 
 
 # ============================================================

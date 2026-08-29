@@ -1,0 +1,184 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order_tracking.css' %}" />
+{% endblock %}
+
+<section class="tracking-page">
+  <div class="container">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb" style="font-size:.85rem;">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" style="color:var(--green-deep);">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Theo dõi đơn hàng</li>
+      </ol>
+    </nav>
+
+    <!-- Box tra cứu — submit GET thật để views.py đọc request.GET.get('order_id') -->
+    <div class="tracking-search-box">
+      <h2><i class="fas fa-search-location me-2"></i>Tra cứu đơn hàng</h2>
+      <p>Nhập mã đơn hàng để xem trạng thái vận chuyển chi tiết</p>
+      <form class="tracking-form" method="get" action="{% url 'order_tracking' %}">
+        <input type="text" name="order_id" id="tracking-input"
+               value="{{ searched|default:'' }}"
+               placeholder="Ví dụ: 123 hoặc email@example.com">
+        <button type="submit"><i class="fas fa-search me-1"></i>Tra cứu</button>
+      </form>
+      {% if searched and not order %}
+      <p style="margin-top:1rem;font-size:.85rem;color:#FFE066;">
+        <i class="fas fa-exclamation-circle me-1"></i>
+        Không tìm thấy đơn hàng khớp với "{{ searched }}". Vui lòng kiểm tra lại mã đơn.
+      </p>
+      {% endif %}
+    </div>
+
+    <!-- Kết quả — chỉ RENDER khi tìm thấy order thật từ views.py.
+         Dùng if thật của Django (không chỉ gắn/bỏ class CSS "show"),
+         vì nếu chỉ dùng CSS để ẩn thì Django vẫn cố render toàn bộ nội
+         dung bên trong — bao gồm order.customer.* — gây lỗi 500 khi
+         order là None (ví dụ lúc mới vào trang, chưa tra cứu gì). -->
+    {% if order %}
+    <div class="tracking-result show" id="tracking-result">
+
+      <!-- Tóm tắt đơn — dữ liệu thật từ object `order` -->
+      <div class="tracking-summary">
+        <div class="order-info">
+          <h5>Đơn hàng #{{ order.id }}</h5>
+          <p>Đặt ngày {{ order.date_order|date:"d/m/Y" }} · {{ order.get_cart_items }} sản phẩm · ${{ order.get_cart_total|floatformat:2 }}</p>
+        </div>
+        <span class="tracking-status-big">
+          <i class="fas fa-{% if order.status == 'delivered' %}check-circle{% elif order.status == 'cancelled' %}times-circle{% elif order.status == 'shipping' %}truck{% else %}clock{% endif %} me-1"></i>
+          {{ order.get_status_display }}
+        </span>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+
+          <!-- Timeline vận chuyển — dựa trên order.status thật
+               Lưu ý: model không lưu timestamp riêng cho mỗi bước,
+               nên chỉ hiển thị bước nào đã hoàn thành dựa theo trạng thái hiện tại. -->
+          <div class="tracking-timeline">
+            <div class="timeline-title"><i class="fas fa-route me-2" style="color:var(--green-deep);"></i>Lộ trình vận chuyển</div>
+
+            {% if order.status == 'cancelled' %}
+            <div style="text-align:center;color:#DC2626;padding:1rem 0;">
+              <i class="fas fa-times-circle" style="font-size:2rem;"></i>
+              <p style="margin-top:.5rem;font-weight:600;">Đơn hàng đã bị hủy</p>
+            </div>
+            {% else %}
+
+            <div class="tl-item done">
+              <div class="tl-dot done"><i class="fas fa-check"></i></div>
+              <div class="tl-content">
+                <div class="tl-title">Đơn hàng đã đặt thành công</div>
+                <div class="tl-desc">Hệ thống đã nhận đơn hàng của bạn</div>
+                <div class="tl-time"><i class="fas fa-clock me-1"></i>{{ order.date_order|date:"d/m/Y — H:i" }}</div>
+              </div>
+            </div>
+
+            <div class="tl-item {% if order.status != 'pending' %}done{% endif %}">
+              <div class="tl-dot {% if order.status != 'pending' %}done{% else %}active{% endif %}">
+                <i class="fas fa-{% if order.status != 'pending' %}check{% else %}clock{% endif %}"></i>
+              </div>
+              <div class="tl-content">
+                <div class="tl-title">Đơn hàng đã được xác nhận</div>
+                <div class="tl-desc">Shop xác nhận và bắt đầu chuẩn bị hàng</div>
+              </div>
+            </div>
+
+            <div class="tl-item {% if order.status == 'shipping' or order.status == 'delivered' %}done{% endif %}">
+              <div class="tl-dot {% if order.status == 'shipping' or order.status == 'delivered' %}done{% elif order.status == 'processing' %}active{% else %}pending{% endif %}">
+                <i class="fas fa-{% if order.status == 'shipping' or order.status == 'delivered' %}check{% else %}box{% endif %}"></i>
+              </div>
+              <div class="tl-content">
+                <div class="tl-title {% if order.status == 'pending' or order.status == 'processing' %}muted{% endif %}">Đã đóng gói xong</div>
+                <div class="tl-desc">Hàng đã được đóng gói và sẵn sàng giao</div>
+              </div>
+            </div>
+
+            <div class="tl-item {% if order.status == 'delivered' %}done{% endif %}">
+              <div class="tl-dot {% if order.status == 'delivered' %}done{% elif order.status == 'shipping' %}active{% else %}pending{% endif %}">
+                <i class="fas fa-{% if order.status == 'delivered' %}check{% else %}truck{% endif %}"></i>
+              </div>
+              <div class="tl-content">
+                <div class="tl-title {% if order.status != 'shipping' and order.status != 'delivered' %}muted{% endif %}">Đang giao hàng</div>
+                <div class="tl-desc">
+                  {% if order.status == 'shipping' %}
+                    Shipper đang trên đường giao đến địa chỉ của bạn.
+                  {% elif order.status == 'delivered' %}
+                    Đã giao thành công.
+                  {% else %}
+                    Đang chờ xác nhận...
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="tl-item {% if order.status == 'delivered' %}done{% endif %}">
+              <div class="tl-dot {% if order.status == 'delivered' %}done{% else %}pending{% endif %}">
+                <i class="fas fa-{% if order.status == 'delivered' %}check{% else %}home{% endif %}"></i>
+              </div>
+              <div class="tl-content">
+                <div class="tl-title {% if order.status != 'delivered' %}muted{% endif %}">Giao hàng thành công</div>
+                {% if order.status != 'delivered' %}
+                <div class="tl-desc">Đang chờ xác nhận...</div>
+                {% endif %}
+              </div>
+            </div>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+
+        <!-- Thông tin đơn hàng bên phải — dữ liệu thật -->
+        <div class="col-lg-4">
+          <div class="box-element mb-3">
+            <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--green-deep);margin-bottom:.8rem;"><i class="fas fa-map-marker-alt me-1"></i>Địa chỉ giao hàng</p>
+            <p style="font-size:.88rem;color:var(--charcoal);font-weight:600;margin-bottom:.2rem;">{{ order.customer.get_full_name|default:order.customer.username }}</p>
+            {% if shipping %}
+            <p style="font-size:.85rem;color:var(--muted);margin:0;line-height:1.6;">
+              {{ shipping.address }}{% if shipping.city %}, {{ shipping.city }}{% endif %}{% if shipping.state %}, {{ shipping.state }}{% endif %}
+            </p>
+            <p style="font-size:.82rem;color:var(--muted);margin-top:.3rem;"><i class="fas fa-phone me-1"></i>{{ shipping.mobile }}</p>
+            {% else %}
+            <p style="font-size:.85rem;color:var(--muted);margin:0;">Chưa có thông tin địa chỉ.</p>
+            {% endif %}
+          </div>
+          <div class="box-element">
+            <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--green-deep);margin-bottom:.8rem;"><i class="fas fa-box me-1"></i>Sản phẩm trong đơn</p>
+            {% for item in order.orderitem_set.all %}
+            <div style="display:flex;gap:.7rem;margin-bottom:.7rem;padding-bottom:.7rem;border-bottom:1px solid rgba(128,128,128,.15);">
+              <img src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--cream);">
+              <div>
+                <div style="font-size:.85rem;font-weight:600;color:var(--charcoal);">{{ item.product.name }}</div>
+                <div style="font-size:.78rem;color:var(--muted);">x{{ item.quantity }}</div>
+              </div>
+            </div>
+            {% empty %}
+            <p style="font-size:.85rem;color:var(--muted);margin:0;">Không có sản phẩm nào.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Trạng thái rỗng — chỉ hiển thị khi chưa nhập gì (trang vừa mở lần đầu).
+         Trường hợp đã tìm nhưng không có kết quả đã được báo ở box tra cứu phía trên. -->
+    {% if not order and not searched %}
+    <div class="text-center py-5" style="color:var(--muted);">
+      <i class="fas fa-box-open" style="font-size:3rem;color:#ddd;"></i>
+      <p style="margin-top:1rem;">Nhập mã đơn hàng hoặc email ở trên để bắt đầu tra cứu.</p>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

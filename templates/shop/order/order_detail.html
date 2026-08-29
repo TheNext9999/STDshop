@@ -1,0 +1,166 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Đơn hàng #{{ order.id }} - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order_detail.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="order-detail-page">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / <a href="{% url 'order_history' %}">Đơn hàng</a> / Chi tiết đơn #{{ order.id }}
+    </div>
+
+    <!-- Tiêu đề + trạng thái -->
+    <div class="order-detail-header">
+      <div>
+        <h1 class="section-heading">Đơn hàng #{{ order.id }}</h1>
+        <p style="font-size:.85rem;color:#666;">Đặt lúc {{ order.date_order|date:"H:i — d/m/Y" }}</p>
+      </div>
+      <span class="status-badge-lg">
+        <i class="fas fa-check-circle"></i> {{ order.get_status_display }}
+      </span>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:{% if message.tags == 'error' %}#e74c3c{% else %}#00a68f{% endif %}; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Timeline trạng thái đơn hàng — dựa trên order.status thật
+         Lưu ý: model không lưu timestamp riêng cho mỗi bước,
+         nên chỉ hiển thị bước nào đã hoàn thành dựa theo trạng thái hiện tại. -->
+    {% if order.status == 'cancelled' %}
+    <div class="order-timeline">
+      <div style="text-align:center;color:#DC2626;">
+        <i class="fas fa-times-circle" style="font-size:2rem;"></i>
+        <p style="margin-top:.5rem;font-weight:600;">Đơn hàng đã bị hủy</p>
+      </div>
+    </div>
+    {% else %}
+    <div class="order-timeline">
+      <div class="timeline-steps">
+        <div class="timeline-progress"
+             style="width:{% if order.status == 'pending' %}0{% elif order.status == 'processing' %}33{% elif order.status == 'shipping' %}66{% else %}100{% endif %}%;"></div>
+
+        <div class="timeline-step">
+          <div class="step-dot done"><i class="fas fa-check"></i></div>
+          <div class="step-label">Đặt hàng</div>
+          <div class="step-date">{{ order.date_order|date:"d/m H:i" }}</div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-dot {% if order.status != 'pending' %}done{% else %}pending{% endif %}">
+            <i class="fas fa-{% if order.status != 'pending' %}check{% else %}clock{% endif %}"></i>
+          </div>
+          <div class="step-label">Xác nhận</div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-dot {% if order.status == 'shipping' or order.status == 'delivered' %}done{% elif order.status == 'processing' %}active{% else %}pending{% endif %}">
+            <i class="fas fa-{% if order.status == 'shipping' or order.status == 'delivered' %}check{% else %}box{% endif %}"></i>
+          </div>
+          <div class="step-label">Đóng gói</div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-dot {% if order.status == 'delivered' %}done{% elif order.status == 'shipping' %}active{% else %}pending{% endif %}">
+            <i class="fas fa-{% if order.status == 'delivered' %}check{% else %}truck{% endif %}"></i>
+          </div>
+          <div class="step-label">Đang giao</div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-dot {% if order.status == 'delivered' %}done{% else %}pending{% endif %}">
+            <i class="fas fa-{% if order.status == 'delivered' %}check{% else %}home{% endif %}"></i>
+          </div>
+          <div class="step-label">Đã nhận</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="info-panels-row">
+
+      <!-- Thông tin người nhận — dữ liệu thật từ model ShippingAddress -->
+      <div>
+        <div class="info-panel">
+          <div class="info-panel-title"><i class="fas fa-user"></i> Người nhận</div>
+          <div class="info-row"><span class="label">Họ tên</span><span class="value">{{ order.name|default:order.customer.get_full_name|default:order.customer.username }}</span></div>
+          <div class="info-row"><span class="label">Email</span><span class="value">{{ order.customer.email }}</span></div>
+          <div class="info-row"><span class="label">Điện thoại</span><span class="value">{{ shipping.mobile|default:"Chưa cập nhật" }}</span></div>
+          <div class="info-row"><span class="label">Địa chỉ</span><span class="value">{% if shipping %}{{ shipping.address }}{% if shipping.city %}, {{ shipping.city }}{% endif %}{% if shipping.state %}, {{ shipping.state }}{% endif %}{% else %}Chưa cập nhật{% endif %}</span></div>
+        </div>
+      </div>
+
+      <!-- Thông tin thanh toán — dữ liệu thật từ model Order -->
+      <div>
+        <div class="info-panel">
+          <div class="info-panel-title"><i class="fas fa-credit-card"></i> Thanh toán</div>
+          <div class="info-row"><span class="label">Trạng thái đơn</span><span class="value" style="color:var(--primary-dark);">{{ order.get_status_display }}</span></div>
+          <div class="info-row"><span class="label">Mã giao dịch</span><span class="value" style="font-size:.8rem;">{{ order.trasaction_id|default:"Chưa có" }}</span></div>
+          <div class="info-row"><span class="label">Ngày đặt</span><span class="value">{{ order.date_order|date:"d/m/Y H:i" }}</span></div>
+          <div class="info-row"><span class="label">Vận chuyển</span><span class="value">Miễn phí</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Danh sách sản phẩm trong đơn -->
+    <div class="order-items-table">
+      <div class="items-table-header">
+        <span style="flex:3;">Sản phẩm</span>
+        <span style="flex:1;text-align:center;">Đơn giá</span>
+        <span style="flex:1;text-align:center;">SL</span>
+        <span style="flex:1;text-align:right;">Thành tiền</span>
+      </div>
+      {% for item in order.orderitem_set.all %}
+      <div class="item-row">
+        <img src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}">
+        <div class="item-info">
+          <div class="item-name">{{ item.product.name }}</div>
+        </div>
+        <div class="item-qty">{{ item.product.price|vnd }}</div>
+        <div class="item-qty">x{{ item.quantity }}</div>
+        <div class="item-price">{{ item.get_total|vnd }}</div>
+      </div>
+      {% empty %}
+      <div class="item-row">
+        <div style="color:#666;padding:1rem;">Đơn hàng không có sản phẩm nào.</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Tổng kết -->
+    <div class="order-summary-wrap">
+      <div class="order-summary-table">
+        <div class="summary-row"><span class="s-label">Tạm tính</span><span>{{ order.get_cart_total|vnd }}</span></div>
+        <div class="summary-row"><span class="s-label">Phí vận chuyển</span><span style="color:var(--primary-dark);">Miễn phí</span></div>
+        <div class="summary-row grand"><span class="s-label">Tổng cộng</span><span class="s-value">{{ order.get_cart_total|vnd }}</span></div>
+      </div>
+    </div>
+
+    <!-- Nút hành động -->
+    <div class="action-bar">
+      <a href="{% url 'order_history' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+
+      <!-- Chỉ hiện nút hủy khi đơn còn ở trạng thái "Chờ xác nhận" -->
+      {% if order.status == 'pending' %}
+      <form method="post" action="{% url 'order_detail' order.id %}" style="display:inline;"
+            onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?');">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="cancel">
+        <button type="submit" class="btn-cancel">Hủy đơn hàng</button>
+      </form>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

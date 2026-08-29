@@ -1,0 +1,124 @@
+.orders-page { padding: 2.5rem 0 5rem; }
+
+/* Breadcrumb đơn giản (không dùng Bootstrap) */
+.breadcrumb-simple { font-size: .85rem; color: #888; margin-bottom: 16px; }
+.breadcrumb-simple a { color: var(--primary); text-decoration: none; }
+.breadcrumb-simple a:hover { text-decoration: underline; }
+
+.section-heading { font-size: 1.5rem; font-weight: 700; color: #222; margin: 4px 0 6px; }
+.section-sub { font-size: .9rem; color: #666; margin-bottom: 1.5rem; }
+
+/* Bộ lọc trạng thái đơn hàng */
+.filter-tabs {
+    display: flex; gap: .4rem; flex-wrap: wrap;
+    background: #fff;
+    border-radius: 14px;
+    padding: .6rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    margin-bottom: 1.5rem;
+}
+.filter-tab {
+    padding: .45rem 1.1rem;
+    border-radius: 8px;
+    font-size: .85rem; font-weight: 500;
+    cursor: pointer; border: none;
+    background: transparent; color: #666;
+    transition: all 0.25s ease;
+}
+.filter-tab.active, .filter-tab:hover {
+    background: var(--primary); color: #fff;
+}
+.filter-tab .count {
+    background: rgba(255,255,255,.25);
+    border-radius: 30px; padding: 0 .4rem;
+    font-size: .72rem; margin-left: .3rem;
+}
+.filter-tab:not(.active) .count {
+    background: #e8f7f4; color: var(--primary-dark);
+}
+
+/* Thẻ đơn hàng */
+.order-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease;
+}
+.order-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+/* Header của mỗi thẻ đơn hàng */
+.order-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.4rem;
+    border-bottom: 1px solid #f5f5f5;
+    flex-wrap: wrap; gap: .5rem;
+}
+.order-id { font-size: .82rem; color: #666; }
+.order-id strong { color: var(--primary-dark); font-size: .9rem; }
+.order-date { font-size: .82rem; color: #666; }
+
+/* Badge trạng thái */
+.status-badge {
+    padding: .3rem .8rem;
+    border-radius: 30px;
+    font-size: .75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+}
+.status-pending    { background: #FEF3C7; color: #92400E; }
+.status-processing { background: #EFF6FF; color: #1D4ED8; }
+.status-shipping   { background: #F0FDF4; color: #166534; }
+.status-delivered  { background: #e8f7f4; color: var(--primary-dark); }
+.status-cancelled  { background: #FEF2F2; color: #991B1B; }
+
+/* Nội dung đơn hàng: ảnh sản phẩm */
+.order-card-body { padding: 1rem 1.4rem; }
+.order-products { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: .8rem; }
+.order-product-thumb {
+    width: 60px; height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+.order-product-more {
+    width: 60px; height: 60px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; font-weight: 700; color: #666;
+}
+
+/* Footer đơn hàng: tổng tiền + nút */
+.order-card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .8rem 1.4rem;
+    background: #f8f9fa;
+    flex-wrap: wrap; gap: .5rem;
+}
+.order-total-label { font-size: .82rem; color: #666; }
+.order-total-value {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--primary-dark);
+}
+.btn-reorder {
+    background: transparent; color: var(--primary-dark);
+    border: 1.5px solid var(--primary); border-radius: 30px;
+    padding: .45rem 1.2rem; font-size: .82rem; font-weight: 600;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+.btn-reorder:hover { background: var(--primary); color: #fff; }
+
+/* Trạng thái trống */
+.empty-orders { text-align: center; padding: 5rem 0; }
+.empty-orders i { font-size: 3.5rem; color: #ddd; }
+
+.btn-shop-now {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 30px;
+    padding: .7rem 1.8rem; font-size: .9rem; font-weight: 700;
+    text-decoration: none;
+}
+.btn-shop-now:hover { background: var(--primary-dark); }

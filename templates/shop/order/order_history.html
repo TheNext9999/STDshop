@@ -1,0 +1,97 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Lịch sử đơn hàng - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order_history.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="orders-page">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / <a href="{% url 'profile' %}">Hồ sơ</a> / Lịch sử đơn hàng
+    </div>
+
+    <h1 class="section-heading">Lịch sử đơn hàng</h1>
+    <p class="section-sub">Theo dõi và quản lý tất cả đơn hàng của bạn</p>
+
+    <!-- Bộ lọc theo trạng thái -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterOrders('all', this)">Tất cả <span class="count">{{ status_counts.all }}</span></button>
+      <button class="filter-tab" onclick="filterOrders('pending', this)">Chờ xác nhận <span class="count">{{ status_counts.pending }}</span></button>
+      <button class="filter-tab" onclick="filterOrders('processing', this)">Đang xử lý <span class="count">{{ status_counts.processing }}</span></button>
+      <button class="filter-tab" onclick="filterOrders('shipping', this)">Đang giao <span class="count">{{ status_counts.shipping }}</span></button>
+      <button class="filter-tab" onclick="filterOrders('delivered', this)">Đã giao <span class="count">{{ status_counts.delivered }}</span></button>
+      <button class="filter-tab" onclick="filterOrders('cancelled', this)">Đã hủy <span class="count">{{ status_counts.cancelled }}</span></button>
+    </div>
+
+    <!-- Danh sách đơn hàng — chỉ dữ liệu thật từ views.order_history -->
+    {% if orders %}
+      {% for order in orders %}
+      <div class="order-card" data-status="{{ order.status }}">
+        <div class="order-card-header">
+          <div>
+            <div class="order-id">Mã đơn: <strong>#{{ order.id }}</strong></div>
+            <div class="order-date"><i class="fas fa-clock"></i> {{ order.date_order|date:"d/m/Y H:i" }}</div>
+          </div>
+          <span class="status-badge status-{{ order.status }}">
+            {{ order.get_status_display }}
+          </span>
+        </div>
+
+        <div class="order-card-body">
+          <!-- Ảnh thumbnail sản phẩm trong đơn -->
+          <div class="order-products">
+            {% for item in order.orderitem_set.all|slice:":4" %}
+              <img class="order-product-thumb" src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}">
+            {% endfor %}
+            {% if order.orderitem_set.count > 4 %}
+              <div class="order-product-more">+{{ order.orderitem_set.count|add:"-4" }}</div>
+            {% endif %}
+          </div>
+          <div style="font-size:.85rem;color:#666;">{{ order.get_cart_items }} sản phẩm</div>
+        </div>
+
+        <div class="order-card-footer">
+          <div>
+            <div class="order-total-label">Tổng tiền</div>
+            <div class="order-total-value">{{ order.get_cart_total|vnd }}</div>
+          </div>
+          <div>
+            <a href="{% url 'order_detail' order.id %}" class="btn-reorder">Xem chi tiết</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <!-- Trạng thái trống thật — chưa có đơn hàng nào -->
+      <div class="empty-orders">
+        <i class="fas fa-box-open"></i>
+        <p style="color:#666;margin-top:1rem;">Bạn chưa có đơn hàng nào.</p>
+        <a href="{% url 'home' %}" class="btn-shop-now">Mua sắm ngay</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  /* Lọc đơn hàng theo trạng thái — ẩn/hiện .order-card đã render sẵn từ server */
+  function filterOrders(status, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.order-card').forEach(card => {
+      card.style.display = (status === 'all' || card.dataset.status === status) ? '' : 'none';
+    });
+  }
+</script>
+{% endblock %}
