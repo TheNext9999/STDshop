@@ -1,0 +1,208 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_flash_sale.css' %}" />
+{% endblock %}
+
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo"><div class="dot"></div> STD Admin</div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}"    class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}"       class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng</a>
+        <a href="{% url 'admin_products' %}"     class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
+        <a href="{% url 'admin_users' %}"        class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
+        <a href="{% url 'admin_categories' %}"   class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
+        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}"     class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
+        <a href="{% url 'admin_flash_sale' %}"   class="admin-nav-item active"><i class="fas fa-bolt"></i> Flash Sale</a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
+      </div>
+      <div class="admin-nav-group">
+        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">⚡ Quản lý Flash Sale</h1>
+          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ sale_products|length }} sản phẩm đang trong Flash Sale</p>
+        </div>
+        <!-- Nút tắt tất cả Flash Sale -->
+        <form method="post" action="{% url 'admin_flash_sale' %}"
+              onsubmit="return confirm('Tắt tất cả Flash Sale hiện tại?')">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="stop_all">
+          <button type="submit" class="btn-admin-sm danger">
+            <i class="fas fa-power-off me-1"></i>Tắt tất cả Flash Sale
+          </button>
+        </form>
+      </div>
+
+      {% for msg in messages %}
+      <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}success{% endif %} mb-3" style="border-radius:var(--radius-sm);font-size:.88rem;">{{ msg }}</div>
+      {% endfor %}
+
+      <!-- KPI nhanh -->
+      <div class="sale-kpi">
+        <div class="sale-kpi-card" style="border-left-color:#C0392B;">
+          <div class="num">{{ sale_products|length }}</div>
+          <div class="label">Đang Flash Sale</div>
+        </div>
+        <div class="sale-kpi-card" style="border-left-color:var(--green-deep);">
+          <div class="num">{{ other_products|length }}</div>
+          <div class="label">Chưa trong Flash Sale</div>
+        </div>
+      </div>
+
+      <!-- Sản phẩm ĐANG trong Flash Sale -->
+      {% if sale_products %}
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3 class="admin-panel-title">
+            <i class="fas fa-fire me-2" style="color:#C0392B;"></i>Đang Flash Sale
+          </h3>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Giá gốc</th>
+                <th>% Giảm</th>
+                <th>Giá sale</th>
+                <th>Tồn kho</th>
+                <th>Đã bán</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in sale_products %}
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.6rem;">
+                    <img src="{{ p.ImageURL }}" alt="{{ p.name }}"
+                         style="width:40px;height:40px;object-fit:cover;border-radius:6px;background:var(--cream);">
+                    <div style="font-weight:600;font-size:.85rem;">{{ p.name }}</div>
+                  </div>
+                </td>
+                <td>${{ p.price|floatformat:2 }}</td>
+                <td>
+                  <!-- Inline edit % giảm giá -->
+                  <form method="post" action="{% url 'admin_flash_sale' %}" style="display:flex;align-items:center;gap:.3rem;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="product_id" value="{{ p.id }}">
+                    <input type="hidden" name="is_flash_sale" value="on">
+                    <input type="hidden" name="stock" value="{{ p.stock }}">
+                    <input class="inline-input" type="number" name="discount_percent"
+                           value="{{ p.discount_percent }}" min="0" max="100"
+                           onchange="this.form.submit()" style="width:65px;">
+                    <span style="font-size:.8rem;color:var(--muted);">%</span>
+                  </form>
+                </td>
+                <td><strong style="color:#C0392B;">${{ p.sale_price|floatformat:2 }}</strong></td>
+                <td>
+                  <div style="font-size:.82rem;">{{ p.stock }}</div>
+                  <div class="stock-bar">
+                    <div class="stock-fill" style="width:{% if p.stock > 0 %}{% widthratio p.sold p.stock|add:p.sold 100 %}{% else %}100{% endif %}%;"></div>
+                  </div>
+                </td>
+                <td>{{ p.sold }}</td>
+                <td>
+                  <!-- Tắt Flash Sale -->
+                  <form method="post" action="{% url 'admin_flash_sale' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle">
+                    <input type="hidden" name="product_id" value="{{ p.id }}">
+                    <button type="submit" class="btn-admin-sm amber"
+                            onclick="return confirm('Tắt Flash Sale cho \'{{ p.name }}\'?')">
+                      <i class="fas fa-toggle-on me-1"></i>Tắt
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Sản phẩm CHƯA trong Flash Sale — thêm mới -->
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3 class="admin-panel-title">
+            <i class="fas fa-plus-circle me-2" style="color:var(--green-deep);"></i>Thêm sản phẩm vào Flash Sale
+          </h3>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+                <th>% Giảm muốn áp dụng</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in other_products %}
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:.6rem;">
+                    <img src="{{ p.ImageURL }}" alt="{{ p.name }}"
+                         style="width:40px;height:40px;object-fit:cover;border-radius:6px;background:var(--cream);">
+                    <div style="font-weight:600;font-size:.85rem;">{{ p.name }}</div>
+                  </div>
+                </td>
+                <td>${{ p.price|floatformat:2 }}</td>
+                <td>{{ p.stock }}</td>
+                <td>
+                  <form method="post" action="{% url 'admin_flash_sale' %}"
+                        style="display:flex;align-items:center;gap:.5rem;" id="form-{{ p.id }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="product_id" value="{{ p.id }}">
+                    <input type="hidden" name="is_flash_sale" value="on">
+                    <input type="hidden" name="stock" value="{{ p.stock }}">
+                    <input class="inline-input" type="number" name="discount_percent"
+                           id="disc-{{ p.id }}" value="20" min="1" max="100" style="width:65px;">
+                    <span style="font-size:.8rem;color:var(--muted);">%</span>
+                    <button type="submit" class="btn-admin-sm" style="background:var(--green-deep);color:#fff;">
+                      <i class="fas fa-bolt me-1"></i>Bật
+                    </button>
+                  </form>
+                </td>
+                <td></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:2rem;">Tất cả sản phẩm đã trong Flash Sale.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+{% endblock %}
+{% block site_footer %}{% endblock %}

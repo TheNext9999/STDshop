@@ -1,0 +1,226 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_notifications.css' %}" />
+{% endblock %}
+
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo"><div class="dot"></div> STD Admin</div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}"    class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}"       class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng</a>
+        <a href="{% url 'admin_products' %}"     class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
+        <a href="{% url 'admin_users' %}"        class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
+        <a href="{% url 'admin_categories' %}"   class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
+        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}"     class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
+        <a href="{% url 'admin_flash_sale' %}"   class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item active"><i class="fas fa-bell"></i> Thông báo</a>
+      </div>
+      <div class="admin-nav-group">
+        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý Thông báo</h1>
+          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ total_notifs }} thông báo · {{ unread_notifs }} chưa đọc</p>
+        </div>
+      </div>
+
+      {% for msg in messages %}
+      <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}success{% endif %} mb-3" style="border-radius:var(--radius-sm);font-size:.88rem;">{{ msg }}</div>
+      {% endfor %}
+
+      <!-- KPI -->
+      <div class="notif-kpi">
+        <div class="notif-kpi-card" style="border-left-color:var(--green-deep);">
+          <div class="num">{{ total_notifs }}</div>
+          <div class="label">Tổng đã gửi</div>
+        </div>
+        <div class="notif-kpi-card" style="border-left-color:var(--amber);">
+          <div class="num">{{ unread_notifs }}</div>
+          <div class="label">Chưa đọc</div>
+        </div>
+        <div class="notif-kpi-card" style="border-left-color:#1D4ED8;">
+          <div class="num">{{ users_list|length }}</div>
+          <div class="label">Người dùng nhận được</div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+
+        <!-- Form gửi thông báo -->
+        <div class="col-lg-4">
+          <div class="form-card">
+            <h6 style="font-family:'Playfair Display',serif;font-weight:700;margin-bottom:1rem;">
+              <i class="fas fa-paper-plane me-2" style="color:var(--green-deep);"></i>Gửi thông báo mới
+            </h6>
+            <form method="post" action="{% url 'admin_notifications' %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="send">
+
+              <div class="mb-3">
+                <label>Loại thông báo</label>
+                <select class="form-control" name="type">
+                  <option value="system">🔵 Hệ thống</option>
+                  <option value="promo">🟡 Khuyến mãi</option>
+                  <option value="order">🟢 Đơn hàng</option>
+                  <option value="warning">🔴 Cảnh báo</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label>Gửi tới</label>
+                <select class="form-control" name="target">
+                  <option value="all">📢 Tất cả người dùng ({{ users_list|length }} người)</option>
+                  {% for u in users_list %}
+                  <option value="{{ u.id }}">👤 {{ u.username }} — {{ u.email }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label>Tiêu đề *</label>
+                <input class="form-control" type="text" name="title"
+                       placeholder="Vd: Flash Sale 60% bắt đầu hôm nay!" required>
+              </div>
+
+              <div class="mb-3">
+                <label>Nội dung *</label>
+                <textarea class="form-control" name="message"
+                          placeholder="Nhập nội dung thông báo chi tiết..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-send" style="width:100%;">
+                <i class="fas fa-paper-plane me-1"></i>Gửi thông báo
+              </button>
+            </form>
+          </div>
+
+          <!-- Mẫu thông báo nhanh -->
+          <div class="form-card">
+            <h6 style="font-family:'Playfair Display',serif;font-weight:700;margin-bottom:.8rem;">
+              ⚡ Mẫu gửi nhanh
+            </h6>
+            <div style="display:flex;flex-direction:column;gap:.5rem;">
+              <button onclick="fillTemplate('promo', 'Flash Sale hôm nay!', '⚡ Ưu đãi khủng — Giảm đến 60% toàn bộ sản phẩm. Chỉ trong hôm nay, số lượng có hạn!')"
+                      class="btn-admin-sm" style="text-align:left;">⚡ Flash Sale</button>
+              <button onclick="fillTemplate('promo', 'Voucher mới dành cho bạn!', '🎁 Bạn vừa nhận được voucher giảm giá. Vào mục Voucher để xem và sử dụng ngay!')"
+                      class="btn-admin-sm" style="text-align:left;">🎁 Voucher mới</button>
+              <button onclick="fillTemplate('system', 'Cập nhật hệ thống', '🔧 Hệ thống sẽ bảo trì từ 00:00 - 02:00. Xin lỗi vì sự bất tiện này!')"
+                      class="btn-admin-sm" style="text-align:left;">🔧 Bảo trì hệ thống</button>
+              <button onclick="fillTemplate('promo', 'Chào mừng bạn đến với STD Shop!', '🌸 Cảm ơn bạn đã tin tưởng STD Shop. Khám phá ngay hàng nghìn sản phẩm chất lượng!')"
+                      class="btn-admin-sm" style="text-align:left;">🌸 Chào mừng</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danh sách thông báo đã gửi -->
+        <div class="col-lg-8">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3 class="admin-panel-title">
+                <i class="fas fa-history me-2" style="color:var(--green-deep);"></i>Lịch sử thông báo đã gửi
+              </h3>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Loại</th>
+                    <th>Tiêu đề</th>
+                    <th>Người nhận</th>
+                    <th>Trạng thái</th>
+                    <th>Thời gian</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for n in notif_list %}
+                  <tr>
+                    <td>
+                      <span class="type-badge type-{{ n.type }}">
+                        <i class="{{ n.icon }} me-1"></i>{{ n.get_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <div style="font-weight:600;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        {{ n.title }}
+                      </div>
+                      <div style="font-size:.75rem;color:var(--muted);margin-top:.2rem;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        {{ n.message }}
+                      </div>
+                    </td>
+                    <td>
+                      <div style="font-weight:600;font-size:.82rem;">{{ n.user.username }}</div>
+                      <div style="font-size:.75rem;color:var(--muted);">{{ n.user.email }}</div>
+                    </td>
+                    <td>
+                      {% if n.is_read %}
+                      <span style="font-size:.75rem;background:#f0f0f0;color:#999;padding:.2rem .6rem;border-radius:30px;font-weight:700;">Đã đọc</span>
+                      {% else %}
+                      <span style="font-size:.75rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Chưa đọc</span>
+                      {% endif %}
+                    </td>
+                    <td style="font-size:.8rem;color:var(--muted);white-space:nowrap;">
+                      {{ n.created_at|date:"d/m/Y H:i" }}
+                    </td>
+                    <td>
+                      <form method="post" action="{% url 'admin_notifications' %}" style="display:inline;"
+                            onsubmit="return confirm('Xóa thông báo này?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="notif_id" value="{{ n.id }}">
+                        <button type="submit" class="btn-admin-sm danger"><i class="fas fa-trash"></i></button>
+                      </form>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="6" style="text-align:center;color:var(--muted);padding:3rem;">
+                      <i class="fas fa-bell-slash" style="font-size:2rem;color:#ddd;display:block;margin-bottom:.8rem;"></i>
+                      Chưa có thông báo nào được gửi.
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  /* Điền sẵn form từ mẫu thông báo nhanh */
+  function fillTemplate(type, title, message) {
+    document.querySelector('select[name="type"]').value = type;
+    document.querySelector('input[name="title"]').value = title;
+    document.querySelector('textarea[name="message"]').value = message;
+    document.querySelector('input[name="title"]').focus();
+  }
+</script>
+{% endblock %}
+{% block site_footer %}{% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_vouchers.css' %}" />
+{% endblock %}
+
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo"><div class="dot"></div> SDT Admin</div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}"    class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}"       class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng</a>
+        <a href="{% url 'admin_products' %}"     class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
+        <a href="{% url 'admin_users' %}"        class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
+        <a href="{% url 'admin_categories' %}"   class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
+        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}"     class="admin-nav-item active"><i class="fas fa-ticket-alt"></i> Voucher</a>
+        <a href="{% url 'admin_flash_sale' %}"   class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
+      </div>
+      <div class="admin-nav-group">
+        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý Voucher</h1>
+          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ vouchers|length }} voucher trong hệ thống</p>
+        </div>
+      </div>
+
+      {% for msg in messages %}
+      <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}success{% endif %} mb-3" style="border-radius:var(--radius-sm);font-size:.88rem;">{{ msg }}</div>
+      {% endfor %}
+
+      <div class="row g-3">
+
+        <!-- Form tạo voucher mới -->
+        <div class="col-lg-4">
+          <div class="form-card">
+            <h6 style="font-family:'Playfair Display',serif;font-weight:700;margin-bottom:1rem;" id="form-title">Tạo Voucher mới</h6>
+            <form method="post" action="{% url 'admin_vouchers' %}" id="voucher-form">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="save">
+              <input type="hidden" name="voucher_id" id="voucher-id" value="">
+
+              <div class="mb-3">
+                <label>Mã Voucher *</label>
+                <input class="form-control" type="text" name="code" id="v-code"
+                       placeholder="STD20" required style="text-transform:uppercase;letter-spacing:1px;">
+              </div>
+              <div class="mb-3">
+                <label>Tên hiển thị</label>
+                <input class="form-control" type="text" name="name" id="v-name"
+                       placeholder="Giảm 20% cho đơn từ $50">
+              </div>
+              <div class="mb-3">
+                <label>% Giảm giá *</label>
+                <input class="form-control" type="number" name="discount" id="v-discount"
+                       min="1" max="100" value="10" required>
+              </div>
+              <div class="mb-3">
+                <label>Đơn tối thiểu ($)</label>
+                <input class="form-control" type="number" name="min_order" id="v-min"
+                       min="0" step="0.01" value="0">
+              </div>
+              <div class="mb-3">
+                <label>Ngày hết hạn</label>
+                <input class="form-control" type="date" name="expiry" id="v-expiry">
+              </div>
+              <div class="mb-3">
+                <label>Phân phối cho</label>
+                <select class="form-control" name="target" id="v-target">
+                  <option value="all">Tất cả người dùng</option>
+                  {% for u in users_list %}
+                  <option value="{{ u.id }}">{{ u.username }} ({{ u.email }})</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div style="display:flex;gap:.6rem;">
+                <button type="submit" class="btn-save"><i class="fas fa-paper-plane me-1"></i>Tạo &amp; Phân phối</button>
+                <button type="button" class="btn-admin-sm" onclick="resetForm()">Làm mới</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bảng danh sách voucher -->
+        <div class="col-lg-8">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3 class="admin-panel-title"><i class="fas fa-ticket-alt me-2" style="color:var(--amber);"></i>Danh sách Voucher</h3>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Người dùng</th>
+                    <th>Giảm</th>
+                    <th>Đơn tối thiểu</th>
+                    <th>Hết hạn</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for v in vouchers %}
+                  <tr>
+                    <td>
+                      <code style="font-size:.82rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:4px;font-weight:700;">{{ v.code }}</code>
+                    </td>
+                    <td>{{ v.name|default:"—" }}</td>
+                    <td>{{ v.user.username }}</td>
+                    <td><strong style="color:var(--amber);">-{{ v.discount }}%</strong></td>
+                    <td>${{ v.min_order|floatformat:0 }}</td>
+                    <td>{{ v.expiry|date:"d/m/Y"|default:"Không giới hạn" }}</td>
+                    <td>
+                      {% if v.is_used %}
+                      <span style="font-size:.75rem;background:#f0f0f0;color:#999;padding:.2rem .6rem;border-radius:30px;font-weight:700;">Đã dùng</span>
+                      {% else %}
+                      <span style="font-size:.75rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Còn hiệu lực</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <form method="post" action="{% url 'admin_vouchers' %}" style="display:inline;"
+                            onsubmit="return confirm('Xóa voucher {{ v.code }}?')">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="voucher_id" value="{{ v.id }}">
+                        <button type="submit" class="btn-admin-sm danger"><i class="fas fa-trash"></i></button>
+                      </form>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có voucher nào.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  document.getElementById('v-code').addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+  });
+  function resetForm() {
+    document.getElementById('form-title').textContent = 'Tạo Voucher mới';
+    document.getElementById('voucher-form').reset();
+    document.getElementById('voucher-id').value = '';
+  }
+</script>
+{% endblock %}
+{% block site_footer %}{% endblock %}

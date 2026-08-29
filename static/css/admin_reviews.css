@@ -1,0 +1,67 @@
+  .admin-page{padding:0}.admin-layout{display:flex;min-height:calc(100vh - 68px)}
+  .admin-sidebar{width:240px;flex-shrink:0;background:#1a1f2e;display:flex;flex-direction:column;position:sticky;top:68px;height:calc(100vh - 68px);overflow-y:auto}
+  .admin-logo{padding:1.5rem;border-bottom:1px solid rgba(255,255,255,.08);font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:.6rem}
+  .admin-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--green-mid)}
+  .admin-nav-group{padding:1rem 0 .5rem}
+  .admin-nav-label{font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:rgba(255,255,255,.3);padding:0 1.2rem .5rem}
+  .admin-nav-item{display:flex;align-items:center;gap:.7rem;padding:.65rem 1.2rem;font-size:.85rem;font-weight:500;color:rgba(255,255,255,.6);text-decoration:none;border-left:3px solid transparent;transition:all .25s ease}
+  .admin-nav-item:hover,.admin-nav-item.active{background:rgba(255,255,255,.06);color:#fff;border-left-color:var(--green-mid)}
+  .admin-nav-item i{width:16px;text-align:center}
+  .admin-nav-item .badge{background:var(--amber);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:30px;margin-left:auto}
+  .admin-content{flex:1;background:#f4f6f9;padding:2rem;overflow-y:auto}
+  .btn-admin-sm{font-size:.78rem;font-weight:600;padding:.35rem .9rem;border-radius:30px;background:var(--green-light);color:var(--green-deep);border:none;cursor:pointer;text-decoration:none;transition:all .25s ease}
+  .btn-admin-sm:hover{background:var(--green-deep);color:#fff}
+  .btn-admin-sm.danger{background:#FEF2F2;color:#DC2626}
+  .btn-admin-sm.danger:hover{background:#DC2626;color:#fff}
+  .btn-admin-sm.warn{background:#FEF3C7;color:#92400E}
+  .btn-admin-sm.warn:hover{background:#F59E0B;color:#fff}
+
+  /* KPI */
+  .review-kpi{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+  .review-kpi-card{background:var(--white);border-radius:var(--radius-sm);padding:.9rem 1.3rem;box-shadow:var(--shadow-sm);flex:1;min-width:130px;cursor:pointer;transition:all .25s ease;border-bottom:3px solid transparent;text-decoration:none;display:block}
+  .review-kpi-card:hover{border-bottom-color:var(--green-deep)}
+  .review-kpi-card.active{border-bottom-color:var(--green-deep);background:var(--green-light)}
+  .review-kpi-card .num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e}
+  .review-kpi-card .label{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+
+  /* Thẻ bình luận */
+  .review-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:1.3rem 1.5rem;margin-bottom:1rem;border-left:4px solid transparent}
+  .review-card.hidden-review{border-left-color:#DC2626;background:#FFFBFB}
+  .review-card.flagged-review{border-left-color:var(--amber)}
+  .review-card.approved-review{border-left-color:var(--green-deep)}
+
+  .review-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.8rem;flex-wrap:wrap}
+  .reviewer-info{display:flex;align-items:center;gap:.7rem}
+  .reviewer-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green-deep),var(--green-mid));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:.9rem;flex-shrink:0}
+  .reviewer-name{font-size:.88rem;font-weight:700;color:var(--charcoal)}
+  .reviewer-meta{font-size:.76rem;color:var(--muted);margin-top:.15rem}
+  .review-stars{color:#FBBF24;font-size:.85rem}
+
+  .review-product-tag{display:inline-flex;align-items:center;gap:.4rem;background:var(--cream);border-radius:30px;padding:.25rem .7rem;font-size:.78rem;color:var(--charcoal);text-decoration:none;font-weight:600}
+  .review-product-tag img{width:20px;height:20px;object-fit:cover;border-radius:4px}
+  .review-product-tag:hover{background:var(--green-light);color:var(--green-deep)}
+
+  .review-comment-text{font-size:.88rem;color:#444;line-height:1.65;margin:.6rem 0;padding:.8rem 1rem;background:#fafafa;border-radius:var(--radius-sm)}
+
+  .status-pill{font-size:.72rem;font-weight:700;padding:.2rem .65rem;border-radius:30px}
+  .status-approved{background:var(--green-light);color:var(--green-deep)}
+  .status-hidden{background:#FEF2F2;color:#DC2626}
+  .status-flagged{background:#FEF3C7;color:#92400E}
+
+  .sensitive-warning{display:flex;align-items:center;gap:.5rem;background:#FEF3C7;color:#92400E;border-radius:var(--radius-sm);padding:.5rem .8rem;font-size:.78rem;font-weight:600;margin-bottom:.6rem}
+
+  .admin-note-box{font-size:.78rem;color:#DC2626;background:#FEF2F2;border-radius:var(--radius-sm);padding:.5rem .8rem;margin-top:.5rem}
+
+  .review-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem}
+
+  /* Modal ẩn bình luận (nhập lý do) */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center}
+  .modal-overlay.show{display:flex}
+  .modal-box{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:440px;padding:1.8rem}
+  .modal-box textarea{width:100%;border:1.5px solid #e8e8e8;border-radius:var(--radius-sm);padding:.6rem .9rem;font-size:.85rem;min-height:80px;outline:none;margin:.8rem 0}
+  .modal-box textarea:focus{border-color:var(--green-deep)}
+
+  /* Bộ lọc từ khóa nhạy cảm */
+  .filter-bar{display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap}
+  .filter-bar input{border:1.5px solid #e8e8e8;border-radius:30px;padding:.5rem 1rem;font-size:.85rem;flex:1;min-width:200px;outline:none}
+  .filter-bar input:focus{border-color:var(--green-deep)}

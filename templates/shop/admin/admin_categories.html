@@ -1,0 +1,201 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_categories.css' %}" />
+{% endblock %}
+
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo"><div class="dot"></div> STD Admin</div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}"     class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng</a>
+        <a href="{% url 'admin_products' %}"   class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
+        <a href="{% url 'admin_users' %}"      class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
+        <a href="{% url 'admin_categories' %}" class="admin-nav-item active"><i class="fas fa-th-large"></i> Danh mục</a>
+        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}"   class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
+        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
+      </div>
+      <div class="admin-nav-group">
+        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý danh mục</h1>
+          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ categories|length }} danh mục trong hệ thống</p>
+        </div>
+      </div>
+
+      {% if messages %}
+      {% for msg in messages %}
+      <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}success{% endif %} mb-3" style="border-radius:var(--radius-sm);font-size:.88rem;">
+        {{ msg }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <div class="row g-3">
+
+        <!-- Form thêm / sửa danh mục -->
+        <div class="col-lg-4">
+          <div class="form-card">
+            <h6 style="font-family:'Playfair Display',serif;font-weight:700;margin-bottom:1rem;" id="form-title">Thêm danh mục mới</h6>
+            <form method="post" action="{% url 'admin_categories' %}" id="cat-form">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="save">
+              <input type="hidden" name="cat_id" id="cat-id" value="">
+
+              <div class="mb-3">
+                <label>Tên danh mục *</label>
+                <input class="form-control" type="text" name="name" id="cat-name" placeholder="Vd: Văn phòng phẩm" required>
+              </div>
+              <div class="mb-3">
+                <label>Slug (URL) *</label>
+                <input class="form-control" type="text" name="slug" id="cat-slug" placeholder="van-phong-pham" required>
+              </div>
+              <div class="mb-3">
+                <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;">
+                  <input type="checkbox" name="is_sub" id="cat-is-sub" style="width:16px;height:16px;accent-color:var(--green-deep);">
+                  Là danh mục con
+                </label>
+              </div>
+              <div class="mb-3" id="parent-group" style="display:none;">
+                <label>Thuộc danh mục cha</label>
+                <select class="form-control" name="sub_category" id="cat-parent">
+                  <option value="">-- Chọn danh mục cha --</option>
+                  {% for cat in parent_cats %}
+                  <option value="{{ cat.id }}">{{ cat.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div style="display:flex;gap:.6rem;">
+                <button type="submit" class="btn-save"><i class="fas fa-save me-1"></i>Lưu danh mục</button>
+                <button type="button" class="btn-admin-sm" onclick="resetForm()">Làm mới</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bảng danh sách danh mục -->
+        <div class="col-lg-8">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3 class="admin-panel-title"><i class="fas fa-th-large me-2" style="color:var(--green-deep);"></i>Danh sách danh mục</h3>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Tên</th>
+                    <th>Slug</th>
+                    <th>Loại</th>
+                    <th>Danh mục cha</th>
+                    <th>Số SP</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for cat in categories %}
+                  <tr>
+                    <td><strong>{{ cat.name }}</strong></td>
+                    <td><code style="font-size:.78rem;background:#f5f5f5;padding:.1rem .4rem;border-radius:4px;">{{ cat.slug }}</code></td>
+                    <td>
+                      {% if cat.is_sub %}
+                      <span style="font-size:.75rem;background:#EFF6FF;color:#1D4ED8;padding:.2rem .6rem;border-radius:30px;font-weight:700;">Danh mục con</span>
+                      {% else %}
+                      <span style="font-size:.75rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Danh mục chính</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ cat.sub_category.name|default:"—" }}</td>
+                    <td>{{ cat.product.count }}</td>
+                    <td>
+                      <div style="display:flex;gap:.4rem;">
+                        <button class="btn-admin-sm"
+                          onclick='editCat({{ cat.id }}, "{{ cat.name|escapejs }}", "{{ cat.slug|escapejs }}", {{ cat.is_sub|yesno:"true,false" }}, "{{ cat.sub_category.id|default:"" }}")'>
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <form method="post" action="{% url 'admin_categories' %}" style="display:inline;"
+                              onsubmit="return confirm('Xóa danh mục {{ cat.name }}? Sản phẩm sẽ mất liên kết!')">
+                          {% csrf_token %}
+                          <input type="hidden" name="action" value="delete">
+                          <input type="hidden" name="cat_id" value="{{ cat.id }}">
+                          <button type="submit" class="btn-admin-sm danger"><i class="fas fa-trash"></i></button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có danh mục nào.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  /* Hiển thị / ẩn dropdown danh mục cha */
+  document.getElementById('cat-is-sub').addEventListener('change', function() {
+    document.getElementById('parent-group').style.display = this.checked ? 'block' : 'none';
+  });
+
+  /* Fill form để sửa danh mục */
+  function editCat(id, name, slug, isSub, parentId) {
+    document.getElementById('form-title').textContent = 'Chỉnh sửa danh mục';
+    document.getElementById('cat-id').value    = id;
+    document.getElementById('cat-name').value  = name;
+    document.getElementById('cat-slug').value  = slug;
+    document.getElementById('cat-is-sub').checked = isSub;
+    document.getElementById('parent-group').style.display = isSub ? 'block' : 'none';
+    if (parentId) document.getElementById('cat-parent').value = parentId;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  /* Reset form về trạng thái thêm mới */
+  function resetForm() {
+    document.getElementById('form-title').textContent = 'Thêm danh mục mới';
+    document.getElementById('cat-form').reset();
+    document.getElementById('cat-id').value = '';
+    document.getElementById('parent-group').style.display = 'none';
+  }
+
+  /* Tự động tạo slug từ tên */
+  document.getElementById('cat-name').addEventListener('input', function() {
+    if (!document.getElementById('cat-id').value) {
+      const slug = this.value
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      document.getElementById('cat-slug').value = slug;
+    }
+  });
+</script>
+{% endblock %}
+{% block site_footer %}{% endblock %}

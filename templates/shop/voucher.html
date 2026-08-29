@@ -1,0 +1,109 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Voucher & Điểm thưởng - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/voucher.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="voucher-page">
+  <div class="container">
+
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / Voucher & Điểm thưởng
+    </div>
+
+    <h1 class="section-heading">Voucher & Điểm thưởng</h1>
+    <p class="section-sub">Tiết kiệm hơn với ưu đãi dành riêng cho bạn</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:{% if message.tags == 'error' %}#e74c3c{% else %}#00a68f{% endif %}; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Tab -->
+    <div class="voucher-tabs">
+      <div class="v-tab active" onclick="switchTab('voucher',this)"><i class="fas fa-ticket-alt"></i> Voucher của tôi</div>
+      <div class="v-tab" onclick="switchTab('points',this)"><i class="fas fa-star"></i> Điểm thưởng</div>
+    </div>
+
+    <!-- ── PANEL VOUCHER ── -->
+    <div id="panel-voucher">
+
+      <!-- Ô nhập mã voucher — submit POST thật tới views.voucher -->
+      <div class="voucher-input-box">
+        <p style="font-size:.85rem;font-weight:600;color:#222;margin-bottom:.7rem;">Nhập mã voucher</p>
+        <form method="post" action="{% url 'voucher' %}" class="voucher-input-row">
+          {% csrf_token %}
+          <input type="text" name="code" id="voucher-code-input" placeholder="Nhập mã ưu đãi (VD: STD20)" required>
+          <button type="submit" class="btn-apply"><i class="fas fa-check"></i> Áp dụng</button>
+        </form>
+      </div>
+
+      <!-- Danh sách voucher — chỉ dữ liệu thật từ database, không còn demo giả -->
+      {% if vouchers %}
+        {% for v in vouchers %}
+        <div class="voucher-card">
+          <div class="voucher-left" style="background:{% cycle 'var(--primary-dark)' '#f59e0b' '#1D4ED8' %};">
+            <div class="discount-big">{{ v.discount }}%</div>
+            <div class="discount-unit">GIẢM GIÁ</div>
+          </div>
+          <div class="voucher-right">
+            <div class="voucher-name">{{ v.name|default:"Mã giảm giá" }}</div>
+            <div class="voucher-condition">Đơn tối thiểu {{ v.min_order|vnd }}</div>
+            <div class="voucher-code" onclick="copyCode('{{ v.code }}')">
+              {{ v.code }} <i class="fas fa-copy"></i>
+            </div>
+            <div class="voucher-expiry">HSD: {{ v.expiry|date:"d/m/Y"|default:"Không giới hạn" }}</div>
+          </div>
+          <span class="v-badge new">Mới</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <!-- Trạng thái trống thật — chưa có voucher nào -->
+        <div class="voucher-empty-state">
+          <i class="fas fa-ticket-alt" style="font-size:3rem;color:#ddd;"></i>
+          <p>Bạn chưa có voucher nào. Hãy theo dõi các chương trình ưu đãi để nhận voucher!</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ── PANEL ĐIỂM THƯỞNG ──
+         Lưu ý: Hệ thống điểm thưởng chưa có model trong database.
+         Hiển thị thông báo "sắp ra mắt" thay vì số liệu giả.
+         Muốn kích hoạt thật: thêm field `points` vào User profile
+         hoặc tạo model LoyaltyPoint riêng trong models.py. -->
+    <div id="panel-points" style="display:none;">
+      <div class="points-coming-soon">
+        <i class="fas fa-star" style="font-size:3.5rem;color:#FFE066;"></i>
+        <h4>Điểm thưởng sắp ra mắt!</h4>
+        <p class="desc">
+          Chương trình tích điểm đang được phát triển. Hãy quay lại sau để nhận ưu đãi từ điểm thưởng nhé!
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  function switchTab(tab, el) {
+    document.querySelectorAll('.v-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-voucher').style.display = tab === 'voucher' ? 'block' : 'none';
+    document.getElementById('panel-points').style.display  = tab === 'points'  ? 'block' : 'none';
+  }
+  function copyCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+      alert('Đã sao chép mã: ' + code);
+    });
+  }
+</script>
+{% endblock %}

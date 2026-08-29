@@ -1,0 +1,119 @@
+.voucher-page { padding: 2.5rem 0 5rem; }
+
+.breadcrumb-simple { font-size: .85rem; color: #888; margin-bottom: 16px; }
+.breadcrumb-simple a { color: var(--primary); text-decoration: none; }
+.breadcrumb-simple a:hover { text-decoration: underline; }
+
+.section-heading { font-size: 1.5rem; font-weight: 700; color: #222; margin: 4px 0 6px; }
+.section-sub { font-size: .9rem; color: #666; margin-bottom: 1.5rem; }
+
+/* Tab điều hướng: Voucher / Điểm thưởng */
+.voucher-tabs {
+    display: flex; border-bottom: 2px solid #eee; margin-bottom: 2rem;
+}
+.v-tab {
+    padding: .75rem 1.5rem; font-size: .9rem; font-weight: 600;
+    color: #666; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.25s ease;
+}
+.v-tab.active { color: var(--primary-dark); border-bottom-color: var(--primary); }
+.v-tab:hover { color: var(--primary-dark); }
+
+/* Thẻ voucher — dạng coupon */
+.voucher-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    display: flex; overflow: hidden;
+    margin-bottom: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+}
+.voucher-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+/* Phần màu bên trái */
+.voucher-left {
+    width: 120px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 1.2rem .5rem;
+    position: relative;
+}
+.voucher-left::after {
+    content: '';
+    position: absolute; right: -12px; top: 50%;
+    transform: translateY(-50%);
+    width: 24px; height: 24px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px #eee;
+}
+.voucher-left .discount-big {
+    font-size: 1.6rem; font-weight: 700;
+    color: #fff; text-align: center; line-height: 1;
+}
+.voucher-left .discount-unit { font-size: .75rem; color: rgba(255,255,255,.8); margin-top: .2rem; }
+
+/* Phần nội dung bên phải */
+.voucher-right {
+    flex: 1; padding: 1.2rem 1.4rem;
+    border-left: 2px dashed #eee;
+}
+.voucher-name { font-size: .92rem; font-weight: 700; color: #222; margin-bottom: .3rem; }
+.voucher-condition { font-size: .82rem; color: #666; margin-bottom: .6rem; }
+.voucher-code {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: #f8f9fa;
+    border: 1.5px dashed #ccc;
+    border-radius: 8px;
+    padding: .3rem .8rem;
+    font-size: .85rem; font-weight: 700;
+    color: #222;
+    cursor: pointer;
+    transition: background 0.25s ease;
+    margin-bottom: .5rem;
+}
+.voucher-code:hover { background: #e8f7f4; border-color: var(--primary); }
+.voucher-code i { font-size: .75rem; color: var(--primary-dark); }
+.voucher-expiry { font-size: .78rem; color: #aaa; }
+.voucher-expiry.urgent { color: #DC2626; font-weight: 600; }
+
+/* Badge trạng thái */
+.v-badge { position: absolute; top: 10px; right: 12px; font-size: .7rem; font-weight: 700; padding: .2rem .6rem; border-radius: 30px; }
+.v-badge.new { background: #EFF6FF; color: #1D4ED8; }
+.v-badge.hot { background: #FEF3C7; color: #92400E; }
+.v-badge.used { background: rgba(128,128,128,.2); color: #666; }
+
+/* Ô nhập mã voucher */
+.voucher-input-box {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+.voucher-input-row { display: flex; gap: .6rem; flex-wrap: wrap; }
+.voucher-input-row input {
+    flex: 1; min-width: 200px; border: 1.5px solid #e8e8e8;
+    border-radius: 8px; padding: .65rem 1rem;
+    font-size: .9rem; text-transform: uppercase;
+    letter-spacing: 1px; outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+.voucher-input-row input:focus { border-color: var(--primary); }
+.btn-apply {
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 8px;
+    padding: .65rem 1.4rem; font-size: .9rem; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+.btn-apply:hover { background: var(--primary-dark); }
+
+/* Trạng thái trống / sắp ra mắt */
+.voucher-empty-state, .points-coming-soon { text-align: center; padding: 4rem 0; }
+.voucher-empty-state p, .points-coming-soon p { color: #666; margin-top: 1rem; }
+.points-coming-soon h4 { margin-top: 1rem; color: #222; font-weight: 700; }
+.points-coming-soon p.desc { max-width: 400px; margin: .5rem auto 0; }

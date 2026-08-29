@@ -1,0 +1,259 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_reviews.css' %}" />
+{% endblock %}
+
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo"><div class="dot"></div> SDT Admin</div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}"    class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}"       class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng</a>
+        <a href="{% url 'admin_products' %}"     class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
+        <a href="{% url 'admin_users' %}"        class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
+        <a href="{% url 'admin_categories' %}"   class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
+        <a href="{% url 'admin_reviews' %}"      class="admin-nav-item active">
+          <i class="fas fa-comment-dots"></i> Bình luận
+          {% if status_counts.flagged > 0 %}<span class="badge">{{ status_counts.flagged }}</span>{% endif %}
+        </a>
+        <a href="{% url 'admin_badges' %}"       class="admin-nav-item"><i class="fas fa-award"></i> Huy hiệu</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}"     class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
+        <a href="{% url 'admin_flash_sale' %}"   class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
+      </div>
+      <div class="admin-nav-group">
+        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Kiểm duyệt bình luận</h1>
+          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">Duyệt, ẩn hoặc xóa đánh giá không phù hợp để giữ chuẩn mực cộng đồng</p>
+        </div>
+      </div>
+
+      {% for msg in messages %}
+      <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}success{% endif %} mb-3" style="border-radius:var(--radius-sm);font-size:.88rem;">{{ msg }}</div>
+      {% endfor %}
+
+      <!-- KPI / Bộ lọc trạng thái -->
+      <div class="review-kpi">
+        <a href="?status=all" class="review-kpi-card {% if status_filter == 'all' %}active{% endif %}">
+          <div class="num">{{ status_counts.all }}</div>
+          <div class="label">Tất cả bình luận</div>
+        </a>
+        <a href="?status=approved" class="review-kpi-card {% if status_filter == 'approved' %}active{% endif %}">
+          <div class="num" style="color:var(--green-deep);">{{ status_counts.approved }}</div>
+          <div class="label">Đang hiển thị</div>
+        </a>
+        <a href="?status=flagged" class="review-kpi-card {% if status_filter == 'flagged' %}active{% endif %}">
+          <div class="num" style="color:#92400E;">{{ status_counts.flagged }}</div>
+          <div class="label">Cần xem xét</div>
+        </a>
+        <a href="?status=hidden" class="review-kpi-card {% if status_filter == 'hidden' %}active{% endif %}">
+          <div class="num" style="color:#DC2626;">{{ status_counts.hidden }}</div>
+          <div class="label">Đã ẩn</div>
+        </a>
+        <a href="?status=pinned" class="review-kpi-card {% if status_filter == 'pinned' %}active{% endif %}">
+          <div class="num" style="color:#7C3AED;">{{ status_counts.pinned }}</div>
+          <div class="label">📌 Đã ghim</div>
+        </a>
+        <a href="?status=replies" class="review-kpi-card {% if status_filter == 'replies' %}active{% endif %}">
+          <div class="num" style="color:#1D4ED8;">{{ status_counts.replies }}</div>
+          <div class="label">Câu trả lời</div>
+        </a>
+      </div>
+
+      <!-- Ô tìm kiếm nhanh (lọc client-side) -->
+      <div class="filter-bar">
+        <input type="text" id="search-input" placeholder="🔍  Tìm theo tên khách hàng, sản phẩm, nội dung...">
+      </div>
+
+      <!-- Danh sách bình luận -->
+      <div id="review-list">
+        {% for r in reviews_list %}
+        <div class="review-card {% if not r.is_approved %}hidden-review{% elif r.is_flagged %}flagged-review{% else %}approved-review{% endif %}"
+             data-search="{{ r.user.username|lower }} {{ r.product.name|lower }} {{ r.comment|lower }}">
+
+          <div class="review-card-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">{{ r.user.username|first|upper }}</div>
+              <div>
+                <div class="reviewer-name">{{ r.user.get_full_name|default:r.user.username }}</div>
+                <div class="reviewer-meta">
+                  <span class="review-stars">
+                    {% for i in "12345" %}<i class="{% if forloop.counter <= r.rating %}fas{% else %}far{% endif %} fa-star"></i>{% endfor %}
+                  </span>
+                  &nbsp;·&nbsp;{{ r.created_at|date:"d/m/Y H:i" }}
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
+              <a href="{% url 'detail' %}?id={{ r.product.id }}" class="review-product-tag" target="_blank">
+                <img src="{{ r.product.ImageURL }}" alt="{{ r.product.name }}">
+                {{ r.product.name|truncatechars:22 }}
+              </a>
+              {% if r.is_pinned %}
+                <span class="status-pill" style="background:#F3E8FF;color:#7C3AED;"><i class="fas fa-thumbtack me-1"></i>Đã ghim</span>
+              {% endif %}
+              {% if not r.is_approved %}
+                <span class="status-pill status-hidden"><i class="fas fa-eye-slash me-1"></i>Đã ẩn</span>
+              {% elif r.is_flagged %}
+                <span class="status-pill status-flagged"><i class="fas fa-flag me-1"></i>Cần xem xét</span>
+              {% else %}
+                <span class="status-pill status-approved"><i class="fas fa-check-circle me-1"></i>Đang hiển thị</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Chỉ báo nếu đây là câu trả lời cho 1 bình luận khác -->
+          {% if r.is_reply %}
+          <div style="font-size:.78rem;color:#1D4ED8;background:#EFF6FF;border-radius:var(--radius-sm);padding:.4rem .8rem;margin-bottom:.6rem;">
+            <i class="fas fa-reply me-1"></i>Trả lời cho <strong>{{ r.parent.user.username }}</strong>:
+            <em style="color:var(--muted);">"{{ r.parent.comment|truncatechars:60 }}"</em>
+          </div>
+          {% elif r.reply_count > 0 %}
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:.6rem;">
+            <i class="fas fa-comments me-1"></i>{{ r.reply_count }} câu trả lời bên dưới
+          </div>
+          {% endif %}
+
+          <!-- Cảnh báo từ khóa nhạy cảm tự động phát hiện -->
+          {% if r.has_sensitive_word %}
+          <div class="sensitive-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            Phát hiện từ ngữ có thể không phù hợp — vui lòng kiểm tra kỹ nội dung bên dưới.
+          </div>
+          {% endif %}
+
+          <div class="review-comment-text">{{ r.comment }}</div>
+
+          {% if r.admin_note %}
+          <div class="admin-note-box">
+            <i class="fas fa-sticky-note me-1"></i><strong>Lý do ẩn:</strong> {{ r.admin_note }}
+          </div>
+          {% endif %}
+
+          <!-- Hành động kiểm duyệt -->
+          <div class="review-actions">
+            {% if r.is_approved %}
+            <button class="btn-admin-sm warn" onclick="openHideModal({{ r.id }}, '{{ r.user.username|escapejs }}')">
+              <i class="fas fa-eye-slash me-1"></i>Ẩn bình luận
+            </button>
+            {% else %}
+            <form method="post" action="{% url 'admin_reviews' %}?status={{ status_filter }}" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="approve">
+              <input type="hidden" name="review_id" value="{{ r.id }}">
+              <button type="submit" class="btn-admin-sm" style="background:var(--green-deep);color:#fff;">
+                <i class="fas fa-check me-1"></i>Duyệt lại
+              </button>
+            </form>
+            {% endif %}
+
+            <!-- Ghim / bỏ ghim — chỉ áp dụng cho bình luận gốc -->
+            {% if not r.is_reply %}
+              {% if r.is_pinned %}
+              <form method="post" action="{% url 'admin_reviews' %}?status={{ status_filter }}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="unpin">
+                <input type="hidden" name="review_id" value="{{ r.id }}">
+                <button type="submit" class="btn-admin-sm" style="background:#F3E8FF;color:#7C3AED;">
+                  <i class="fas fa-thumbtack me-1"></i>Bỏ ghim
+                </button>
+              </form>
+              {% else %}
+              <form method="post" action="{% url 'admin_reviews' %}?status={{ status_filter }}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="pin">
+                <input type="hidden" name="review_id" value="{{ r.id }}">
+                <button type="submit" class="btn-admin-sm" style="background:#F3E8FF;color:#7C3AED;">
+                  <i class="fas fa-thumbtack me-1"></i>Ghim &amp; báo cho khách
+                </button>
+              </form>
+              {% endif %}
+            {% endif %}
+
+            <form method="post" action="{% url 'admin_reviews' %}?status={{ status_filter }}" style="display:inline;"
+                  onsubmit="return confirm('Xóa vĩnh viễn bình luận này? Không thể hoàn tác!')">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="review_id" value="{{ r.id }}">
+              <button type="submit" class="btn-admin-sm danger"><i class="fas fa-trash me-1"></i>Xóa vĩnh viễn</button>
+            </form>
+          </div>
+
+        </div>
+        {% empty %}
+        <div style="text-align:center;padding:4rem 0;color:var(--muted);background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);">
+          <i class="fas fa-comment-slash" style="font-size:2.5rem;color:#ddd;display:block;margin-bottom:1rem;"></i>
+          Không có bình luận nào trong mục này.
+        </div>
+        {% endfor %}
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal nhập lý do ẩn bình luận -->
+<div class="modal-overlay" id="hide-modal">
+  <div class="modal-box">
+    <h5 style="font-family:'Playfair Display',serif;font-weight:700;margin-bottom:.3rem;">Ẩn bình luận</h5>
+    <p style="font-size:.85rem;color:var(--muted);margin:0;">Bình luận của <strong id="hide-username"></strong> sẽ không còn hiển thị công khai.</p>
+    <form method="post" action="{% url 'admin_reviews' %}?status={{ status_filter }}" id="hide-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="hide">
+      <input type="hidden" name="review_id" id="hide-review-id" value="">
+      <label style="font-size:.82rem;font-weight:600;color:var(--charcoal);">Lý do ẩn (khách hàng có thể không thấy, chỉ nội bộ)</label>
+      <textarea name="admin_note" placeholder="Vd: Ngôn từ không phù hợp, spam, nội dung sai sự thật..."></textarea>
+      <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+        <button type="button" class="btn-admin-sm" onclick="closeHideModal()">Hủy</button>
+        <button type="submit" class="btn-admin-sm danger"><i class="fas fa-eye-slash me-1"></i>Xác nhận ẩn</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openHideModal(id, username) {
+    document.getElementById('hide-review-id').value = id;
+    document.getElementById('hide-username').textContent = username;
+    document.getElementById('hide-modal').classList.add('show');
+  }
+  function closeHideModal() {
+    document.getElementById('hide-modal').classList.remove('show');
+  }
+  document.getElementById('hide-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeHideModal();
+  });
+
+  /* Tìm kiếm nhanh phía client trong danh sách đã tải */
+  document.getElementById('search-input').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('#review-list .review-card').forEach(card => {
+      card.style.display = card.dataset.search.includes(q) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}
+{% block site_footer %}{% endblock %}
