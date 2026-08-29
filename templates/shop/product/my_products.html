@@ -1,0 +1,57 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Sản phẩm tôi đã đăng - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_products.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="myp-page">
+  <div class="container">
+
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / Sản phẩm tôi đã đăng
+    </div>
+
+    <div class="myp-header-row">
+      <div>
+        <h1 class="section-heading">Sản phẩm tôi đã đăng</h1>
+        <p class="section-sub">{{ my_products_list|length }} sản phẩm bạn đã đăng bán</p>
+      </div>
+      <a href="{% url 'post_product' %}" class="btn-add-product">
+        <i class="fas fa-plus"></i> Đăng bán sản phẩm mới
+      </a>
+    </div>
+
+    <div class="myp-table-wrapper">
+      {% for p in my_products_list %}
+      <div class="myp-row">
+        <img class="myp-img" src="{{ p.ImageURL }}" alt="{{ p.name }}">
+        <div class="myp-info">
+          <div class="myp-name">{{ p.name }}</div>
+          <div class="myp-meta"><i class="fas fa-calendar"></i> Đăng lúc {{ p.date_posted|date:"d/m/Y H:i" }}</div>
+        </div>
+        <div class="myp-price">{{ p.price|vnd }}</div>
+        {% if p.is_approved %}
+        <span class="myp-status approved"><i class="fas fa-check-circle"></i> Đang hiển thị</span>
+        {% else %}
+        <span class="myp-status pending"><i class="fas fa-eye-slash"></i> Đã bị ẩn</span>
+        {% endif %}
+        <a href="{% url 'detail' %}?id={{ p.id }}" class="btn-view">Xem</a>
+      </div>
+      {% empty %}
+      <div class="myp-empty">
+        <i class="fas fa-box-open"></i>
+        <p style="margin-top:1rem;">Bạn chưa đăng bán sản phẩm nào.</p>
+        <a href="{% url 'post_product' %}" class="btn-add-product" style="margin-top:.8rem;">
+          Đăng bán ngay
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}

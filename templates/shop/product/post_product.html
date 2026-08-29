@@ -1,0 +1,108 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}Đăng bán sản phẩm - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/post_product.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="post-page">
+  <div class="container">
+
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / Đăng bán sản phẩm
+    </div>
+
+    <div class="post-page-header">
+      <h1 class="section-heading">Đăng bán sản phẩm của bạn</h1>
+      <p class="section-sub">Chia sẻ sản phẩm của bạn tới hàng nghìn khách hàng của STDShop</p>
+    </div>
+
+    <div class="post-form-card">
+
+      <div class="post-note">
+        <i class="fas fa-info-circle"></i>
+        Sản phẩm của bạn sẽ hiển thị ngay trên shop. Quản trị viên có thể xem lại và ẩn sản phẩm nếu nội dung không phù hợp.
+      </div>
+
+      {% for msg in messages %}
+      <div class="form-message {% if msg.tags == 'error' %}error{% else %}success{% endif %}">{{ msg }}</div>
+      {% endfor %}
+
+      <form method="post" action="{% url 'post_product' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="field-row">
+          <div class="field-col-8">
+            <label>Tên sản phẩm *</label>
+            <input class="form-control" type="text" name="name" placeholder="Vd: Áo hoodie unisex, giày sneaker..." required>
+          </div>
+          <div class="field-col-4">
+            <label>Giá bán (đ) *</label>
+            <input class="form-control" type="number" name="price" step="1000" min="0" placeholder="0" required>
+          </div>
+
+          <div class="field-col-6">
+            <label>Số lượng có sẵn</label>
+            <input class="form-control" type="number" name="stock" min="1" value="1">
+          </div>
+          <div class="field-col-6">
+            <label>Ảnh sản phẩm</label>
+            <input class="form-control" type="file" name="image" id="image-input" accept="image/*" style="padding:.5rem;">
+          </div>
+
+          <div class="field-col-12">
+            <img id="image-preview" alt="Xem trước ảnh">
+          </div>
+
+          <div class="field-col-12">
+            <label>Danh mục phù hợp</label>
+            <div class="category-checks">
+              {% for cat in categories_all %}
+              <label class="category-check-item">
+                <input type="checkbox" name="categories" value="{{ cat.id }}">
+                {{ cat.name }}
+              </label>
+              {% empty %}
+              <span style="font-size:.82rem;color:#666;">Chưa có danh mục nào.</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="field-col-12">
+            <label>Mô tả chi tiết</label>
+            <textarea class="form-control" name="detail" placeholder="Mô tả tình trạng, thông số kỹ thuật, lý do bán..."></textarea>
+          </div>
+
+          <div class="field-col-12">
+            <button type="submit" class="btn-post-submit">
+              <i class="fas fa-upload"></i> Đăng bán ngay
+            </button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  /* Xem trước ảnh ngay khi chọn file */
+  document.getElementById('image-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('image-preview');
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+</script>
+{% endblock %}

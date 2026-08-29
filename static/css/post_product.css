@@ -1,0 +1,80 @@
+.post-page { padding: 2.5rem 0 5rem; }
+
+.breadcrumb-simple { font-size: .85rem; color: #888; margin-bottom: 16px; }
+.breadcrumb-simple a { color: var(--primary); text-decoration: none; }
+.breadcrumb-simple a:hover { text-decoration: underline; }
+
+.post-page-header { max-width: 720px; margin: 0 auto 2rem; text-align: center; }
+.section-heading { font-size: 1.5rem; font-weight: 700; color: #222; margin: 4px 0 6px; }
+.section-sub { font-size: .9rem; color: #666; margin: 0; }
+
+.post-form-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.post-form-card label {
+    font-size: .85rem; font-weight: 600;
+    color: #222; margin-bottom: .4rem; display: block;
+}
+.post-form-card .form-control {
+    border: 1.5px solid rgba(128,128,128,.25);
+    border-radius: 8px;
+    padding: .65rem 1rem; font-size: .9rem;
+    width: 100%; outline: none;
+    background: #fff; color: #222;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+.post-form-card .form-control:focus { border-color: var(--primary); }
+.post-form-card textarea.form-control { min-height: 120px; resize: vertical; }
+
+/* Layout hàng field thuần CSS (thay Bootstrap row/col-md) */
+.field-row {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    margin-bottom: 16px;
+}
+.field-col-8 { flex: 1 1 calc(66.666% - 8px); min-width: 220px; }
+.field-col-6 { flex: 1 1 calc(50% - 8px); min-width: 200px; }
+.field-col-4 { flex: 1 1 calc(33.333% - 11px); min-width: 160px; }
+.field-col-12 { flex: 1 1 100%; }
+
+.category-checks { display: flex; flex-wrap: wrap; gap: .6rem; }
+.category-check-item {
+    display: flex; align-items: center; gap: .4rem;
+    background: #e8f7f4; color: var(--primary-dark);
+    border-radius: 30px; padding: .35rem .9rem;
+    font-size: .82rem; cursor: pointer;
+}
+.category-check-item input { accent-color: var(--primary); }
+
+#image-preview { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: .8rem; display: none; }
+
+.btn-post-submit {
+    width: 100%; background: var(--primary); color: #fff;
+    border: none; border-radius: 8px;
+    padding: .85rem; font-size: .95rem; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+.btn-post-submit:hover { background: var(--primary-dark); }
+
+.post-note {
+    background: #e8f7f4; color: var(--primary-dark);
+    border-radius: 8px; padding: .8rem 1rem;
+    font-size: .82rem; margin-bottom: 1.5rem;
+}
+
+.form-message {
+    border-radius: 8px;
+    font-size: .88rem;
+    padding: .7rem 1rem;
+    margin-bottom: .8rem;
+}
+.form-message.success { background: #e8f7f4; color: var(--primary-dark); }
+.form-message.error { background: #FEF2F2; color: #DC2626; }

@@ -781,7 +781,7 @@ def post_product(request):
     ctx = _base_context(request)
     categories = Catergory.objects.all()
     ctx.update({'categories_all': categories, 'page_title': 'Đăng bán sản phẩm'})
-    return render(request, 'shop/post_product.html', ctx)
+    return render(request, 'shop/product/post_product.html', ctx)
 
 
 @login_required(login_url='login')
@@ -790,7 +790,7 @@ def my_products(request):
     ctx = _base_context(request)
     products = Product.objects.filter(seller=request.user).order_by('-date_posted')
     ctx.update({'my_products_list': products, 'page_title': 'Sản phẩm tôi đã đăng'})
-    return render(request, 'shop/my_products.html', ctx)
+    return render(request, 'shop/product/my_products.html', ctx)
 
 
 def compare(request):
@@ -1117,7 +1117,7 @@ def admin_products(request):
         'source_counts': source_counts,
         'page_title':    'Quản lý sản phẩm',
     })
-    return render(request, 'shop/products.html', ctx)
+    return render(request, 'shop/product/products.html', ctx)
 
 
 def admin_orders(request):
