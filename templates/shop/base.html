@@ -83,6 +83,7 @@
 
     {% block content %}{% endblock %}
 
+    {% block site_footer %}
     <!-- FLOATING CART (góc phải dưới) -->
     <a href="chat.html" class="floating-chat-btn">
       <i class="fas fa-comments"></i>
@@ -186,6 +187,7 @@
         </div>
       </div>
     </footer>
+    {% endblock %}
 
     {% block extra_js %}
     <script src="{% static 'js/order-script.js' %}"></script>

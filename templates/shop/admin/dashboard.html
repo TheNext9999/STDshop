@@ -1,0 +1,220 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Admin Dashboard - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">
+        <div class="dot"></div> STDShop Admin
+      </div>
+
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item active">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+      </div>
+
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}" class="admin-nav-item">
+          <i class="fas fa-box"></i> Đơn hàng
+        </a>
+        <a href="{% url 'admin_products' %}" class="admin-nav-item">
+          <i class="fas fa-tags"></i> Sản phẩm
+        </a>
+        <a href="{% url 'admin_users' %}" class="admin-nav-item">
+          <i class="fas fa-users"></i> Khách hàng
+        </a>
+        <a href="{% url 'admin_categories' %}" class="admin-nav-item">
+          <i class="fas fa-th-large"></i> Danh mục
+        </a>
+        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
+        <a href="{% url 'admin_badges' %}" class="admin-nav-item"><i class="fas fa-medal"></i> Huy hiệu</a>
+      </div>
+
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}" class="admin-nav-item">
+          <i class="fas fa-ticket-alt"></i> Voucher
+        </a>
+        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item">
+          <i class="fas fa-bolt"></i> Flash Sale
+        </a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item">
+          <i class="fas fa-bell"></i> Thông báo
+        </a>
+      </div>
+
+      <div class="admin-nav-group" style="margin-top:auto;">
+        <div class="admin-nav-label">Hệ thống</div>
+        <a href="{% url 'home' %}" class="admin-nav-item">
+          <i class="fas fa-store"></i> Xem cửa hàng
+        </a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </aside>
+
+    <!-- ── CONTENT ── -->
+    <main class="admin-content">
+
+      <!-- Header -->
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-page-title">Dashboard</h1>
+          <div class="admin-date"><i class="fas fa-calendar"></i> Hôm nay: {% now "d/m/Y" %}</div>
+        </div>
+        <div class="admin-header-actions">
+          <a href="{% url 'admin_products' %}" class="btn-admin-sm" style="background:var(--primary);color:#fff;">
+            <i class="fas fa-plus"></i> Thêm sản phẩm
+          </a>
+        </div>
+      </div>
+
+      <!-- KPI Cards — chỉ số liệu thật từ database -->
+      <div class="kpi-grid">
+        <div class="kpi-card revenue">
+          <div class="kpi-icon revenue"><i class="fas fa-dollar-sign"></i></div>
+          <div class="kpi-info">
+            <div class="kpi-value">{{ total_revenue|vnd }}</div>
+            <div class="kpi-label">Tổng doanh thu</div>
+          </div>
+        </div>
+        <div class="kpi-card orders">
+          <div class="kpi-icon orders"><i class="fas fa-shopping-bag"></i></div>
+          <div class="kpi-info">
+            <div class="kpi-value">{{ total_orders }}</div>
+            <div class="kpi-label">Tổng đơn hàng</div>
+          </div>
+        </div>
+        <div class="kpi-card users">
+          <div class="kpi-icon users"><i class="fas fa-users"></i></div>
+          <div class="kpi-info">
+            <div class="kpi-value">{{ total_users }}</div>
+            <div class="kpi-label">Tổng khách hàng</div>
+          </div>
+        </div>
+        <div class="kpi-card products">
+          <div class="kpi-icon products"><i class="fas fa-box-open"></i></div>
+          <div class="kpi-info">
+            <div class="kpi-value">{{ total_products }}</div>
+            <div class="kpi-label">Tổng sản phẩm</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ + Sản phẩm bán chạy -->
+      <div class="dashboard-charts-row">
+
+        <!-- Doanh thu 7 ngày gần nhất — tính thật từ OrderItem trong admin_dashboard view -->
+        <div class="col-chart">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3 class="admin-panel-title"><i class="fas fa-chart-bar" style="color:var(--primary-dark);"></i> Doanh thu 7 ngày gần nhất</h3>
+            </div>
+            <div style="padding:1.4rem;">
+              {% if chart_data %}
+              <div class="bar-chart">
+                {% for d in chart_data %}
+                <div class="bar-col">
+                  <div class="bar-val">{{ d.total|vnd }}</div>
+                  <div class="bar-fill" style="height:{% widthratio d.total max_day_total 100 %}%;"></div>
+                  <div class="bar-label">{{ d.label }}</div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div style="text-align:center;color:#666;padding:1.5rem;">
+                <i class="fas fa-chart-line" style="font-size:2.5rem;color:#ddd;"></i>
+                <p style="margin-top:1rem;">Chưa có dữ liệu doanh thu.</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Top 5 sản phẩm bán chạy — dữ liệu thật, sắp xếp theo product.sold -->
+        <div class="col-top">
+          <div class="admin-panel" style="height:100%;">
+            <div class="admin-panel-header">
+              <h3 class="admin-panel-title"><i class="fas fa-fire" style="color:#f59e0b;"></i> Bán chạy nhất</h3>
+            </div>
+            {% for p in top_products %}
+            <div class="top-product-row">
+              <div class="top-rank {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% endif %}">#{{ forloop.counter }}</div>
+              <img class="top-product-img" src="{{ p.ImageURL }}" alt="{{ p.name }}">
+              <div style="flex:1;">
+                <div class="top-product-name">{{ p.name }}</div>
+                <div class="top-product-sold">{{ p.sold }} đã bán</div>
+              </div>
+              <div class="top-product-rev">{{ p.price|vnd }}</div>
+            </div>
+            {% empty %}
+            <div style="padding:2rem;text-align:center;color:#666;">
+              <i class="fas fa-box-open" style="font-size:2rem;color:#ddd;"></i>
+              <p style="margin-top:.7rem;">Chưa có dữ liệu bán hàng.</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Đơn hàng gần đây -->
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3 class="admin-panel-title"><i class="fas fa-clock" style="color:var(--primary-dark);"></i> Đơn hàng gần đây</h3>
+          <a href="{% url 'admin_orders' %}" class="btn-admin-sm">Xem tất cả</a>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Sản phẩm</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Ngày đặt</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+              <tr>
+                <td><strong style="color:var(--primary-dark);">#{{ order.id }}</strong></td>
+                <td>{{ order.customer.get_full_name|default:order.customer.username }}</td>
+                <td>{{ order.get_cart_items }} sản phẩm</td>
+                <td><strong>{{ order.get_cart_total|vnd }}</strong></td>
+                <td><span class="pill {{ order.status }}">{{ order.get_status_display }}</span></td>
+                <td>{{ order.date_order|date:"d/m/Y" }}</td>
+                <td><a href="{% url 'admin_orders' %}" style="font-size:.8rem;color:var(--primary-dark);font-weight:600;">Chi tiết</a></td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align:center;color:#666;padding:2rem;">Chưa có đơn hàng nào.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+<!-- Ẩn footer/floating chat/cart-sidebar mặc định trên trang admin -->
+{% block site_footer %}{% endblock %}

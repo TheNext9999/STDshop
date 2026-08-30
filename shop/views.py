@@ -1016,7 +1016,7 @@ def admin_dashboard(request):
         'max_day_total':  max_day_total,
         'page_title':     'Dashboard',
     })
-    return render(request, 'shop/dashboard.html', ctx)
+    return render(request, 'shop/admin/dashboard.html', ctx)
 
 
 def admin_products(request):
@@ -1117,7 +1117,7 @@ def admin_products(request):
         'source_counts': source_counts,
         'page_title':    'Quản lý sản phẩm',
     })
-    return render(request, 'shop/product/products.html', ctx)
+    return render(request, 'shop/admin/products.html', ctx)
 
 
 def admin_orders(request):
@@ -1147,7 +1147,7 @@ def admin_orders(request):
     }
 
     ctx.update({'orders': orders, 'status_counts': status_counts, 'page_title': 'Quản lý đơn hàng'})
-    return render(request, 'shop/orders.html', ctx)
+    return render(request, 'shop/admin/orders.html', ctx)
 
 
 def admin_users(request):
@@ -1195,7 +1195,7 @@ def admin_users(request):
         'vip_users': vip_users,
         'page_title': 'Quản lý khách hàng',
     })
-    return render(request, 'shop/users.html', ctx)
+    return render(request, 'shop/admin/users.html', ctx)
 # ============================================================
 #  ADMIN VIEWS BỔ SUNG — thêm vào cuối views.py hiện tại
 #  4 chức năng còn thiếu trong sidebar admin:
@@ -1265,7 +1265,7 @@ def admin_categories(request):
         'parent_cats': parent_cats,
         'page_title':  'Quản lý danh mục',
     })
-    return render(request, 'shop/admin_categories.html', ctx)
+    return render(request, 'shop/admin/admin_categories.html', ctx)
 
 
 # ── 2. QUẢN LÝ VOUCHER ──────────────────────────────────────────────────
@@ -1344,7 +1344,7 @@ def admin_vouchers(request):
         'users_list': users_list,
         'page_title': 'Quản lý Voucher',
     })
-    return render(request, 'shop/admin_vouchers.html', ctx)
+    return render(request, 'shop/admin/admin_vouchers.html', ctx)
 
 
 # ── 3. QUẢN LÝ FLASH SALE ───────────────────────────────────────────────
@@ -1399,7 +1399,7 @@ def admin_flash_sale(request):
         'other_products': other_products,
         'page_title':     'Quản lý Flash Sale',
     })
-    return render(request, 'shop/admin_flash_sale.html', ctx)
+    return render(request, 'shop/admin/admin_flash_sale.html', ctx)
 
 
 # ── 4. GỬI THÔNG BÁO HÀNG LOẠT ─────────────────────────────────────────
@@ -1462,7 +1462,7 @@ def admin_notifications(request):
         'unread_notifs':unread_notifs,
         'page_title':   'Quản lý Thông báo',
     })
-    return render(request, 'shop/admin_notifications.html', ctx)
+    return render(request, 'shop/admin/admin_notifications.html', ctx)
 
 
 # ── 5. KIỂM DUYỆT BÌNH LUẬN SẢN PHẨM ────────────────────────────────────
@@ -1573,7 +1573,7 @@ def admin_reviews(request):
         'status_counts':  status_counts,
         'page_title':     'Quản lý Bình luận',
     })
-    return render(request, 'shop/admin_reviews.html', ctx)
+    return render(request, 'shop/admin/admin_reviews.html', ctx)
 
 
 # ── 6. QUẢN LÝ HUY HIỆU NGƯỜI DÙNG ──────────────────────────────────────
@@ -1642,7 +1642,7 @@ def admin_badges(request):
         'users_list': users_list,
         'page_title': 'Quản lý Huy hiệu',
     })
-    return render(request, 'shop/admin_badges.html', ctx)
+    return render(request, 'shop/admin/admin_badges.html', ctx)
 
 
 # ============================================================

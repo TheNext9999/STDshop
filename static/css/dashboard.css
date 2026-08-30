@@ -1,0 +1,175 @@
+.admin-page { padding: 0; }
+
+/* Layout admin: sidebar + content */
+.admin-layout { display: flex; min-height: calc(100vh - 68px); }
+
+/* Sidebar quản trị */
+.admin-sidebar {
+    width: 240px; flex-shrink: 0;
+    background: #1a1f2e;
+    display: flex; flex-direction: column;
+    position: sticky; top: 68px;
+    height: calc(100vh - 68px);
+    overflow-y: auto;
+}
+.admin-logo {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-size: 1rem; font-weight: 700;
+    color: #fff; display: flex; align-items: center; gap: .6rem;
+}
+.admin-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+
+/* Menu sidebar */
+.admin-nav-group { padding: 1rem 0 .5rem; }
+.admin-nav-label {
+    font-size: .65rem; text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 700;
+    color: rgba(255,255,255,.3);
+    padding: 0 1.2rem .5rem;
+}
+.admin-nav-item {
+    display: flex; align-items: center; gap: .7rem;
+    padding: .65rem 1.2rem;
+    font-size: .85rem; font-weight: 500;
+    color: rgba(255,255,255,.6);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+.admin-nav-item:hover, .admin-nav-item.active {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    border-left-color: var(--primary);
+}
+.admin-nav-item i { width: 16px; text-align: center; font-size: .88rem; }
+.admin-nav-item .badge { background: #f59e0b; color: #fff; font-size: .65rem; font-weight: 700; padding: .1rem .4rem; border-radius: 30px; margin-left: auto; }
+
+/* Content area */
+.admin-content { flex: 1; background: #f4f6f9; padding: 2rem; overflow-y: auto; box-sizing: border-box; }
+
+/* Header trang */
+.admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+.admin-page-title { font-size: 1.5rem; font-weight: 700; color: #1a1f2e; margin: 0; }
+.admin-date { font-size: .83rem; color: #666; }
+.admin-header-actions { display: flex; gap: .6rem; }
+
+/* Layout lưới thuần CSS (thay Bootstrap row/col) */
+.kpi-grid {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.kpi-grid > div { flex: 1 1 calc(25% - 12px); min-width: 220px; }
+
+.dashboard-charts-row {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.dashboard-charts-row .col-chart { flex: 2 1 500px; min-width: 320px; }
+.dashboard-charts-row .col-top { flex: 1 1 300px; min-width: 280px; }
+
+/* Thẻ thống kê KPI */
+.kpi-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.4rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    display: flex; align-items: center; gap: 1rem;
+    border-left: 4px solid transparent;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-sizing: border-box;
+}
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.kpi-card.revenue { border-left-color: var(--primary); }
+.kpi-card.orders  { border-left-color: #f59e0b; }
+.kpi-card.users   { border-left-color: #1D4ED8; }
+.kpi-card.products{ border-left-color: #7C3AED; }
+
+.kpi-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+}
+.kpi-icon.revenue { background: #e8f7f4; color: var(--primary-dark); }
+.kpi-icon.orders  { background: #FEF3C7; color: #92400E; }
+.kpi-icon.users   { background: #EFF6FF; color: #1D4ED8; }
+.kpi-icon.products{ background: #F3E8FF; color: #7C3AED; }
+
+.kpi-info .kpi-value {
+    font-size: 1.5rem; font-weight: 700;
+    color: #1a1f2e; line-height: 1;
+}
+.kpi-info .kpi-label { font-size: .78rem; color: #666; margin-top: .25rem; }
+
+/* Panel admin */
+.admin-panel {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+.admin-panel-header {
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .5rem;
+}
+.admin-panel-title { font-size: .92rem; font-weight: 700; color: #1a1f2e; margin: 0; }
+.btn-admin-sm {
+    font-size: .78rem; font-weight: 600;
+    padding: .35rem .9rem; border-radius: 30px;
+    background: #e8f7f4; color: var(--primary-dark);
+    border: none; cursor: pointer; text-decoration: none;
+    transition: all 0.25s ease;
+}
+.btn-admin-sm:hover { background: var(--primary); color: #fff; }
+
+/* Bảng đơn hàng gần đây */
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th {
+    background: #f8f9fa; font-size: .75rem;
+    text-transform: uppercase; letter-spacing: .6px;
+    font-weight: 700; color: #666;
+    padding: .75rem 1.2rem; text-align: left;
+    border-bottom: 1px solid #eee;
+}
+.admin-table td { padding: .85rem 1.2rem; font-size: .85rem; color: #333; border-bottom: 1px solid #f5f5f5; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: #fafafa; }
+
+/* Status pills */
+.pill { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .7rem; border-radius: 30px; font-size: .72rem; font-weight: 700; }
+.pill.delivered { background: #e8f7f4; color: var(--primary-dark); }
+.pill.shipping  { background: #EFF6FF; color: #1D4ED8; }
+.pill.processing{ background: #EFF6FF; color: #1D4ED8; }
+.pill.pending   { background: #FEF3C7; color: #92400E; }
+.pill.cancelled { background: #FEF2F2; color: #DC2626; }
+
+/* Biểu đồ doanh thu (CSS bar chart đơn giản) */
+.bar-chart { display: flex; align-items: flex-end; gap: .5rem; height: 140px; padding: .5rem 0; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.bar-fill {
+    width: 100%; border-radius: 4px 4px 0 0;
+    background: linear-gradient(to top, var(--primary-dark), var(--primary));
+    transition: height .5s ease;
+    min-height: 4px;
+}
+.bar-fill:hover { background: linear-gradient(to top, #f59e0b, #f5a623); }
+.bar-label { font-size: .7rem; color: #666; font-weight: 500; }
+.bar-val { font-size: .68rem; color: var(--primary-dark); font-weight: 700; }
+
+/* Sản phẩm bán chạy */
+.top-product-row {
+    display: flex; align-items: center; gap: .8rem;
+    padding: .8rem 1.2rem; border-bottom: 1px solid #f5f5f5;
+}
+.top-product-row:last-child { border-bottom: none; }
+.top-rank { font-size: 1rem; font-weight: 700; color: #ccc; min-width: 24px; }
+.top-rank.gold   { color: #F59E0B; }
+.top-rank.silver { color: #9CA3AF; }
+.top-rank.bronze { color: #CD7C32; }
+.top-product-img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.top-product-name { flex: 1; font-size: .85rem; font-weight: 600; color: #333; }
+.top-product-sold { font-size: .78rem; color: #666; }
+.top-product-rev { font-size: .9rem; font-weight: 700; color: var(--primary-dark); }

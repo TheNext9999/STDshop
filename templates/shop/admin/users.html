@@ -1,0 +1,243 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block main-content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/users.css' %}" />
+{% endblock %}
+
+<div class="admin-page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo"><div class="dot"></div> Lotus Admin</div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Tổng quan</div>
+        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Quản lý</div>
+        <a href="{% url 'admin_orders' %}"   class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng <span class="badge">{{ pending_orders_count }}</span></a>
+        <a href="{% url 'admin_products' %}" class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
+        <a href="{% url 'admin_users' %}"    class="admin-nav-item active"><i class="fas fa-users"></i> Khách hàng</a>
+        <a href="{% url 'admin_categories' %}" class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
+        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
+      </div>
+      <div class="admin-nav-group">
+        <div class="admin-nav-label">Marketing</div>
+        <a href="{% url 'admin_vouchers' %}" class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
+        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
+        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
+      </div>
+      <div class="admin-nav-group">
+        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
+        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý khách hàng</h1>
+          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ total_users }} tài khoản trong hệ thống</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn-admin-sm"><i class="fas fa-file-excel me-1"></i>Xuất Excel</button>
+        </div>
+      </div>
+
+      <!-- KPI — dữ liệu thật tính từ database -->
+      <div class="users-kpi">
+        <div class="users-kpi-card total">
+          <div class="num">{{ total_users }}</div>
+          <div class="label">Tổng khách hàng</div>
+          <div class="change"><i class="fas fa-arrow-up me-1"></i>+{{ new_this_week }} tuần này</div>
+        </div>
+        <div class="users-kpi-card new">
+          <div class="num">{{ new_this_week }}</div>
+          <div class="label">Mới trong tuần</div>
+        </div>
+        <div class="users-kpi-card active">
+          <div class="num">{{ active_users }}</div>
+          <div class="label">Đã từng đặt hàng</div>
+        </div>
+        <div class="users-kpi-card vip">
+          <div class="num">{{ vip_users }}</div>
+          <div class="label">Khách VIP</div>
+          <div class="change" style="color:#7C3AED;">Chi tiêu &gt;$500</div>
+        </div>
+      </div>
+
+      <!-- Bảng khách hàng -->
+      <div class="admin-panel">
+
+        <!-- Bộ lọc — lưu ý: input/select dưới đây hiện chỉ là UI, chưa nối backend filter -->
+        <div class="filter-bar">
+          <input type="text" placeholder="🔍  Tìm tên, email...">
+          <select>
+            <option>Tất cả trạng thái</option>
+            <option>Đang hoạt động</option>
+            <option>Bị khóa</option>
+          </select>
+          <select>
+            <option>Tất cả thời gian</option>
+            <option>Đăng ký hôm nay</option>
+            <option>7 ngày qua</option>
+            <option>Tháng này</option>
+          </select>
+          <select>
+            <option>Sắp xếp: Mới nhất</option>
+            <option>Chi tiêu cao nhất</option>
+            <option>Nhiều đơn nhất</option>
+          </select>
+        </div>
+
+        <!-- Bảng -->
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Khách hàng</th>
+                <th>Ngày đăng ký</th>
+                <th>Tổng đơn</th>
+                <th>Tổng chi tiêu</th>
+                <th>Tổng chi tiêu</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for u in users_list %}
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:.75rem;">
+                      <div class="user-avatar">{{ u.username|first|upper }}</div>
+                      <div>
+                        <div style="font-weight:600;">{{ u.get_full_name|default:u.username }}</div>
+                        <div style="font-size:.75rem;color:var(--muted);">{{ u.email }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ u.date_joined|date:"d/m/Y" }}</td>
+                  <td>{{ u.order_count }} đơn</td>
+                  <td><strong>${{ u.total_spent|floatformat:2 }}</strong></td>
+                  <td>
+                    {% if u.is_active %}
+                    <span style="font-size:.78rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Hoạt động</span>
+                    {% else %}
+                    <span style="font-size:.78rem;background:#FEF2F2;color:#DC2626;padding:.2rem .6rem;border-radius:30px;font-weight:700;">Bị khóa</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:.4rem;">
+                      <button class="btn-admin-sm" onclick='openUserModal({{ u.id }}, "{{ u.username|escapejs }}", "{{ u.get_full_name|default:u.username|escapejs }}", "{{ u.email|escapejs }}", "{{ u.date_joined|date:"d/m/Y" }}", {{ u.order_count }}, {{ u.total_spent }}, {{ u.is_active|yesno:"true,false" }})'>
+                        <i class="fas fa-eye me-1"></i>Xem
+                      </button>
+                      <!-- Form khóa/mở khóa tài khoản — submit POST thật -->
+                      <form method="post" action="{% url 'admin_users' %}" style="display:inline;"
+                            onsubmit="return confirm('{% if u.is_active %}Khóa{% else %}Mở khóa{% endif %} tài khoản {{ u.username }}?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="toggle_active">
+                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                        <button type="submit" class="btn-admin-sm {% if u.is_active %}danger{% endif %}">
+                          <i class="fas fa-{% if u.is_active %}lock{% else %}lock-open{% endif %}"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có khách hàng nào.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="admin-pagination">
+          <span>Hiển thị tất cả {{ total_users }} khách hàng</span>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal chi tiết khách hàng -->
+<div class="modal-overlay" id="user-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;gap:.8rem;">
+        <div class="user-avatar" id="modal-avatar">N</div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;" id="modal-name">Nguyễn Văn An</div>
+          <div style="font-size:.8rem;color:var(--muted);">Thành viên từ 01/01/2025</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeUserModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--green-deep);margin-bottom:.8rem;"><i class="fas fa-user me-1"></i>Thông tin cơ bản</p>
+      <div class="detail-row"><span class="dl">Email</span><span class="dv" id="modal-email"></span></div>
+      <div class="detail-row"><span class="dl">Ngày tham gia</span><span class="dv" id="modal-joined"></span></div>
+
+      <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--green-deep);margin:1.2rem 0 .8rem;"><i class="fas fa-chart-line me-1"></i>Thống kê mua hàng</p>
+      <div class="detail-row"><span class="dl">Tổng đơn hàng</span><span class="dv" id="modal-orders"></span></div>
+      <div class="detail-row"><span class="dl">Tổng chi tiêu</span><span class="dv" id="modal-spent" style="color:var(--green-deep);"></span></div>
+      <div class="detail-row"><span class="dl">Trạng thái</span><span class="dv" id="modal-status"></span></div>
+
+      <div style="display:flex;gap:.7rem;margin-top:1.5rem;">
+        <a id="modal-email-btn" href="#" class="btn-admin-sm" style="flex:1;padding:.6rem;background:var(--green-deep);color:#fff;text-align:center;">
+          <i class="fas fa-envelope me-1"></i>Gửi email
+        </a>
+        <!-- Form khóa/mở khóa — submit POST thật, action/text đổi theo trạng thái hiện tại -->
+        <form id="modal-toggle-form" method="post" action="{% url 'admin_users' %}" style="flex:1;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="toggle_active">
+          <input type="hidden" name="user_id" id="modal-user-id" value="">
+          <button type="submit" id="modal-toggle-btn" class="btn-admin-sm danger" style="width:100%;padding:.6rem;background:#FEF2F2;color:#DC2626;">
+            <i class="fas fa-ban me-1"></i>Khóa tài khoản
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Mở modal chi tiết — fill dữ liệu thật truyền từ nút "Xem" trong bảng */
+  function openUserModal(id, username, fullName, email, joined, orderCount, totalSpent, isActive) {
+    document.getElementById('modal-name').textContent   = fullName;
+    document.getElementById('modal-avatar').textContent = username[0].toUpperCase();
+    document.getElementById('modal-email').textContent  = email;
+    document.getElementById('modal-joined').textContent = joined;
+    document.getElementById('modal-orders').textContent = orderCount + ' đơn';
+    document.getElementById('modal-spent').textContent  = '$' + totalSpent.toFixed(2);
+    document.getElementById('modal-status').textContent = isActive ? 'Hoạt động' : 'Bị khóa';
+    document.getElementById('modal-email-btn').href      = 'mailto:' + email;
+    document.getElementById('modal-user-id').value       = id;
+
+    const toggleBtn = document.getElementById('modal-toggle-btn');
+    if (isActive) {
+      toggleBtn.innerHTML = '<i class="fas fa-ban me-1"></i>Khóa tài khoản';
+    } else {
+      toggleBtn.innerHTML = '<i class="fas fa-unlock me-1"></i>Mở khóa tài khoản';
+    }
+
+    document.getElementById('user-modal').classList.add('show');
+  }
+  function closeUserModal() { document.getElementById('user-modal').classList.remove('show'); }
+  document.getElementById('user-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeUserModal();
+  });
+</script>
+{% endblock %}
+{% block site_footer %}{% endblock %}
