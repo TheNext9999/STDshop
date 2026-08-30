@@ -1,109 +1,61 @@
-{% extends 'shop/base.html' %}
-{% load static %}
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
 
-{% block main-content %}
+{% block title %}Quản lý sản phẩm - STDShop Admin{% endblock %}
+
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-common.css' %}" />
 <link rel="stylesheet" href="{% static 'css/products.css' %}" />
 {% endblock %}
 
+{% block content %}
 <div class="admin-page">
   <div class="admin-layout">
 
-    <!-- Sidebar (giống dashboard) -->
-    <aside class="admin-sidebar">
-      <div class="admin-logo"><div class="dot"></div> Lotus Admin</div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Tổng quan</div>
-        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Quản lý</div>
-        <a href="{% url 'admin_orders' %}" class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng <span class="badge">{{ pending_orders_count }}</span></a>
-        <a href="{% url 'admin_products' %}" class="admin-nav-item active"><i class="fas fa-tags"></i> Sản phẩm</a>
-        <a href="{% url 'admin_users' %}" class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
-        <a href="{% url 'admin_categories' %}" class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
-        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
-        <a href="{% url 'admin_badges' %}" class="admin-nav-item"><i class="fas fa-award"></i> Huy hiệu</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Marketing</div>
-        <a href="{% url 'admin_vouchers' %}" class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
-        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
-        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
-      </div>
-      <div class="admin-nav-group">
-        <a href="{% url 'home' %}" class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
-        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-      </div>
-    </aside>
+    {% include "shop/admin/_sidebar.html" with active="products" %}
 
     <!-- Content -->
     <main class="admin-content">
 
       <!-- Header -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+      <div class="admin-page-header">
         <div>
-          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý sản phẩm</h1>
-          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ products|length }} sản phẩm trong hệ thống</p>
+          <h1 class="admin-page-title">Quản lý sản phẩm</h1>
+          <p class="admin-page-sub">{{ products|length }} sản phẩm trong hệ thống</p>
         </div>
         <button class="btn-admin-sm primary" onclick="openModal()">
-          <i class="fas fa-plus me-1"></i>Thêm sản phẩm mới
+          <i class="fas fa-plus"></i> Thêm sản phẩm mới
         </button>
       </div>
 
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color:{% if message.tags == 'error' %}#e74c3c{% else %}#00a68f{% endif %}; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
       <!-- Bộ lọc theo nguồn sản phẩm: Shop tự đăng vs Khách hàng tự đăng bán -->
       <div style="display:flex;gap:.5rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-        <a href="?source=all" class="btn-admin-sm {% if source_filter == 'all' %}primary{% endif %}" style="{% if source_filter == 'all' %}background:var(--green-deep);color:#fff;{% endif %}">
-          Tất cả <span style="opacity:.8;">({{ source_counts.all }})</span>
+        <a href="?source=all" class="btn-admin-sm {% if source_filter == 'all' %}primary{% endif %}">
+          Tất cả ({{ source_counts.all }})
         </a>
-        <a href="?source=shop" class="btn-admin-sm {% if source_filter == 'shop' %}primary{% endif %}" style="{% if source_filter == 'shop' %}background:var(--green-deep);color:#fff;{% endif %}">
-          <i class="fas fa-store me-1"></i>Hàng của Shop ({{ source_counts.shop }})
+        <a href="?source=shop" class="btn-admin-sm {% if source_filter == 'shop' %}primary{% endif %}">
+          <i class="fas fa-store"></i> Hàng của Shop ({{ source_counts.shop }})
         </a>
-        <a href="?source=customer" class="btn-admin-sm {% if source_filter == 'customer' %}primary{% endif %}" style="{% if source_filter == 'customer' %}background:var(--green-deep);color:#fff;{% endif %}">
-          <i class="fas fa-user me-1"></i>Khách hàng đăng ({{ source_counts.customer }})
+        <a href="?source=customer" class="btn-admin-sm {% if source_filter == 'customer' %}primary{% endif %}">
+          <i class="fas fa-user"></i> Khách hàng đăng ({{ source_counts.customer }})
         </a>
-        <a href="?source=pending" class="btn-admin-sm {% if source_filter == 'pending' %}danger{% endif %}" style="{% if source_filter == 'pending' %}background:#FEF2F2;color:#DC2626;{% endif %}">
-          <i class="fas fa-clock me-1"></i>Chờ xem xét ({{ source_counts.pending }})
+        <a href="?source=pending" class="btn-admin-sm {% if source_filter == 'pending' %}danger{% endif %}">
+          <i class="fas fa-clock"></i> Chờ xem xét ({{ source_counts.pending }})
         </a>
       </div>
 
       <!-- Bảng sản phẩm -->
       <div class="admin-panel">
 
-        <!-- Bộ lọc -->
+        <!-- Tìm kiếm (lọc trực tiếp trên bảng đã render) -->
         <div class="filter-bar">
-          <input type="text" placeholder="🔍  Tìm kiếm sản phẩm...">
-          <select>
-            <option>Tất cả danh mục</option>
-            {% for cat in categories %}
-            <option>{{ cat.name }}</option>
-            {% empty %}
-            <option>Văn phòng phẩm</option>
-            <option>Sách vở</option>
-            <option>Ba lô & Túi</option>
-            {% endfor %}
-          </select>
-          <select>
-            <option>Tất cả trạng thái</option>
-            <option>Còn hàng</option>
-            <option>Sắp hết</option>
-            <option>Hết hàng</option>
-          </select>
-          <select>
-            <option>Sắp xếp: Mới nhất</option>
-            <option>Giá tăng dần</option>
-            <option>Giá giảm dần</option>
-            <option>Bán chạy nhất</option>
-          </select>
-        </div>
-
-        <!-- Thanh chọn hàng loạt -->
-        <div style="padding:.7rem 1.4rem;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:.8rem;font-size:.83rem;color:var(--muted);">
-          <input type="checkbox" class="row-check" id="select-all">
-          <label for="select-all">Chọn tất cả</label>
-          <span style="margin-left:.5rem;">|</span>
-          <button class="btn-admin-sm danger" style="font-size:.75rem;">Xóa đã chọn</button>
-          <button class="btn-admin-sm" style="font-size:.75rem;">Xuất Excel</button>
+          <input type="text" id="productSearchInput" placeholder="🔍  Tìm kiếm theo tên sản phẩm...">
         </div>
 
         <!-- Bảng -->
@@ -111,7 +63,6 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th style="width:40px;"><input type="checkbox" class="row-check"></th>
                 <th>Sản phẩm</th>
                 <th>Người bán</th>
                 <th>Ngày đăng</th>
@@ -125,45 +76,44 @@
             </thead>
             <tbody>
               {% for product in products %}
-              <tr>
-                <td><input type="checkbox" class="row-check"></td>
+              <tr data-search="{{ product.name|lower }}">
                 <td>
                   <div style="display:flex;align-items:center;gap:.7rem;">
                     <img class="product-thumb" src="{{ product.ImageURL }}" alt="{{ product.name }}">
                     <div>
                       <div style="font-weight:600;font-size:.88rem;">{{ product.name }}</div>
-                      <div style="font-size:.75rem;color:var(--muted);">ID: {{ product.id }}</div>
+                      <div style="font-size:.75rem;color:#666;">ID: {{ product.id }}</div>
                     </div>
                   </div>
                 </td>
                 <td>
                   {% if product.seller %}
                   <span style="font-size:.78rem;background:#EFF6FF;color:#1D4ED8;padding:.2rem .6rem;border-radius:30px;font-weight:700;">
-                    <i class="fas fa-user me-1"></i>{{ product.seller.username }}
+                    <i class="fas fa-user"></i> {{ product.seller.username }}
                   </span>
                   {% else %}
-                  <span style="font-size:.78rem;color:var(--muted);"><i class="fas fa-store me-1"></i>Shop</span>
+                  <span style="font-size:.78rem;color:#666;"><i class="fas fa-store"></i> Shop</span>
                   {% endif %}
                 </td>
-                <td style="font-size:.8rem;color:var(--muted);white-space:nowrap;">
+                <td style="font-size:.8rem;color:#666;white-space:nowrap;">
                   {{ product.date_posted|date:"d/m/Y H:i" }}
                 </td>
                 <td>
                   {% for cat in product.catergory.all %}{{ cat.name }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
                 </td>
                 <td>
-                  <strong>${{ product.price|floatformat:2 }}</strong>
+                  <strong>{{ product.price|vnd }}</strong>
                   {% if product.is_flash_sale and product.discount_percent > 0 %}
-                  <div style="font-size:.72rem;color:#C0392B;font-weight:700;">⚡ -{{ product.discount_percent }}% → ${{ product.sale_price|floatformat:2 }}</div>
+                  <div style="font-size:.72rem;color:#C0392B;font-weight:700;">⚡ -{{ product.discount_percent }}% → {{ product.sale_price|vnd }}</div>
                   {% endif %}
                 </td>
                 <td>
                   {% if product.stock > 10 %}
-                    <span class="stock-ok"><i class="fas fa-check-circle me-1"></i>{{ product.stock }}</span>
+                    <span class="stock-ok"><i class="fas fa-check-circle"></i> {{ product.stock }}</span>
                   {% elif product.stock > 0 %}
-                    <span class="stock-low"><i class="fas fa-exclamation-circle me-1"></i>{{ product.stock }}</span>
+                    <span class="stock-low"><i class="fas fa-exclamation-circle"></i> {{ product.stock }}</span>
                   {% else %}
-                    <span class="stock-out"><i class="fas fa-times-circle me-1"></i>Hết hàng</span>
+                    <span class="stock-out"><i class="fas fa-times-circle"></i> Hết hàng</span>
                   {% endif %}
                 </td>
                 <td>{{ product.sold }}</td>
@@ -173,7 +123,7 @@
                   {% elif product.is_flash_sale %}
                   <span style="font-size:.78rem;background:#FEF3C7;color:#92400E;padding:.2rem .6rem;border-radius:30px;font-weight:700;">⚡ Flash Sale</span>
                   {% else %}
-                  <span style="font-size:.78rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Đang bán</span>
+                  <span style="font-size:.78rem;background:#e8f7f4;color:var(--primary-dark);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Đang bán</span>
                   {% endif %}
                 </td>
                 <td>
@@ -191,7 +141,7 @@
                       {% csrf_token %}
                       <input type="hidden" name="action" value="approve">
                       <input type="hidden" name="product_id" value="{{ product.id }}">
-                      <button type="submit" class="btn-admin-sm" style="background:var(--green-deep);color:#fff;" title="Duyệt lại"><i class="fas fa-check"></i></button>
+                      <button type="submit" class="btn-admin-sm primary" title="Duyệt lại"><i class="fas fa-check"></i></button>
                     </form>
                     {% endif %}
 
@@ -212,7 +162,7 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="10" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có sản phẩm nào.</td>
+                <td colspan="9" style="text-align:center;color:#666;padding:2rem;">Chưa có sản phẩm nào.</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -222,15 +172,6 @@
         <!-- Tổng số sản phẩm — số liệu thật -->
         <div class="admin-pagination">
           <span>Hiển thị tất cả {{ products|length }} sản phẩm</span>
-          <div class="page-btns">
-            <button class="pg-btn"><i class="fas fa-chevron-left"></i></button>
-            <button class="pg-btn active">1</button>
-            <button class="pg-btn">2</button>
-            <button class="pg-btn">3</button>
-            <button class="pg-btn">...</button>
-            <button class="pg-btn">52</button>
-            <button class="pg-btn"><i class="fas fa-chevron-right"></i></button>
-          </div>
         </div>
 
       </div>
@@ -249,48 +190,51 @@
       <!-- Để trống khi thêm mới, có giá trị khi sửa -->
       <input type="hidden" name="product_id" id="modal-product-id" value="">
 
-      <div class="row g-3">
-        <div class="col-12 form-group">
+      <div class="modal-field-row">
+        <div class="field-12 form-group">
           <label>Tên sản phẩm *</label>
           <input class="form-control" type="text" name="name" id="modal-name" placeholder="Nhập tên sản phẩm..." required>
         </div>
-        <div class="col-md-6 form-group">
-          <label>Giá bán ($) *</label>
-          <input class="form-control" type="number" name="price" id="modal-price" step="0.01" placeholder="0.00" required>
+        <div class="field-6 form-group">
+          <label>Giá bán (đ) *</label>
+          <input class="form-control" type="number" name="price" id="modal-price" step="1000" min="0" placeholder="0" required>
         </div>
-        <div class="col-md-6 form-group">
+        <div class="field-6 form-group">
           <label>Tồn kho</label>
           <input class="form-control" type="number" name="stock" id="modal-stock" placeholder="0" value="100">
         </div>
-        <div class="col-md-6 form-group">
+        <div class="field-6 form-group">
           <label>% Giảm giá (Flash Sale)</label>
           <input class="form-control" type="number" name="discount_percent" id="modal-discount" min="0" max="100" placeholder="0" value="0">
         </div>
-        <div class="col-md-6 form-group">
+        <div class="field-6 form-group">
           <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;margin-top:1.8rem;">
-            <input type="checkbox" name="is_flash_sale" id="modal-flash" style="width:16px;height:16px;accent-color:var(--green-deep);">
+            <input type="checkbox" name="is_flash_sale" id="modal-flash" style="width:16px;height:16px;accent-color:var(--primary);">
             Hiển thị trong Flash Sale
           </label>
         </div>
-        <div class="col-12 form-group">
+        <div class="field-12 form-group">
           <label>Mô tả sản phẩm</label>
           <textarea class="form-control" name="detail" id="modal-detail" rows="3" placeholder="Nhập mô tả ngắn..."></textarea>
         </div>
-        <div class="col-12 form-group">
-          <p style="font-size:.78rem;color:var(--muted);margin:0;">
-            <i class="fas fa-info-circle me-1"></i>
+        <div class="field-12 form-group">
+          <p style="font-size:.78rem;color:#666;margin:0;">
+            <i class="fas fa-info-circle"></i>
             Ảnh sản phẩm và danh mục được quản lý qua Django Admin (<code>/admin/</code>) vì cần upload file / chọn quan hệ nhiều-nhiều.
           </p>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-modal-cancel" onclick="closeModal()">Hủy</button>
-        <button type="submit" class="btn-modal-save"><i class="fas fa-save me-1"></i>Lưu sản phẩm</button>
+        <button type="submit" class="btn-modal-save"><i class="fas fa-save"></i> Lưu sản phẩm</button>
       </div>
     </form>
   </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+{{ block.super }}
 <script>
   /* Mở modal — nếu có productData (object) thì fill sẵn để sửa, ngược lại để trống (thêm mới) */
   function openModal(productData) {
@@ -311,10 +255,15 @@
   document.getElementById('product-modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
-  /* Select all checkbox */
-  document.getElementById('select-all').addEventListener('change', function() {
-    document.querySelectorAll('.row-check').forEach(cb => cb.checked = this.checked);
+
+  /* Tìm kiếm sản phẩm theo tên (lọc trực tiếp trên bảng đã render) */
+  document.getElementById('productSearchInput').addEventListener('input', function () {
+    const keyword = this.value.trim().toLowerCase();
+    document.querySelectorAll('tbody tr[data-search]').forEach(row => {
+      row.style.display = row.dataset.search.includes(keyword) ? '' : 'none';
+    });
   });
 </script>
 {% endblock %}
+
 {% block site_footer %}{% endblock %}

@@ -1,53 +1,34 @@
 {% extends "shop/base.html" %}
-{% load static %}
+{% load static shop_filters %}
 
-{% block main-content %}
+{% block title %}Quản lý đơn hàng - STDShop Admin{% endblock %}
+
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-common.css' %}" />
 <link rel="stylesheet" href="{% static 'css/orders.css' %}" />
 {% endblock %}
 
+{% block content %}
 <div class="admin-page">
   <div class="admin-layout">
 
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="admin-logo"><div class="dot"></div> STD Admin</div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Tổng quan</div>
-        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Quản lý</div>
-        <a href="{% url 'admin_orders' %}" class="admin-nav-item active"><i class="fas fa-box"></i> Đơn hàng <span class="badge">{{ pending_orders_count }}</span></a>
-        <a href="{% url 'admin_products' %}" class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
-        <a href="{% url 'admin_users' %}" class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
-        <a href="{% url 'admin_categories' %}" class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
-        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Marketing</div>
-        <a href="{% url 'admin_vouchers' %}" class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
-        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
-        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
-      </div>
-      <div class="admin-nav-group">
-        <a href="{% url 'home' %}" class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
-        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-      </div>
-    </aside>
+    {% include "shop/admin/_sidebar.html" with active="orders" pending_orders_count=status_counts.pending %}
 
     <!-- Content -->
     <main class="admin-content">
 
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <div class="admin-page-header">
         <div>
-          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý đơn hàng</h1>
-          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ status_counts.all }} đơn hàng</p>
+          <h1 class="admin-page-title">Quản lý đơn hàng</h1>
+          <p class="admin-page-sub">{{ status_counts.all }} đơn hàng</p>
         </div>
-        <button class="btn-admin-sm" style="background:var(--green-deep);color:#fff;">
-          <i class="fas fa-file-excel me-1"></i>Xuất Excel
-        </button>
       </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color:#00a68f; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
 
       <!-- KPI mini: đếm theo trạng thái — dữ liệu thật, click để lọc bảng -->
       <div class="order-kpi">
@@ -68,7 +49,7 @@
           <div class="label">Đang giao</div>
         </div>
         <div class="order-kpi-card" onclick="filterAdminOrders('delivered', this)">
-          <div class="num" style="color:var(--green-deep);">{{ status_counts.delivered }}</div>
+          <div class="num" style="color:var(--primary-dark);">{{ status_counts.delivered }}</div>
           <div class="label">Đã giao</div>
         </div>
         <div class="order-kpi-card" onclick="filterAdminOrders('cancelled', this)">
@@ -80,29 +61,9 @@
       <!-- Bảng đơn hàng -->
       <div class="admin-panel">
 
-        <!-- Bộ lọc -->
+        <!-- Bộ lọc (thuần giao diện - lọc thật đang dùng KPI mini phía trên) -->
         <div class="filter-bar">
-          <input type="text" placeholder="🔍  Tìm mã đơn, tên KH, email...">
-          <select>
-            <option>Tất cả trạng thái</option>
-            <option>Chờ xác nhận</option>
-            <option>Đang xử lý</option>
-            <option>Đang giao</option>
-            <option>Đã giao</option>
-            <option>Đã hủy</option>
-          </select>
-          <select>
-            <option>Tất cả thời gian</option>
-            <option>Hôm nay</option>
-            <option>7 ngày qua</option>
-            <option>Tháng này</option>
-            <option>Tháng trước</option>
-          </select>
-          <select>
-            <option>Sắp xếp: Mới nhất</option>
-            <option>Cũ nhất</option>
-            <option>Giá trị cao nhất</option>
-          </select>
+          <input type="text" id="orderSearchInput" placeholder="🔍  Tìm mã đơn, tên KH, email...">
         </div>
 
         <!-- Bảng -->
@@ -122,14 +83,14 @@
             </thead>
             <tbody>
               {% for order in orders %}
-              <tr data-status="{{ order.status }}">
-                <td><strong style="color:var(--green-deep);">#{{ order.id }}</strong></td>
+              <tr data-status="{{ order.status }}" data-search="{{ order.id }} {{ order.customer.username }} {{ order.customer.email }}">
+                <td><strong style="color:var(--primary-dark);">#{{ order.id }}</strong></td>
                 <td>
                   <div style="font-weight:600;">{{ order.customer.get_full_name|default:order.customer.username }}</div>
-                  <div style="font-size:.75rem;color:var(--muted);">{{ order.customer.email }}</div>
+                  <div style="font-size:.75rem;color:#666;">{{ order.customer.email }}</div>
                 </td>
                 <td>{{ order.get_cart_items }}</td>
-                <td><strong>${{ order.get_cart_total }}</strong></td>
+                <td><strong>{{ order.get_cart_total|vnd }}</strong></td>
                 <td><span class="pill {{ order.status }}">{{ order.get_status_display }}</span></td>
                 <td>{{ order.date_order|date:"d/m/Y" }}</td>
                 <td>
@@ -146,11 +107,11 @@
                     </select>
                   </form>
                 </td>
-                <td><a href="{% url 'order_detail' order.id %}" style="font-size:.8rem;color:var(--green-deep);font-weight:600;white-space:nowrap;">Chi tiết</a></td>
+                <td><a href="{% url 'order_detail' order.id %}" style="font-size:.8rem;color:var(--primary-dark);font-weight:600;white-space:nowrap;">Chi tiết</a></td>
               </tr>
               {% empty %}
               <tr>
-                <td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có đơn hàng nào.</td>
+                <td colspan="8" style="text-align:center;color:#666;padding:2rem;">Chưa có đơn hàng nào.</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -166,7 +127,10 @@
     </main>
   </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+{{ block.super }}
 <script>
   /* Lọc đơn hàng theo trạng thái khi click vào thẻ KPI mini */
   function filterAdminOrders(status, card) {
@@ -177,6 +141,15 @@
       row.style.display = (status === 'all' || row.dataset.status === status) ? '' : 'none';
     });
   }
+
+  /* Tìm kiếm theo mã đơn / tên KH / email (lọc trực tiếp trên bảng đã render) */
+  document.getElementById('orderSearchInput').addEventListener('input', function () {
+    const keyword = this.value.trim().toLowerCase();
+    document.querySelectorAll('tbody tr[data-search]').forEach(row => {
+      row.style.display = row.dataset.search.toLowerCase().includes(keyword) ? '' : 'none';
+    });
+  });
 </script>
 {% endblock %}
+
 {% block site_footer %}{% endblock %}

@@ -4,6 +4,7 @@
 {% block title %}Admin Dashboard - STDShop{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-common.css' %}" />
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
 {% endblock %}
 
@@ -11,72 +12,19 @@
 <div class="admin-page">
   <div class="admin-layout">
 
-    <!-- ── SIDEBAR ── -->
-    <aside class="admin-sidebar">
-      <div class="admin-logo">
-        <div class="dot"></div> STDShop Admin
-      </div>
-
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Tổng quan</div>
-        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item active">
-          <i class="fas fa-tachometer-alt"></i> Dashboard
-        </a>
-      </div>
-
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Quản lý</div>
-        <a href="{% url 'admin_orders' %}" class="admin-nav-item">
-          <i class="fas fa-box"></i> Đơn hàng
-        </a>
-        <a href="{% url 'admin_products' %}" class="admin-nav-item">
-          <i class="fas fa-tags"></i> Sản phẩm
-        </a>
-        <a href="{% url 'admin_users' %}" class="admin-nav-item">
-          <i class="fas fa-users"></i> Khách hàng
-        </a>
-        <a href="{% url 'admin_categories' %}" class="admin-nav-item">
-          <i class="fas fa-th-large"></i> Danh mục
-        </a>
-        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
-        <a href="{% url 'admin_badges' %}" class="admin-nav-item"><i class="fas fa-medal"></i> Huy hiệu</a>
-      </div>
-
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Marketing</div>
-        <a href="{% url 'admin_vouchers' %}" class="admin-nav-item">
-          <i class="fas fa-ticket-alt"></i> Voucher
-        </a>
-        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item">
-          <i class="fas fa-bolt"></i> Flash Sale
-        </a>
-        <a href="{% url 'admin_notifications' %}" class="admin-nav-item">
-          <i class="fas fa-bell"></i> Thông báo
-        </a>
-      </div>
-
-      <div class="admin-nav-group" style="margin-top:auto;">
-        <div class="admin-nav-label">Hệ thống</div>
-        <a href="{% url 'home' %}" class="admin-nav-item">
-          <i class="fas fa-store"></i> Xem cửa hàng
-        </a>
-        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;">
-          <i class="fas fa-sign-out-alt"></i> Đăng xuất
-        </a>
-      </div>
-    </aside>
+    {% include "shop/admin/_sidebar.html" with active="dashboard" %}
 
     <!-- ── CONTENT ── -->
     <main class="admin-content">
 
       <!-- Header -->
-      <div class="admin-header">
+      <div class="admin-page-header">
         <div>
           <h1 class="admin-page-title">Dashboard</h1>
           <div class="admin-date"><i class="fas fa-calendar"></i> Hôm nay: {% now "d/m/Y" %}</div>
         </div>
         <div class="admin-header-actions">
-          <a href="{% url 'admin_products' %}" class="btn-admin-sm" style="background:var(--primary);color:#fff;">
+          <a href="{% url 'admin_products' %}" class="btn-admin-sm primary">
             <i class="fas fa-plus"></i> Thêm sản phẩm
           </a>
         </div>

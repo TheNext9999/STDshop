@@ -1,5 +1,8 @@
-{# Sidebar dùng chung cho mọi trang Admin. Truyền biến `active` để tô sáng đúng mục.
-   Ví dụ: {% include "shop/admin/_sidebar.html" with active="orders" %} #}
+{% comment %}
+Sidebar dùng chung cho mọi trang Admin. Truyền biến `active` để tô sáng đúng mục.
+Ví dụ cách gọi (ĐÂY CHỈ LÀ VÍ DỤ TRONG COMMENT, KHÔNG PHẢI CODE CHẠY THẬT):
+{% include "shop/admin/_sidebar.html" with active="orders" %}
+{% endcomment %}
 <aside class="admin-sidebar">
   <div class="admin-logo"><div class="dot"></div> STDShop Admin</div>
 
