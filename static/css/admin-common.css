@@ -1,0 +1,191 @@
+/* ============================================================
+   CSS DÙNG CHUNG CHO MỌI TRANG ADMIN (sidebar, panel, table...)
+   Mỗi trang admin (dashboard/orders/products/...) chỉ cần load
+   thêm file CSS RIÊNG của nó bên cạnh file này.
+   ============================================================ */
+
+.admin-page { padding: 0; }
+.admin-layout { display: flex; min-height: calc(100vh - 68px); }
+
+/* Sidebar quản trị */
+.admin-sidebar {
+    width: 240px; flex-shrink: 0;
+    background: #1a1f2e;
+    display: flex; flex-direction: column;
+    position: sticky; top: 68px;
+    height: calc(100vh - 68px);
+    overflow-y: auto;
+}
+.admin-logo {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-size: 1rem; font-weight: 700;
+    color: #fff; display: flex; align-items: center; gap: .6rem;
+}
+.admin-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+
+.admin-nav-group { padding: 1rem 0 .5rem; }
+.admin-nav-label {
+    font-size: .65rem; text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 700;
+    color: rgba(255,255,255,.3);
+    padding: 0 1.2rem .5rem;
+}
+.admin-nav-item {
+    display: flex; align-items: center; gap: .7rem;
+    padding: .65rem 1.2rem;
+    font-size: .85rem; font-weight: 500;
+    color: rgba(255,255,255,.6);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+.admin-nav-item:hover, .admin-nav-item.active {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    border-left-color: var(--primary);
+}
+.admin-nav-item i { width: 16px; text-align: center; font-size: .88rem; }
+.admin-nav-item .badge { background: #f59e0b; color: #fff; font-size: .65rem; font-weight: 700; padding: .1rem .4rem; border-radius: 30px; margin-left: auto; }
+
+/* Content area */
+.admin-content { flex: 1; background: #f4f6f9; padding: 2rem; overflow-y: auto; box-sizing: border-box; }
+.admin-page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+}
+.admin-page-title { font-size: 1.5rem; font-weight: 700; color: #1a1f2e; margin: 0; }
+.admin-page-sub { font-size: .83rem; color: #666; margin: .3rem 0 0; }
+
+/* Panel admin */
+.admin-panel {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    overflow: hidden;
+}
+.admin-panel-header {
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: .5rem;
+}
+.admin-panel-title { font-size: .92rem; font-weight: 700; color: #1a1f2e; margin: 0; }
+
+/* Nút nhỏ dùng khắp trang admin */
+.btn-admin-sm {
+    font-size: .78rem; font-weight: 600;
+    padding: .35rem .9rem; border-radius: 30px;
+    background: #e8f7f4; color: var(--primary-dark);
+    border: none; cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: .4rem;
+    transition: all 0.25s ease;
+}
+.btn-admin-sm:hover { background: var(--primary); color: #fff; }
+.btn-admin-sm.primary { background: var(--primary); color: #fff; }
+.btn-admin-sm.primary:hover { background: var(--primary-dark); }
+.btn-admin-sm.danger { background: #FEF2F2; color: #DC2626; }
+.btn-admin-sm.danger:hover { background: #DC2626; color: #fff; }
+
+/* Bảng dữ liệu dùng chung */
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th {
+    background: #f8f9fa; font-size: .75rem;
+    text-transform: uppercase; letter-spacing: .6px;
+    font-weight: 700; color: #666;
+    padding: .75rem 1.2rem; text-align: left;
+    border-bottom: 1px solid #eee;
+}
+.admin-table td { padding: .85rem 1.2rem; font-size: .85rem; color: #333; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: #fafafa; }
+
+/* Badge trạng thái dùng chung (đơn hàng, sản phẩm...) */
+.pill { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .7rem; border-radius: 30px; font-size: .72rem; font-weight: 700; }
+.pill.delivered  { background: #e8f7f4; color: var(--primary-dark); }
+.pill.shipping   { background: #EFF6FF; color: #1D4ED8; }
+.pill.processing { background: #F3E8FF; color: #7C3AED; }
+.pill.pending    { background: #FEF3C7; color: #92400E; }
+.pill.cancelled  { background: #FEF2F2; color: #DC2626; }
+
+/* Bộ lọc/tìm kiếm dùng chung */
+.filter-bar {
+    display: flex; align-items: center; gap: .7rem;
+    padding: 1rem 1.4rem;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+.filter-bar input, .filter-bar select {
+    border: 1.5px solid #e8e8e8;
+    border-radius: 8px;
+    padding: .5rem .9rem;
+    font-size: .85rem;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+.filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary); }
+.filter-bar input { flex: 1; min-width: 180px; }
+
+/* Dropdown cập nhật trạng thái nhanh trong bảng */
+.status-select {
+    border: 1.5px solid #e0e0e0; border-radius: 8px;
+    padding: .3rem .6rem; font-size: .78rem; font-weight: 600;
+    cursor: pointer; outline: none; background: #fff;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+.status-select:focus { border-color: var(--primary); }
+
+/* Checkbox chọn hàng loạt */
+.row-check { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
+
+/* Phân trang dùng chung */
+.admin-pagination { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.4rem; border-top: 1px solid #f0f0f0; font-size: .83rem; color: #666; flex-wrap: wrap; gap: .5rem; }
+.page-btns { display: flex; gap: .3rem; }
+.pg-btn { width: 32px; height: 32px; border-radius: 6px; border: 1.5px solid #e0e0e0; background: #fff; color: #666; font-size: .83rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+.pg-btn.active, .pg-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Modal thêm/sửa dùng chung */
+.modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 9999;
+    align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    padding: 2rem;
+    box-sizing: border-box;
+    animation: adminModalSlideUp .25s ease;
+}
+@keyframes adminModalSlideUp { from { transform: translateY(30px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+.modal-title { font-size: 1.2rem; font-weight: 700; margin: 0 0 1.5rem; }
+.modal-form .form-control {
+    border: 1.5px solid #e8e8e8; border-radius: 8px;
+    padding: .65rem 1rem; font-size: .88rem;
+    width: 100%; outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+.modal-form .form-control:focus { border-color: var(--primary); }
+.modal-form label { font-size: .8rem; font-weight: 600; color: #222; margin-bottom: .3rem; display: block; }
+.modal-form .form-group { margin-bottom: 1rem; }
+.modal-footer { display: flex; gap: .7rem; justify-content: flex-end; margin-top: 1.5rem; }
+.btn-modal-cancel { background: transparent; border: 1.5px solid #e0e0e0; color: #666; border-radius: 8px; padding: .6rem 1.3rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.btn-modal-cancel:hover { border-color: #aaa; }
+.btn-modal-save { background: var(--primary); color: #fff; border: none; border-radius: 8px; padding: .6rem 1.5rem; font-weight: 700; cursor: pointer; transition: background 0.2s ease; }
+.btn-modal-save:hover { background: var(--primary-dark); }
+
+/* Layout hàng field thuần CSS cho modal (thay Bootstrap row/col) */
+.modal-field-row { display: flex; flex-wrap: wrap; gap: 16px; }
+.modal-field-row .field-12 { flex: 1 1 100%; }
+.modal-field-row .field-6 { flex: 1 1 calc(50% - 8px); min-width: 180px; }

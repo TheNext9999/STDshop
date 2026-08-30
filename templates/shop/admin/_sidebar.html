@@ -1,0 +1,58 @@
+{# Sidebar dùng chung cho mọi trang Admin. Truyền biến `active` để tô sáng đúng mục.
+   Ví dụ: {% include "shop/admin/_sidebar.html" with active="orders" %} #}
+<aside class="admin-sidebar">
+  <div class="admin-logo"><div class="dot"></div> STDShop Admin</div>
+
+  <div class="admin-nav-group">
+    <div class="admin-nav-label">Tổng quan</div>
+    <a href="{% url 'admin_dashboard' %}" class="admin-nav-item {% if active == 'dashboard' %}active{% endif %}">
+      <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+  </div>
+
+  <div class="admin-nav-group">
+    <div class="admin-nav-label">Quản lý</div>
+    <a href="{% url 'admin_orders' %}" class="admin-nav-item {% if active == 'orders' %}active{% endif %}">
+      <i class="fas fa-box"></i> Đơn hàng
+      {% if pending_orders_count %}<span class="badge">{{ pending_orders_count }}</span>{% endif %}
+    </a>
+    <a href="{% url 'admin_products' %}" class="admin-nav-item {% if active == 'products' %}active{% endif %}">
+      <i class="fas fa-tags"></i> Sản phẩm
+    </a>
+    <a href="{% url 'admin_users' %}" class="admin-nav-item {% if active == 'users' %}active{% endif %}">
+      <i class="fas fa-users"></i> Khách hàng
+    </a>
+    <a href="{% url 'admin_categories' %}" class="admin-nav-item {% if active == 'categories' %}active{% endif %}">
+      <i class="fas fa-th-large"></i> Danh mục
+    </a>
+    <a href="{% url 'admin_reviews' %}" class="admin-nav-item {% if active == 'reviews' %}active{% endif %}">
+      <i class="fas fa-comment-dots"></i> Bình luận
+    </a>
+    <a href="{% url 'admin_badges' %}" class="admin-nav-item {% if active == 'badges' %}active{% endif %}">
+      <i class="fas fa-medal"></i> Huy hiệu
+    </a>
+  </div>
+
+  <div class="admin-nav-group">
+    <div class="admin-nav-label">Marketing</div>
+    <a href="{% url 'admin_vouchers' %}" class="admin-nav-item {% if active == 'vouchers' %}active{% endif %}">
+      <i class="fas fa-ticket-alt"></i> Voucher
+    </a>
+    <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item {% if active == 'flash_sale' %}active{% endif %}">
+      <i class="fas fa-bolt"></i> Flash Sale
+    </a>
+    <a href="{% url 'admin_notifications' %}" class="admin-nav-item {% if active == 'notifications' %}active{% endif %}">
+      <i class="fas fa-bell"></i> Thông báo
+    </a>
+  </div>
+
+  <div class="admin-nav-group" style="margin-top:auto;">
+    <div class="admin-nav-label">Hệ thống</div>
+    <a href="{% url 'home' %}" class="admin-nav-item">
+      <i class="fas fa-store"></i> Xem cửa hàng
+    </a>
+    <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;">
+      <i class="fas fa-sign-out-alt"></i> Đăng xuất
+    </a>
+  </div>
+</aside>
