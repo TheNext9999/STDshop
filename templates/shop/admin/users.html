@@ -1,61 +1,42 @@
-{% extends 'shop/base.html' %}
-{% load static %}
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
 
-{% block main-content %}
+{% block title %}Quản lý khách hàng - STDShop Admin{% endblock %}
+
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-common.css' %}" />
 <link rel="stylesheet" href="{% static 'css/users.css' %}" />
 {% endblock %}
 
+{% block content %}
 <div class="admin-page">
   <div class="admin-layout">
 
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="admin-logo"><div class="dot"></div> Lotus Admin</div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Tổng quan</div>
-        <a href="{% url 'admin_dashboard' %}" class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Quản lý</div>
-        <a href="{% url 'admin_orders' %}"   class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng <span class="badge">{{ pending_orders_count }}</span></a>
-        <a href="{% url 'admin_products' %}" class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
-        <a href="{% url 'admin_users' %}"    class="admin-nav-item active"><i class="fas fa-users"></i> Khách hàng</a>
-        <a href="{% url 'admin_categories' %}" class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
-        <a href="{% url 'admin_reviews' %}" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Marketing</div>
-        <a href="{% url 'admin_vouchers' %}" class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
-        <a href="{% url 'admin_flash_sale' %}" class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
-        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
-      </div>
-      <div class="admin-nav-group">
-        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
-        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-      </div>
-    </aside>
+    {% include "shop/admin/_sidebar.html" with active="users" %}
 
     <!-- Content -->
     <main class="admin-content">
 
       <!-- Header -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <div class="admin-page-header">
         <div>
-          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">Quản lý khách hàng</h1>
-          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ total_users }} tài khoản trong hệ thống</p>
-        </div>
-        <div class="d-flex gap-2">
-          <button class="btn-admin-sm"><i class="fas fa-file-excel me-1"></i>Xuất Excel</button>
+          <h1 class="admin-page-title">Quản lý khách hàng</h1>
+          <p class="admin-page-sub">{{ total_users }} tài khoản trong hệ thống</p>
         </div>
       </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color:#00a68f; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
 
       <!-- KPI — dữ liệu thật tính từ database -->
       <div class="users-kpi">
         <div class="users-kpi-card total">
           <div class="num">{{ total_users }}</div>
           <div class="label">Tổng khách hàng</div>
-          <div class="change"><i class="fas fa-arrow-up me-1"></i>+{{ new_this_week }} tuần này</div>
+          <div class="change"><i class="fas fa-arrow-up"></i> +{{ new_this_week }} tuần này</div>
         </div>
         <div class="users-kpi-card new">
           <div class="num">{{ new_this_week }}</div>
@@ -68,32 +49,16 @@
         <div class="users-kpi-card vip">
           <div class="num">{{ vip_users }}</div>
           <div class="label">Khách VIP</div>
-          <div class="change" style="color:#7C3AED;">Chi tiêu &gt;$500</div>
+          <div class="change" style="color:#7C3AED;">Chi tiêu &gt; 500đ</div>
         </div>
       </div>
 
       <!-- Bảng khách hàng -->
       <div class="admin-panel">
 
-        <!-- Bộ lọc — lưu ý: input/select dưới đây hiện chỉ là UI, chưa nối backend filter -->
+        <!-- Tìm kiếm (lọc trực tiếp trên bảng đã render) -->
         <div class="filter-bar">
-          <input type="text" placeholder="🔍  Tìm tên, email...">
-          <select>
-            <option>Tất cả trạng thái</option>
-            <option>Đang hoạt động</option>
-            <option>Bị khóa</option>
-          </select>
-          <select>
-            <option>Tất cả thời gian</option>
-            <option>Đăng ký hôm nay</option>
-            <option>7 ngày qua</option>
-            <option>Tháng này</option>
-          </select>
-          <select>
-            <option>Sắp xếp: Mới nhất</option>
-            <option>Chi tiêu cao nhất</option>
-            <option>Nhiều đơn nhất</option>
-          </select>
+          <input type="text" id="userSearchInput" placeholder="🔍  Tìm tên, email...">
         </div>
 
         <!-- Bảng -->
@@ -105,29 +70,28 @@
                 <th>Ngày đăng ký</th>
                 <th>Tổng đơn</th>
                 <th>Tổng chi tiêu</th>
-                <th>Tổng chi tiêu</th>
                 <th>Trạng thái</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {% for u in users_list %}
-                <tr>
+                <tr data-search="{{ u.username|lower }} {{ u.email|lower }}">
                   <td>
                     <div style="display:flex;align-items:center;gap:.75rem;">
                       <div class="user-avatar">{{ u.username|first|upper }}</div>
                       <div>
                         <div style="font-weight:600;">{{ u.get_full_name|default:u.username }}</div>
-                        <div style="font-size:.75rem;color:var(--muted);">{{ u.email }}</div>
+                        <div style="font-size:.75rem;color:#666;">{{ u.email }}</div>
                       </div>
                     </div>
                   </td>
                   <td>{{ u.date_joined|date:"d/m/Y" }}</td>
                   <td>{{ u.order_count }} đơn</td>
-                  <td><strong>${{ u.total_spent|floatformat:2 }}</strong></td>
+                  <td><strong>{{ u.total_spent|vnd }}</strong></td>
                   <td>
                     {% if u.is_active %}
-                    <span style="font-size:.78rem;background:var(--green-light);color:var(--green-deep);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Hoạt động</span>
+                    <span style="font-size:.78rem;background:#e8f7f4;color:var(--primary-dark);padding:.2rem .6rem;border-radius:30px;font-weight:700;">Hoạt động</span>
                     {% else %}
                     <span style="font-size:.78rem;background:#FEF2F2;color:#DC2626;padding:.2rem .6rem;border-radius:30px;font-weight:700;">Bị khóa</span>
                     {% endif %}
@@ -135,7 +99,7 @@
                   <td>
                     <div style="display:flex;gap:.4rem;">
                       <button class="btn-admin-sm" onclick='openUserModal({{ u.id }}, "{{ u.username|escapejs }}", "{{ u.get_full_name|default:u.username|escapejs }}", "{{ u.email|escapejs }}", "{{ u.date_joined|date:"d/m/Y" }}", {{ u.order_count }}, {{ u.total_spent }}, {{ u.is_active|yesno:"true,false" }})'>
-                        <i class="fas fa-eye me-1"></i>Xem
+                        <i class="fas fa-eye"></i> Xem
                       </button>
                       <!-- Form khóa/mở khóa tài khoản — submit POST thật -->
                       <form method="post" action="{% url 'admin_users' %}" style="display:inline;"
@@ -152,7 +116,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                  <td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có khách hàng nào.</td>
+                  <td colspan="6" style="text-align:center;color:#666;padding:2rem;">Chưa có khách hàng nào.</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -171,39 +135,39 @@
 
 <!-- Modal chi tiết khách hàng -->
 <div class="modal-overlay" id="user-modal">
-  <div class="modal-box">
+  <div class="modal-box modal-box-user">
     <div class="modal-header">
       <div style="display:flex;align-items:center;gap:.8rem;">
         <div class="user-avatar" id="modal-avatar">N</div>
         <div>
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;" id="modal-name">Nguyễn Văn An</div>
-          <div style="font-size:.8rem;color:var(--muted);">Thành viên từ 01/01/2025</div>
+          <div style="font-size:1rem;font-weight:700;" id="modal-name">—</div>
+          <div style="font-size:.8rem;color:#666;" id="modal-joined-header">—</div>
         </div>
       </div>
       <button class="modal-close" onclick="closeUserModal()">&times;</button>
     </div>
     <div class="modal-body">
 
-      <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--green-deep);margin-bottom:.8rem;"><i class="fas fa-user me-1"></i>Thông tin cơ bản</p>
+      <p class="modal-section-label"><i class="fas fa-user"></i> Thông tin cơ bản</p>
       <div class="detail-row"><span class="dl">Email</span><span class="dv" id="modal-email"></span></div>
       <div class="detail-row"><span class="dl">Ngày tham gia</span><span class="dv" id="modal-joined"></span></div>
 
-      <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--green-deep);margin:1.2rem 0 .8rem;"><i class="fas fa-chart-line me-1"></i>Thống kê mua hàng</p>
+      <p class="modal-section-label" style="margin-top:1.2rem;"><i class="fas fa-chart-line"></i> Thống kê mua hàng</p>
       <div class="detail-row"><span class="dl">Tổng đơn hàng</span><span class="dv" id="modal-orders"></span></div>
-      <div class="detail-row"><span class="dl">Tổng chi tiêu</span><span class="dv" id="modal-spent" style="color:var(--green-deep);"></span></div>
+      <div class="detail-row"><span class="dl">Tổng chi tiêu</span><span class="dv" id="modal-spent" style="color:var(--primary-dark);"></span></div>
       <div class="detail-row"><span class="dl">Trạng thái</span><span class="dv" id="modal-status"></span></div>
 
       <div style="display:flex;gap:.7rem;margin-top:1.5rem;">
-        <a id="modal-email-btn" href="#" class="btn-admin-sm" style="flex:1;padding:.6rem;background:var(--green-deep);color:#fff;text-align:center;">
-          <i class="fas fa-envelope me-1"></i>Gửi email
+        <a id="modal-email-btn" href="#" class="btn-admin-sm primary" style="flex:1;padding:.6rem;text-align:center;">
+          <i class="fas fa-envelope"></i> Gửi email
         </a>
         <!-- Form khóa/mở khóa — submit POST thật, action/text đổi theo trạng thái hiện tại -->
         <form id="modal-toggle-form" method="post" action="{% url 'admin_users' %}" style="flex:1;">
           {% csrf_token %}
           <input type="hidden" name="action" value="toggle_active">
           <input type="hidden" name="user_id" id="modal-user-id" value="">
-          <button type="submit" id="modal-toggle-btn" class="btn-admin-sm danger" style="width:100%;padding:.6rem;background:#FEF2F2;color:#DC2626;">
-            <i class="fas fa-ban me-1"></i>Khóa tài khoản
+          <button type="submit" id="modal-toggle-btn" class="btn-admin-sm danger" style="width:100%;padding:.6rem;">
+            <i class="fas fa-ban"></i> Khóa tài khoản
           </button>
         </form>
       </div>
@@ -211,25 +175,29 @@
     </div>
   </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+{{ block.super }}
 <script>
   /* Mở modal chi tiết — fill dữ liệu thật truyền từ nút "Xem" trong bảng */
   function openUserModal(id, username, fullName, email, joined, orderCount, totalSpent, isActive) {
-    document.getElementById('modal-name').textContent   = fullName;
-    document.getElementById('modal-avatar').textContent = username[0].toUpperCase();
-    document.getElementById('modal-email').textContent  = email;
-    document.getElementById('modal-joined').textContent = joined;
-    document.getElementById('modal-orders').textContent = orderCount + ' đơn';
-    document.getElementById('modal-spent').textContent  = '$' + totalSpent.toFixed(2);
-    document.getElementById('modal-status').textContent = isActive ? 'Hoạt động' : 'Bị khóa';
-    document.getElementById('modal-email-btn').href      = 'mailto:' + email;
-    document.getElementById('modal-user-id').value       = id;
+    document.getElementById('modal-name').textContent         = fullName;
+    document.getElementById('modal-avatar').textContent       = username[0].toUpperCase();
+    document.getElementById('modal-joined-header').textContent = 'Thành viên từ ' + joined;
+    document.getElementById('modal-email').textContent        = email;
+    document.getElementById('modal-joined').textContent       = joined;
+    document.getElementById('modal-orders').textContent       = orderCount + ' đơn';
+    document.getElementById('modal-spent').textContent        = totalSpent.toLocaleString('vi-VN') + 'đ';
+    document.getElementById('modal-status').textContent       = isActive ? 'Hoạt động' : 'Bị khóa';
+    document.getElementById('modal-email-btn').href           = 'mailto:' + email;
+    document.getElementById('modal-user-id').value            = id;
 
     const toggleBtn = document.getElementById('modal-toggle-btn');
     if (isActive) {
-      toggleBtn.innerHTML = '<i class="fas fa-ban me-1"></i>Khóa tài khoản';
+      toggleBtn.innerHTML = '<i class="fas fa-ban"></i> Khóa tài khoản';
     } else {
-      toggleBtn.innerHTML = '<i class="fas fa-unlock me-1"></i>Mở khóa tài khoản';
+      toggleBtn.innerHTML = '<i class="fas fa-unlock"></i> Mở khóa tài khoản';
     }
 
     document.getElementById('user-modal').classList.add('show');
@@ -238,6 +206,15 @@
   document.getElementById('user-modal').addEventListener('click', function(e) {
     if (e.target === this) closeUserModal();
   });
+
+  /* Tìm kiếm khách hàng theo tên/email (lọc trực tiếp trên bảng đã render) */
+  document.getElementById('userSearchInput').addEventListener('input', function () {
+    const keyword = this.value.trim().toLowerCase();
+    document.querySelectorAll('tbody tr[data-search]').forEach(row => {
+      row.style.display = row.dataset.search.includes(keyword) ? '' : 'none';
+    });
+  });
 </script>
 {% endblock %}
+
 {% block site_footer %}{% endblock %}
