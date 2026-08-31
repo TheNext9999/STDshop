@@ -1,101 +1,77 @@
-{% extends 'shop/base.html' %}
+{% extends "shop/base.html" %}
 {% load static %}
 
-{% block main-content %}
+{% block title %}Quản lý Huy hiệu - STDShop Admin{% endblock %}
+
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-common.css' %}" />
 <link rel="stylesheet" href="{% static 'css/admin_badges.css' %}" />
 {% endblock %}
+
+{% block content %}
 <div class="admin-page">
   <div class="admin-layout">
 
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="admin-logo"><div class="dot"></div> STD Admin</div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Tổng quan</div>
-        <a href="{% url 'admin_dashboard' %}"    class="admin-nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Quản lý</div>
-        <a href="{% url 'admin_orders' %}"       class="admin-nav-item"><i class="fas fa-box"></i> Đơn hàng</a>
-        <a href="{% url 'admin_products' %}"     class="admin-nav-item"><i class="fas fa-tags"></i> Sản phẩm</a>
-        <a href="{% url 'admin_users' %}"        class="admin-nav-item"><i class="fas fa-users"></i> Khách hàng</a>
-        <a href="{% url 'admin_categories' %}"   class="admin-nav-item"><i class="fas fa-th-large"></i> Danh mục</a>
-        <a href="{% url 'admin_reviews' %}"      class="admin-nav-item"><i class="fas fa-comment-dots"></i> Bình luận</a>
-        <a href="{% url 'admin_badges' %}"       class="admin-nav-item active"><i class="fas fa-award"></i> Huy hiệu</a>
-      </div>
-      <div class="admin-nav-group">
-        <div class="admin-nav-label">Marketing</div>
-        <a href="{% url 'admin_vouchers' %}"     class="admin-nav-item"><i class="fas fa-ticket-alt"></i> Voucher</a>
-        <a href="{% url 'admin_flash_sale' %}"   class="admin-nav-item"><i class="fas fa-bolt"></i> Flash Sale</a>
-        <a href="{% url 'admin_notifications' %}" class="admin-nav-item"><i class="fas fa-bell"></i> Thông báo</a>
-      </div>
-      <div class="admin-nav-group">
-        <a href="{% url 'home' %}"   class="admin-nav-item"><i class="fas fa-store"></i> Xem cửa hàng</a>
-        <a href="{% url 'logout' %}" class="admin-nav-item" style="color:#f87171;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-      </div>
-    </aside>
+    {% include "shop/admin/_sidebar.html" with active="badges" %}
 
     <!-- Content -->
     <main class="admin-content">
 
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <div class="admin-page-header">
         <div>
-          <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#1a1f2e;margin:0;">🏅 Quản lý Huy hiệu</h1>
-          <p style="font-size:.83rem;color:var(--muted);margin:.3rem 0 0;">{{ badges|length }} huy hiệu · Gán cho khách hàng và thành viên bất kỳ</p>
+          <h1 class="admin-page-title">🏅 Quản lý Huy hiệu</h1>
+          <p class="admin-page-sub">{{ badges|length }} huy hiệu · Gán cho khách hàng và thành viên bất kỳ</p>
         </div>
       </div>
 
       {% for msg in messages %}
-      <div class="alert alert-{% if msg.tags == 'error' %}danger{% elif msg.tags == 'info' %}info{% else %}success{% endif %} mb-3" style="border-radius:var(--radius-sm);font-size:.88rem;">{{ msg }}</div>
+      <div class="form-message {% if msg.tags == 'error' %}error{% elif msg.tags == 'info' %}info{% else %}success{% endif %}">{{ msg }}</div>
       {% endfor %}
 
-      <div class="row g-3">
+      <div class="admin-badges-layout">
 
         <!-- Form tạo huy hiệu mới -->
-        <div class="col-lg-4">
+        <div class="col-form">
           <div class="form-card">
-            <h6 style="font-family:'Playfair Display',serif;font-weight:700;margin-bottom:1rem;">
-              <i class="fas fa-plus-circle me-2" style="color:var(--green-deep);"></i>Tạo huy hiệu mới
-            </h6>
+            <h6><i class="fas fa-plus-circle" style="color:var(--primary-dark);"></i> Tạo huy hiệu mới</h6>
             <form method="post" action="{% url 'admin_badges' %}">
               {% csrf_token %}
               <input type="hidden" name="action" value="create_badge">
 
-              <div class="mb-3">
+              <div class="form-group">
                 <label>Tên huy hiệu *</label>
                 <input class="form-control" type="text" name="name" id="badge-name-input"
                        placeholder="Vd: Mod, VIP, Thành viên mới..." required>
               </div>
 
-              <div class="mb-3">
+              <div class="form-group">
                 <label>Icon / Emoji (tùy chọn)</label>
                 <input class="form-control" type="text" name="icon" id="badge-icon-input"
                        placeholder="🛡️ 👑 💎 🌱 ..." maxlength="4">
               </div>
 
-              <div class="mb-3">
+              <div class="form-group">
                 <label>Màu nền</label>
                 <input class="form-control" type="color" name="color" id="badge-color-input" value="#3B82F6" style="height:42px;padding:.3rem;">
                 <div class="color-swatches">
-                  <div class="color-swatch" style="background:#3B82F6" onclick="pickColor('#3B82F6')"></div>
-                  <div class="color-swatch" style="background:#DC2626" onclick="pickColor('#DC2626')"></div>
-                  <div class="color-swatch" style="background:#F59E0B" onclick="pickColor('#F59E0B')"></div>
-                  <div class="color-swatch" style="background:#10B981" onclick="pickColor('#10B981')"></div>
-                  <div class="color-swatch" style="background:#8B5CF6" onclick="pickColor('#8B5CF6')"></div>
-                  <div class="color-swatch" style="background:#EC4899" onclick="pickColor('#EC4899')"></div>
-                  <div class="color-swatch" style="background:#06B6D4" onclick="pickColor('#06B6D4')"></div>
-                  <div class="color-swatch" style="background:#6B7280" onclick="pickColor('#6B7280')"></div>
+                  <div class="color-swatch" style="background:#3B82F6" onclick="pickColor('#3B82F6', this)"></div>
+                  <div class="color-swatch" style="background:#DC2626" onclick="pickColor('#DC2626', this)"></div>
+                  <div class="color-swatch" style="background:#F59E0B" onclick="pickColor('#F59E0B', this)"></div>
+                  <div class="color-swatch" style="background:#10B981" onclick="pickColor('#10B981', this)"></div>
+                  <div class="color-swatch" style="background:#8B5CF6" onclick="pickColor('#8B5CF6', this)"></div>
+                  <div class="color-swatch" style="background:#EC4899" onclick="pickColor('#EC4899', this)"></div>
+                  <div class="color-swatch" style="background:#06B6D4" onclick="pickColor('#06B6D4', this)"></div>
+                  <div class="color-swatch" style="background:#6B7280" onclick="pickColor('#6B7280', this)"></div>
                 </div>
               </div>
 
-              <div class="mb-3">
+              <div class="form-group">
                 <label>Màu chữ</label>
                 <input class="form-control" type="color" name="text_color" id="badge-textcolor-input" value="#FFFFFF" style="height:42px;padding:.3rem;">
               </div>
 
               <!-- Xem trước huy hiệu -->
-              <div class="mb-3">
+              <div class="form-group">
                 <label>Xem trước</label>
                 <div>
                   <span class="badge-pill" id="badge-preview" style="background:#3B82F6;color:#FFFFFF;">
@@ -105,17 +81,17 @@
               </div>
 
               <button type="submit" class="btn-save" style="width:100%;">
-                <i class="fas fa-save me-1"></i>Tạo huy hiệu
+                <i class="fas fa-save"></i> Tạo huy hiệu
               </button>
             </form>
           </div>
         </div>
 
         <!-- Danh sách huy hiệu hiện có -->
-        <div class="col-lg-8">
+        <div class="col-table">
           <div class="admin-panel">
             <div class="admin-panel-header">
-              <h3 class="admin-panel-title"><i class="fas fa-list me-2" style="color:var(--green-deep);"></i>Tất cả huy hiệu</h3>
+              <h3 class="admin-panel-title"><i class="fas fa-list" style="color:var(--primary-dark);"></i> Tất cả huy hiệu</h3>
             </div>
             <div style="overflow-x:auto;">
               <table class="admin-table">
@@ -136,19 +112,19 @@
                       </span>
                     </td>
                     <td>{{ b.userbadge_set.count }} người</td>
-                    <td style="font-size:.8rem;color:var(--muted);">{{ b.created_at|date:"d/m/Y" }}</td>
+                    <td style="font-size:.8rem;color:#666;">{{ b.created_at|date:"d/m/Y" }}</td>
                     <td>
                       <form method="post" action="{% url 'admin_badges' %}" style="display:inline;"
                             onsubmit="return confirm('Xóa huy hiệu \'{{ b.name }}\'? Huy hiệu sẽ bị gỡ khỏi tất cả người dùng đang có!')">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="delete_badge">
                         <input type="hidden" name="badge_id" value="{{ b.id }}">
-                        <button type="submit" class="btn-admin-sm danger"><i class="fas fa-trash me-1"></i>Xóa</button>
+                        <button type="submit" class="btn-admin-sm danger"><i class="fas fa-trash"></i> Xóa</button>
                       </form>
                     </td>
                   </tr>
                   {% empty %}
-                  <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem;">Chưa có huy hiệu nào. Tạo huy hiệu đầu tiên ở form bên trái!</td></tr>
+                  <tr><td colspan="4" style="text-align:center;color:#666;padding:2rem;">Chưa có huy hiệu nào. Tạo huy hiệu đầu tiên ở form bên trái!</td></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -161,10 +137,10 @@
       <!-- Gán huy hiệu cho từng người dùng -->
       <div class="admin-panel">
         <div class="admin-panel-header">
-          <h3 class="admin-panel-title"><i class="fas fa-user-tag me-2" style="color:var(--amber);"></i>Gán huy hiệu cho người dùng</h3>
+          <h3 class="admin-panel-title"><i class="fas fa-user-tag" style="color:#f59e0b;"></i> Gán huy hiệu cho người dùng</h3>
         </div>
 
-        <div class="filter-bar" style="padding:1rem 1.4rem 0;">
+        <div class="filter-bar">
           <input type="text" id="search-user" placeholder="🔍  Tìm theo tên người dùng...">
         </div>
 
@@ -175,7 +151,7 @@
               <div class="user-avatar-sm">{{ u.username|first|upper }}</div>
               <div>
                 <div style="font-weight:600;font-size:.85rem;">{{ u.username }}</div>
-                <div style="font-size:.72rem;color:var(--muted);">{{ u.email }}</div>
+                <div style="font-size:.72rem;color:#666;">{{ u.email }}</div>
               </div>
             </div>
 
@@ -208,13 +184,13 @@
                 <option value="{{ b.id }}">{{ b.icon }} {{ b.name }}</option>
                 {% endfor %}
               </select>
-              <button type="submit" class="btn-admin-sm" style="background:var(--green-deep);color:#fff;">
+              <button type="submit" class="btn-admin-sm primary">
                 <i class="fas fa-plus"></i>
               </button>
             </form>
           </div>
           {% empty %}
-          <div style="text-align:center;padding:2rem;color:var(--muted);">Chưa có người dùng nào.</div>
+          <div style="text-align:center;padding:2rem;color:#666;">Chưa có người dùng nào.</div>
           {% endfor %}
         </div>
       </div>
@@ -222,7 +198,10 @@
     </main>
   </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+{{ block.super }}
 <script>
   /* Cập nhật preview huy hiệu theo thời gian thực */
   const nameInput  = document.getElementById('badge-name-input');
@@ -241,10 +220,10 @@
   }
   [nameInput, iconInput, colorInput, textColorInput].forEach(el => el.addEventListener('input', updatePreview));
 
-  function pickColor(hex) {
+  function pickColor(hex, swatchEl) {
     colorInput.value = hex;
     document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-    event.target.classList.add('selected');
+    swatchEl.classList.add('selected');
     updatePreview();
   }
 
@@ -257,4 +236,5 @@
   });
 </script>
 {% endblock %}
+
 {% block site_footer %}{% endblock %}
