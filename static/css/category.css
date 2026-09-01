@@ -1,32 +1,44 @@
-  .category-page { padding: 2.5rem 0 4rem; }
-  .category-page-title {
-    font-family: 'Playfair Display', serif;
+.category-page { padding: 2.5rem 0 4rem; }
+
+.breadcrumb-simple { font-size: .85rem; color: #888; margin-bottom: 16px; }
+.breadcrumb-simple a { color: var(--primary); text-decoration: none; }
+.breadcrumb-simple a:hover { text-decoration: underline; }
+
+.category-page-title {
     font-size: 1.8rem; font-weight: 700;
-    color: var(--charcoal);
-  }
-  /* Bộ lọc sắp xếp (UI-only, chưa có backend) */
-  .sort-bar {
+    color: #222;
+    margin: 4px 0 6px;
+}
+.section-sub { font-size: .9rem; color: #666; margin-bottom: 1.2rem; }
+
+/* Bộ lọc sắp xếp (UI-only, chưa có backend - giữ nguyên theo thiết kế gốc) */
+.sort-bar {
     display: flex; align-items: center; gap: 1rem;
-    background: var(--white);
-    border-radius: var(--radius-sm);
+    background: #fff;
+    border-radius: 8px;
     padding: .65rem 1.2rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
-  }
-  .sort-bar span { font-size: .85rem; color: var(--muted); font-weight: 500; }
-  .sort-bar select {
+}
+.sort-bar span { font-size: .85rem; color: #666; font-weight: 500; }
+.sort-bar select {
     border: 1.5px solid #e8e8e8;
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
     padding: .35rem .8rem;
     font-size: .85rem;
-    color: var(--charcoal);
+    color: #222;
+    font-family: inherit;
     outline: none;
     cursor: pointer;
-  }
-  .sort-bar select:focus { border-color: var(--green-deep); }
-  .product-count {
+}
+.sort-bar select:focus { border-color: var(--primary); }
+.product-count {
     margin-left: auto;
     font-size: .83rem;
-    color: var(--muted);
-  }
+    color: #666;
+}
+
+.category-empty { text-align: center; padding: 4rem 0; grid-column: 1 / -1; }
+.category-empty i { font-size: 3rem; color: #ccc; }
+.category-empty p { color: #666; margin-top: 1rem; }
