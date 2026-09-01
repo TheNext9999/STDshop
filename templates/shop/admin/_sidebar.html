@@ -11,6 +11,9 @@ Ví dụ cách gọi (ĐÂY CHỈ LÀ VÍ DỤ TRONG COMMENT, KHÔNG PHẢI CODE
     <a href="{% url 'admin_dashboard' %}" class="admin-nav-item {% if active == 'dashboard' %}active{% endif %}">
       <i class="fas fa-tachometer-alt"></i> Dashboard
     </a>
+    <a href="{% url 'admin_reports' %}" class="admin-nav-item {% if active == 'reports' %}active{% endif %}">
+      <i class="fas fa-chart-line"></i> Báo cáo
+    </a>
   </div>
 
   <div class="admin-nav-group">

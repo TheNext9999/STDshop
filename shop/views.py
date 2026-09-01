@@ -1019,6 +1019,91 @@ def admin_dashboard(request):
     return render(request, 'shop/admin/dashboard.html', ctx)
 
 
+def admin_reports(request):
+    """Trang Báo cáo thống kê — TÍNH NĂNG MỚI, không có trong dự án gốc.
+    Cung cấp dữ liệu thật cho 4 loại biểu đồ: đường (doanh thu theo ngày),
+    tròn (đơn hàng theo trạng thái, doanh thu theo danh mục), cột (top sản phẩm bán chạy).
+    """
+    if not _admin_required(request):
+        return redirect('login')
+
+    from datetime import timedelta
+    from django.db.models import Count
+
+    ctx = _base_context(request)
+    today = timezone.localdate()
+
+    # Khoảng thời gian xem báo cáo doanh thu: 7 / 30 / 90 ngày (mặc định 30)
+    try:
+        days = int(request.GET.get('days', 30))
+    except (TypeError, ValueError):
+        days = 30
+    if days not in (7, 30, 90):
+        days = 30
+
+    # ── 1. DOANH THU THEO NGÀY (biểu đồ đường) ──
+    revenue_labels = []
+    revenue_values = []
+    for i in range(days - 1, -1, -1):
+        day = today - timedelta(days=i)
+        items_that_day = OrderItem.objects.filter(
+            order__complete=True,
+            order__date_order__date=day
+        ).select_related('product')
+        day_total = sum([it.get_total for it in items_that_day])
+        revenue_labels.append(day.strftime('%d/%m'))
+        revenue_values.append(round(day_total, 2))
+    total_revenue_period = round(sum(revenue_values), 2)
+
+    # ── 2. ĐƠN HÀNG THEO TRẠNG THÁI (biểu đồ tròn) ──
+    status_labels_map = dict(Order.STATUS_CHOICES)
+    status_rows = Order.objects.values('status').annotate(count=Count('id'))
+    status_counts = {row['status']: row['count'] for row in status_rows}
+    status_chart_labels = list(status_labels_map.values())
+    status_chart_values = [status_counts.get(key, 0) for key in status_labels_map.keys()]
+    total_orders_all = sum(status_chart_values)
+
+    # ── 3. TOP 10 SẢN PHẨM BÁN CHẠY (biểu đồ cột) ──
+    top_products_qs = Product.objects.order_by('-sold')[:10]
+    top_labels = [p.name[:22] for p in top_products_qs]
+    top_values = [p.sold for p in top_products_qs]
+
+    # ── 4. DOANH THU THEO DANH MỤC (biểu đồ tròn/donut) ──
+    # Lưu ý: 1 sản phẩm có thể thuộc nhiều danh mục (ManyToMany), nên doanh thu
+    # của sản phẩm đó được cộng vào MỖI danh mục nó thuộc về (có thể trùng lặp
+    # khi cộng tổng, đây là hạn chế hợp lý vì model không có "danh mục chính").
+    category_revenue = {}
+    completed_items = OrderItem.objects.filter(
+        order__complete=True
+    ).select_related('product').prefetch_related('product__catergory')
+    for item in completed_items:
+        if not item.product:
+            continue
+        cats = item.product.catergory.all()
+        if not cats:
+            category_revenue['Chưa phân loại'] = category_revenue.get('Chưa phân loại', 0) + item.get_total
+        for cat in cats:
+            category_revenue[cat.name] = category_revenue.get(cat.name, 0) + item.get_total
+    category_labels = list(category_revenue.keys())
+    category_values = [round(v, 2) for v in category_revenue.values()]
+
+    ctx.update({
+        'days': days,
+        'total_revenue_period': total_revenue_period,
+        'total_orders_all': total_orders_all,
+        'revenue_labels': json.dumps(revenue_labels),
+        'revenue_values': json.dumps(revenue_values),
+        'status_chart_labels': json.dumps(status_chart_labels),
+        'status_chart_values': json.dumps(status_chart_values),
+        'top_labels': json.dumps(top_labels),
+        'top_values': json.dumps(top_values),
+        'category_labels': json.dumps(category_labels),
+        'category_values': json.dumps(category_values),
+        'page_title': 'Báo cáo thống kê',
+    })
+    return render(request, 'shop/admin/reports.html', ctx)
+
+
 def admin_products(request):
     """Quản lý sản phẩm — CRUD đầy đủ."""
     if not _admin_required(request):

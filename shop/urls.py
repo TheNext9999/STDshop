@@ -51,6 +51,7 @@ urlpatterns = [
 
     # ── Quản trị Admin (custom panel) ────────────────────────────────────
     path('admin-panel/',                  views.admin_dashboard,      name='admin_dashboard'),
+    path('admin-panel/reports/',          views.admin_reports,        name='admin_reports'),
     path('admin-panel/products/',         views.admin_products,       name='admin_products'),
     path('admin-panel/orders/',           views.admin_orders,         name='admin_orders'),
     path('admin-panel/users/',            views.admin_users,          name='admin_users'),

@@ -1,0 +1,201 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}Báo cáo thống kê - STDShop Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-common.css' %}" />
+<link rel="stylesheet" href="{% static 'css/admin_reports.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="admin-layout">
+
+    {% include "shop/admin/_sidebar.html" with active="reports" %}
+
+    <!-- Content -->
+    <main class="admin-content">
+
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">📊 Báo cáo thống kê</h1>
+          <p class="admin-page-sub">Tổng quan doanh thu, đơn hàng và sản phẩm bán chạy</p>
+        </div>
+      </div>
+
+      <!-- Bộ chọn khoảng thời gian cho biểu đồ doanh thu -->
+      <div class="reports-period-bar">
+        <span>Xem doanh thu trong:</span>
+        <a href="?days=7" class="period-btn {% if days == 7 %}active{% endif %}">7 ngày</a>
+        <a href="?days=30" class="period-btn {% if days == 30 %}active{% endif %}">30 ngày</a>
+        <a href="?days=90" class="period-btn {% if days == 90 %}active{% endif %}">90 ngày</a>
+      </div>
+
+      <!-- KPI nhanh -->
+      <div class="reports-kpi">
+        <div class="reports-kpi-card revenue">
+          <div class="num">{{ total_revenue_period|vnd }}</div>
+          <div class="label">Doanh thu {{ days }} ngày qua</div>
+        </div>
+        <div class="reports-kpi-card orders">
+          <div class="num">{{ total_orders_all }}</div>
+          <div class="label">Tổng đơn hàng (mọi trạng thái)</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+
+        <!-- BIỂU ĐỒ ĐƯỜNG: Doanh thu theo ngày -->
+        <div class="chart-card full">
+          <h3 class="chart-card-title"><i class="fas fa-chart-line" style="color:var(--primary-dark);"></i> Doanh thu theo ngày ({{ days }} ngày gần nhất)</h3>
+          <canvas id="revenueLineChart"></canvas>
+        </div>
+
+        <!-- BIỂU ĐỒ CỘT: Top sản phẩm bán chạy -->
+        <div class="chart-card half">
+          <h3 class="chart-card-title"><i class="fas fa-fire" style="color:#f59e0b;"></i> Top 10 sản phẩm bán chạy</h3>
+          {% if top_labels == "[]" %}
+          <div class="chart-empty"><i class="fas fa-box-open"></i>Chưa có dữ liệu bán hàng.</div>
+          {% else %}
+          <canvas id="topProductsBarChart"></canvas>
+          {% endif %}
+        </div>
+
+        <!-- BIỂU ĐỒ TRÒN: Đơn hàng theo trạng thái -->
+        <div class="chart-card half">
+          <h3 class="chart-card-title"><i class="fas fa-chart-pie" style="color:#1D4ED8;"></i> Đơn hàng theo trạng thái</h3>
+          {% if total_orders_all == 0 %}
+          <div class="chart-empty"><i class="fas fa-box-open"></i>Chưa có đơn hàng nào.</div>
+          {% else %}
+          <canvas id="statusPieChart"></canvas>
+          {% endif %}
+        </div>
+
+        <!-- BIỂU ĐỒ DONUT: Doanh thu theo danh mục -->
+        <div class="chart-card full">
+          <h3 class="chart-card-title"><i class="fas fa-th-large" style="color:#7C3AED;"></i> Doanh thu theo danh mục</h3>
+          {% if category_labels == "[]" %}
+          <div class="chart-empty"><i class="fas fa-th-large"></i>Chưa có đơn hàng hoàn tất để thống kê theo danh mục.</div>
+          {% else %}
+          <canvas id="categoryDoughnutChart" style="max-width:480px;margin:0 auto;display:block;"></canvas>
+          {% endif %}
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+(function() {
+    const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00C9B0';
+    const primaryDark = getComputedStyle(document.documentElement).getPropertyValue('--primary-dark').trim() || '#00A68F';
+    const palette = ['#00C9B0', '#1D4ED8', '#f59e0b', '#7C3AED', '#DC2626', '#10B981', '#EC4899', '#06B6D4', '#6B7280', '#F97316'];
+
+    // ── Biểu đồ đường: Doanh thu theo ngày ──
+    const revenueCtx = document.getElementById('revenueLineChart');
+    if (revenueCtx) {
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: {{ revenue_labels|safe }},
+                datasets: [{
+                    label: 'Doanh thu (đ)',
+                    data: {{ revenue_values|safe }},
+                    borderColor: primary,
+                    backgroundColor: 'rgba(0, 201, 176, 0.12)',
+                    tension: 0.35,
+                    fill: true,
+                    pointRadius: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: v => v.toLocaleString('vi-VN') + 'đ' }
+                    }
+                }
+            }
+        });
+    }
+
+    // ── Biểu đồ cột: Top sản phẩm bán chạy ──
+    const topCtx = document.getElementById('topProductsBarChart');
+    if (topCtx) {
+        new Chart(topCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ top_labels|safe }},
+                datasets: [{
+                    label: 'Đã bán',
+                    data: {{ top_values|safe }},
+                    backgroundColor: primary,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+    }
+
+    // ── Biểu đồ tròn: Đơn hàng theo trạng thái ──
+    const statusCtx = document.getElementById('statusPieChart');
+    if (statusCtx) {
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ status_chart_labels|safe }},
+                datasets: [{
+                    data: {{ status_chart_values|safe }},
+                    backgroundColor: palette,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+
+    // ── Biểu đồ donut: Doanh thu theo danh mục ──
+    const catCtx = document.getElementById('categoryDoughnutChart');
+    if (catCtx) {
+        new Chart(catCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ category_labels|safe }},
+                datasets: [{
+                    data: {{ category_values|safe }},
+                    backgroundColor: palette,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ctx.label + ': ' + ctx.parsed.toLocaleString('vi-VN') + 'đ'
+                        }
+                    }
+                }
+            }
+        });
+    }
+})();
+</script>
+{% endblock %}
+
+{% block site_footer %}{% endblock %}

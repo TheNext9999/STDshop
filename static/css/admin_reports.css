@@ -1,0 +1,54 @@
+/* CSS riêng cho trang Báo cáo thống kê. Phần layout/sidebar chung nằm trong admin-common.css */
+
+.reports-period-bar {
+    display: flex; align-items: center; gap: .6rem;
+    margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.reports-period-bar span { font-size: .85rem; color: #666; }
+.period-btn {
+    padding: .4rem 1rem; border-radius: 30px;
+    font-size: .82rem; font-weight: 600;
+    background: #fff; color: #666;
+    border: 1.5px solid #e0e0e0;
+    text-decoration: none; cursor: pointer;
+    transition: all 0.2s ease;
+}
+.period-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+.period-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* KPI */
+.reports-kpi { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.reports-kpi-card {
+    background: #fff; border-radius: 14px;
+    padding: 1.2rem 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    flex: 1; min-width: 220px;
+    border-left: 4px solid transparent;
+    box-sizing: border-box;
+}
+.reports-kpi-card.revenue { border-left-color: var(--primary); }
+.reports-kpi-card.orders { border-left-color: #1D4ED8; }
+.reports-kpi-card .num { font-size: 1.6rem; font-weight: 700; color: #1a1f2e; }
+.reports-kpi-card .label { font-size: .8rem; color: #666; margin-top: .25rem; }
+
+/* Lưới biểu đồ */
+.charts-grid {
+    display: flex; flex-wrap: wrap; gap: 1.2rem;
+}
+.chart-card {
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 1.4rem;
+    box-sizing: border-box;
+}
+.chart-card.full { flex: 1 1 100%; }
+.chart-card.half { flex: 1 1 calc(50% - 10px); min-width: 320px; }
+.chart-card-title {
+    font-size: .92rem; font-weight: 700; color: #1a1f2e;
+    margin: 0 0 1rem; display: flex; align-items: center; gap: .5rem;
+}
+.chart-card canvas { max-height: 320px; }
+
+.chart-empty {
+    text-align: center; padding: 2.5rem 0; color: #666;
+}
+.chart-empty i { font-size: 2.2rem; color: #ddd; display: block; margin-bottom: .7rem; }
