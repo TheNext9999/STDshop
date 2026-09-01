@@ -1,0 +1,32 @@
+  .category-page { padding: 2.5rem 0 4rem; }
+  .category-page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700;
+    color: var(--charcoal);
+  }
+  /* Bộ lọc sắp xếp (UI-only, chưa có backend) */
+  .sort-bar {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: .65rem 1.2rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .sort-bar span { font-size: .85rem; color: var(--muted); font-weight: 500; }
+  .sort-bar select {
+    border: 1.5px solid #e8e8e8;
+    border-radius: var(--radius-sm);
+    padding: .35rem .8rem;
+    font-size: .85rem;
+    color: var(--charcoal);
+    outline: none;
+    cursor: pointer;
+  }
+  .sort-bar select:focus { border-color: var(--green-deep); }
+  .product-count {
+    margin-left: auto;
+    font-size: .83rem;
+    color: var(--muted);
+  }
