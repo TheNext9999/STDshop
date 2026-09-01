@@ -1,0 +1,91 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}Thông báo - STDShop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/notifications.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="notif-page">
+  <div class="container">
+
+    <div class="breadcrumb-simple">
+      <a href="{% url 'home' %}">Trang chủ</a> / Thông báo
+    </div>
+
+    <h1 class="section-heading">Thông báo</h1>
+    <p class="section-sub">Cập nhật tin tức đơn hàng và ưu đãi mới nhất</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color:#00a68f; font-weight:600; margin-bottom:16px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Tab lọc theo loại (chỉ lọc bằng JS phía client, dữ liệu vẫn load đủ từ server) -->
+    <div class="notif-tabs">
+      <button type="button" class="notif-tab active" onclick="filterNotif('all', this)">Tất cả <span class="badge-dot">{{ notifications|length }}</span></button>
+      <button type="button" class="notif-tab" onclick="filterNotif('order', this)">Đơn hàng</button>
+      <button type="button" class="notif-tab" onclick="filterNotif('promo', this)">Khuyến mãi</button>
+      <button type="button" class="notif-tab" onclick="filterNotif('system', this)">Hệ thống</button>
+    </div>
+
+    <!-- Thanh hành động — form thật gọi views.notifications với action=mark_all_read -->
+    <div class="notif-actions">
+      <div class="notif-summary">Có <strong>{{ unread_count }}</strong> thông báo chưa đọc</div>
+      {% if notifications %}
+      <form method="post" action="{% url 'notifications' %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="mark_all_read">
+        <button type="submit" class="btn-mark-all"><i class="fas fa-check-double"></i> Đánh dấu tất cả đã đọc</button>
+      </form>
+      {% endif %}
+    </div>
+
+    <!-- Danh sách thông báo — chỉ dữ liệu thật từ model Notification -->
+    {% if notifications %}
+      {% for notif in notifications %}
+      <!-- Click vào thông báo chưa đọc sẽ tự động đánh dấu đã đọc -->
+      <form method="post" action="{% url 'notifications' %}" class="notif-item-form" data-type="{{ notif.type }}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="mark_read">
+        <input type="hidden" name="notif_id" value="{{ notif.id }}">
+        <button type="submit" class="notif-item {% if not notif.is_read %}unread{% endif %}" style="width:100%;text-align:left;border:none;cursor:pointer;">
+          {% if not notif.is_read %}<div class="unread-dot"></div>{% endif %}
+          <div class="notif-type-icon {{ notif.type }}"><i class="{{ notif.icon }}"></i></div>
+          <div class="notif-content">
+            <div class="notif-title">{{ notif.title }}</div>
+            <div class="notif-body">{{ notif.message }}</div>
+            <div class="notif-time {% if not notif.is_read %}new{% endif %}">{{ notif.created_at|timesince }} trước</div>
+          </div>
+        </button>
+      </form>
+      {% endfor %}
+    {% else %}
+      <!-- Trạng thái trống thật — chưa có thông báo nào -->
+      <div class="notif-empty">
+        <i class="fas fa-bell-slash"></i>
+        <p style="color:#666;margin-top:1rem;">Bạn chưa có thông báo nào.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  /* Lọc thông báo theo loại — ẩn/hiện các form .notif-item-form đã render sẵn từ server */
+  function filterNotif(type, btn) {
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.notif-item-form').forEach(form => {
+      form.style.display = (type === 'all' || form.dataset.type === type) ? '' : 'none';
+    });
+  }
+</script>
+{% endblock %}

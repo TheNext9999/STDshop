@@ -2049,6 +2049,44 @@ input:checked + .slider:before { transform: translateX(26px); }
     justify-content: center;
 }
 
+/* Icon chuông thông báo trên navbar - vòng tròn nền nhạt */
+.notif-icon {
+    position: relative;
+    background: #e8f7f4;
+    color: var(--primary-dark);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.notif-icon:hover {
+    background: #d5f0ea;
+}
+
+.notif-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #e74c3c;
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 2px #fff;
+}
+
 .auth-link {
     display: flex;
     align-items: center;
