@@ -32,57 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
        nằm ở Django/database. Khi cần làm lại live search, nên gọi 1 API Django
        (ví dụ /search/suggest/?q=...) trả JSON rồi hiển thị tương tự. Hiện tại
        thanh tìm kiếm chỉ điều hướng sang trang kết quả tìm kiếm khi Enter/bấm nút. */
+    /* Lưu ý: thanh tìm kiếm giờ là <form method="post" action="{% url 'search' %}">
+       thật trong base.html (field name="searched" khớp với request.POST['searched']
+       trong views.search()) - nên không cần JS bắt sự kiện Enter/click để redirect
+       nữa, trình duyệt tự submit form chuẩn. JS ở đây chỉ còn lo hiệu ứng "has-text". */
     function setupSearchBar() {
         const searchInput = document.getElementById("searchInput");
-        const searchSubmitBtn = document.querySelector(".search-submit-btn");
         const searchWrapper = document.querySelector('.search-wrapper');
 
-        if (!searchInput) return;
+        if (!searchInput || !searchWrapper) return;
 
-        if (searchSubmitBtn) {
-            searchSubmitBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                const keyword = searchInput.value.trim();
-                if (keyword) window.location.href = `/html/search.html?q=${encodeURIComponent(keyword)}`;
-            });
-        }
-
-        searchInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                const keyword = searchInput.value.trim();
-                if (keyword) window.location.href = `/html/search.html?q=${encodeURIComponent(keyword)}`;
-            }
+        searchInput.addEventListener("input", function () {
+            searchWrapper.classList.toggle("has-text", this.value.trim().length > 0);
         });
-
-        if (searchWrapper) {
-            searchInput.addEventListener("input", function () {
-                searchWrapper.classList.toggle("has-text", this.value.trim().length > 0);
-            });
-            searchInput.addEventListener("focus", () => {
-                if (searchInput.value.trim().length > 0) searchWrapper.classList.add("has-text");
-            });
-            searchInput.addEventListener("blur", () => {
-                if (searchInput.value.trim().length === 0) searchWrapper.classList.remove("has-text");
-            });
-        }
+        searchInput.addEventListener("focus", () => {
+            if (searchInput.value.trim().length > 0) searchWrapper.classList.add("has-text");
+        });
+        searchInput.addEventListener("blur", () => {
+            if (searchInput.value.trim().length === 0) searchWrapper.classList.remove("has-text");
+        });
     }
 
     /* ==================== SETUP CATEGORY FILTERS ==================== */
-    function setupCategoryFilters() {
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                e.preventDefault();
-                const category = card.dataset.category || card.querySelector('p')?.textContent;
-                if (!category) return;
-                window.location.href = `/html/search.html?category=${encodeURIComponent(category)}`;
-            });
-        });
-    }
+    /* Lưu ý: setupCategoryFilters() đã bị xóa — trước đây category-card dùng
+       href="#" nên cần JS bắt click để điều hướng tới /html/search.html (đường
+       dẫn tĩnh từ bản demo gốc). Giờ mỗi category-card đã có href thật trỏ tới
+       {% url 'category' %}?category=<slug>, nên để trình duyệt tự điều hướng
+       bình thường, không cần JS can thiệp/ghi đè nữa. */
 
     /* ==================== CART MANAGEMENT ==================== */
     /* ==================== INITIALIZE ==================== */
     setupSearchBar();
-    setupCategoryFilters();
 });
 
 /* ==================== GO TO CHECKOUT ==================== */
