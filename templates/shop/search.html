@@ -1,129 +1,96 @@
-<!-- Navbar giữ nguyên -->
-<nav class="navbar">
-  <div class="nav-container">
-    <a href="/html/customer-order.html" style="text-decoration: none;">
-      <div class="logo">
-        <img src="/css/pic/STDLogo2.png" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
-      </div>
-    </a>
-    <!-- Thanh tìm kiếm ở giữa -->
-    <div class="search-bar">
-      <div class="search-wrapper">
-        <i class="fas fa-search search-icon" id="searchIcon"></i>
-        <input type="text" id="searchInput" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off" />
-        <button type="submit" class="search-submit-btn"><i class="fas fa-arrow-right"></i></button>
-      </div>
-      <!-- Kết quả tìm kiếm -->
-      <div id="searchResults" class="search-results"></div>
-    </div>
-    <div class="nav-right">
-      <div class="cart-wrapper">
-        <button id="cartBtn" class="cart-icon">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cartCount" class="cart-count">0</span>
-        </button>
+{% extends "shop/base.html" %}
+{% load static %}
 
-        <div class="cart-dropdown" id="cartDropdown">
-          <h4 class="cart-dropdown-title">Sản phẩm mới thêm</h4>
-          <div class="cart-items-list" id="cartItemsList">
-            <p class="empty-cart-msg">Chưa có sản phẩm</p>
-          </div>
-          <div class="cart-dropdown-footer">
-            <span id="cartStatusText">0 sản phẩm trong giỏ</span>
-            <button class="btn-view-cart" onclick="location.href='cart.html'">Xem Giỏ Hàng</button>
-          </div>
-        </div>
-      </div>
-      <a href="auth.html" class="auth-link">
-        <i class="fas fa-user-circle"></i>
-        <span class="auth-text">Đăng nhập / Đăng ký</span>
-      </a>
-    </div>
-  </div>
-</nav>
+{% block title %}Kết quả tìm kiếm - STDShop{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/customer-order.css' %}" />
+<link rel="stylesheet" href="{% static 'css/search.css' %}" />
+{% endblock %}
+
+{% block content %}
 <!-- Trang tìm kiếm -->
 <div class="search-page">
-  <!-- CỘT BỘ LỌC BÊN TRÁI (Giống Shopee) -->
-  <!-- CỘT BỘ LỌC BÊN TRÁI - ĐÃ CẢI TIẾN -->
+
+  <!-- CỘT BỘ LỌC BÊN TRÁI -->
   <div class="filter-sidebar">
     <h3 class="filter-title">BỘ LỌC TÌM KIẾM</h3>
 
-    <!-- 1. Theo Danh Mục -->
+    <!-- 1. Theo Danh Mục — dùng danh mục THẬT từ database -->
     <div class="filter-group">
-      <strong>Theo Danh Mục</strong><br />
-      <label><input type="checkbox" class="category-filter" value="hoodie" />Áo Hoodie</label>
-      <label><input type="checkbox" class="category-filter" value="balo" />Balo & Túi</label>
-      <label><input type="checkbox" class="category-filter" value="giay" />Giày Sneaker</label>
-      <label><input type="checkbox" class="category-filter" value="sac" />Sạc & Phụ kiện</label>
-      <label><input type="checkbox" class="category-filter" value="quan" />Quần Jeans</label>
-      <label><input type="checkbox" class="category-filter" value="ao-thun" />Áo Thun</label>
+      <strong>Theo Danh Mục</strong>
+      {% for cat in categories %}
+      <label><input type="checkbox" class="category-filter" value="{{ cat.slug }}" />{{ cat.name }}</label>
+      {% empty %}
+      <span style="font-size:.85rem;color:#999;">Chưa có danh mục nào.</span>
+      {% endfor %}
     </div>
 
-    <!-- 2. Khoảng Giá - ĐÃ SỬA -->
+    <!-- 2. Khoảng Giá -->
     <div class="filter-group">
       <strong>Khoảng Giá</strong>
 
       <div class="price-range">
-        <input type="number" id="priceFrom" placeholder="Từ" class="price-input" />
+        <input type="number" id="priceFrom" placeholder="Từ" class="price-input" min="0" />
         <span class="price-separator">—</span>
-        <input type="number" id="priceTo" placeholder="Đến" class="price-input" />
-        <button id="applyPrice" class="apply-btn">Áp dụng</button>
+        <input type="number" id="priceTo" placeholder="Đến" class="price-input" min="0" />
       </div>
+      <button id="applyPrice" class="apply-btn" style="width:100%;margin-bottom:14px;">Áp dụng</button>
 
       <div class="price-quick">
-        <button class="price-quick-btn" data-max="100000">Dưới 100k</button>
-        <button class="price-quick-btn" data-max="200000">100k - 200k</button>
-        <button class="price-quick-btn" data-max="500000">200k - 500k</button>
-        <button class="price-quick-btn" data-max="0">Trên 500k</button>
+        <button type="button" class="price-quick-btn" data-min="0" data-max="100000">Dưới 100k</button>
+        <button type="button" class="price-quick-btn" data-min="100000" data-max="200000">100k - 200k</button>
+        <button type="button" class="price-quick-btn" data-min="200000" data-max="500000">200k - 500k</button>
+        <button type="button" class="price-quick-btn" data-min="500000" data-max="">Trên 500k</button>
       </div>
     </div>
 
-    <!-- 3. Đánh Giá - ĐÃ SỬA (Màu vàng + xuống dòng) -->
+    <!-- 3. Đánh Giá -->
     <div class="filter-group">
       <strong>Đánh Giá</strong>
 
       <label class="rating-label">
         <input type="checkbox" class="rating-filter" value="5" />
-        <span class="stars">★★★★★</span>
-        Trở lên
+        <span class="stars">★★★★★</span> Trở lên
       </label>
-
       <label class="rating-label">
         <input type="checkbox" class="rating-filter" value="4" />
-        <span class="stars">★★★★☆</span>
-        Trở lên
+        <span class="stars">★★★★☆</span> Trở lên
       </label>
-
       <label class="rating-label">
         <input type="checkbox" class="rating-filter" value="3" />
-        <span class="stars">★★★☆☆</span>
-        Trở lên
+        <span class="stars">★★★☆☆</span> Trở lên
       </label>
-
       <label class="rating-label">
         <input type="checkbox" class="rating-filter" value="2" />
-        <span class="stars">★★☆☆☆</span>
-        Trở lên
+        <span class="stars">★★☆☆☆</span> Trở lên
       </label>
     </div>
 
-    <!-- 4. Dịch Vụ & Khuyến Mãi -->
+    <!-- 4. Dịch Vụ & Khuyến Mãi
+         Lưu ý: chỉ giữ 2 lựa chọn có dữ liệu thật đứng sau (tồn kho, giảm giá).
+         Đã bỏ "Miễn phí vận chuyển" và "Shop Yêu Thích" vì model không có
+         trường nào tương ứng - để lại sẽ là checkbox không lọc được gì cả. -->
     <div class="filter-group">
       <strong>Dịch Vụ & Khuyến Mãi</strong>
-      <label><input type="checkbox" class="service-filter" />Miễn phí vận chuyển</label>
-      <label><input type="checkbox" class="service-filter" />Có sẵn hàng</label>
-      <label><input type="checkbox" class="service-filter" />Shop Yêu Thích</label>
-      <label><input type="checkbox" class="service-filter" />Giảm giá hôm nay</label>
+      <label><input type="checkbox" id="filterInStock" />Có sẵn hàng</label>
+      <label><input type="checkbox" id="filterDiscount" />Đang giảm giá</label>
     </div>
+
+    <button type="button" id="clearFilters" class="btn-clear-filters">Xóa tất cả bộ lọc</button>
   </div>
 
   <!-- Khu vực kết quả tìm kiếm -->
   <div class="search-results-area">
     <div class="search-header">
       <div class="search-keyword">
-        Kết quả tìm kiếm cho: <strong id="searchKeyword"></strong>
+        {% if searched %}
+          Kết quả tìm kiếm cho: <strong>"{{ searched }}"</strong> ({{ keys|length }} sản phẩm)
+        {% else %}
+          Nhập từ khóa vào ô tìm kiếm phía trên để bắt đầu tìm sản phẩm
+        {% endif %}
       </div>
+      {% if keys %}
       <div class="sort-tabs">
         <div class="sort-tab active" data-sort="relevance">Liên Quan</div>
         <div class="sort-tab" data-sort="newest">Mới Nhất</div>
@@ -131,12 +98,126 @@
         <div class="sort-tab" data-sort="price-asc">Giá Thấp → Cao</div>
         <div class="sort-tab" data-sort="price-desc">Giá Cao → Thấp</div>
       </div>
+      {% endif %}
     </div>
 
-    <div class="results-grid" id="searchResultsGrid">
-      <!-- JS sẽ render sản phẩm tìm được vào đây -->
+    <div class="results-grid product-grid" id="searchResultsGrid">
+      {% for product in keys %}
+      <div class="search-result-item"
+           data-category="{% for cat in product.catergory.all %}{{ cat.slug }} {% endfor %}"
+           data-price="{{ product.sale_price }}"
+           data-rating="{{ product.average_rating }}"
+           data-sold="{{ product.sold }}"
+           data-stock="{{ product.stock }}"
+           data-discount="{{ product.discount_percent }}"
+           data-date="{{ product.date_posted|date:'U' }}">
+        {% include "shop/partials/product_card.html" %}
+      </div>
+      {% empty %}
+      <div class="no-results">
+        <i class="fas fa-search"></i>
+        {% if searched %}
+          Không tìm thấy sản phẩm nào khớp với "{{ searched }}".
+        {% else %}
+          Hãy nhập từ khóa để tìm sản phẩm bạn cần.
+        {% endif %}
+      </div>
+      {% endfor %}
     </div>
   </div>
 </div>
+{% endblock %}
 
-<script src="/js/search.js"></script>
+{% block extra_js %}
+{{ block.super }}
+<script>
+(function () {
+    const grid = document.getElementById('searchResultsGrid');
+    if (!grid) return;
+    const items = Array.from(grid.querySelectorAll('.search-result-item'));
+    if (items.length === 0) return;
+
+    let priceMin = null, priceMax = null;
+
+    function applyFilters() {
+        const checkedCategories = Array.from(document.querySelectorAll('.category-filter:checked')).map(cb => cb.value);
+        const checkedRatings = Array.from(document.querySelectorAll('.rating-filter:checked')).map(cb => parseFloat(cb.value));
+        const minRating = checkedRatings.length ? Math.min(...checkedRatings) : null;
+        const inStockOnly = document.getElementById('filterInStock').checked;
+        const discountOnly = document.getElementById('filterDiscount').checked;
+
+        items.forEach(item => {
+            const cats = item.dataset.category.trim().split(/\s+/).filter(Boolean);
+            const price = parseFloat(item.dataset.price) || 0;
+            const rating = parseFloat(item.dataset.rating) || 0;
+            const stock = parseInt(item.dataset.stock) || 0;
+            const discount = parseInt(item.dataset.discount) || 0;
+
+            let visible = true;
+            if (checkedCategories.length && !checkedCategories.some(c => cats.includes(c))) visible = false;
+            if (priceMin !== null && price < priceMin) visible = false;
+            if (priceMax !== null && price > priceMax) visible = false;
+            if (minRating !== null && rating < minRating) visible = false;
+            if (inStockOnly && stock <= 0) visible = false;
+            if (discountOnly && discount <= 0) visible = false;
+
+            item.style.display = visible ? '' : 'none';
+        });
+    }
+
+    document.querySelectorAll('.category-filter, .rating-filter').forEach(cb => cb.addEventListener('change', applyFilters));
+    document.getElementById('filterInStock').addEventListener('change', applyFilters);
+    document.getElementById('filterDiscount').addEventListener('change', applyFilters);
+
+    document.getElementById('applyPrice').addEventListener('click', () => {
+        const from = document.getElementById('priceFrom').value;
+        const to = document.getElementById('priceTo').value;
+        priceMin = from ? parseFloat(from) : null;
+        priceMax = to ? parseFloat(to) : null;
+        document.querySelectorAll('.price-quick-btn').forEach(b => b.classList.remove('active'));
+        applyFilters();
+    });
+
+    document.querySelectorAll('.price-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.price-quick-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            priceMin = btn.dataset.min ? parseFloat(btn.dataset.min) : null;
+            priceMax = btn.dataset.max ? parseFloat(btn.dataset.max) : null;
+            document.getElementById('priceFrom').value = priceMin ?? '';
+            document.getElementById('priceTo').value = priceMax ?? '';
+            applyFilters();
+        });
+    });
+
+    document.getElementById('clearFilters').addEventListener('click', () => {
+        document.querySelectorAll('.category-filter, .rating-filter').forEach(cb => cb.checked = false);
+        document.getElementById('filterInStock').checked = false;
+        document.getElementById('filterDiscount').checked = false;
+        document.getElementById('priceFrom').value = '';
+        document.getElementById('priceTo').value = '';
+        priceMin = null; priceMax = null;
+        document.querySelectorAll('.price-quick-btn').forEach(b => b.classList.remove('active'));
+        applyFilters();
+    });
+
+    // ── Sắp xếp ──
+    document.querySelectorAll('.sort-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const sortBy = tab.dataset.sort;
+
+            const sorted = [...items].sort((a, b) => {
+                if (sortBy === 'newest') return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+                if (sortBy === 'bestselling') return parseInt(b.dataset.sold) - parseInt(a.dataset.sold);
+                if (sortBy === 'price-asc') return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                if (sortBy === 'price-desc') return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                return 0; // relevance: giữ nguyên thứ tự server trả về
+            });
+            sorted.forEach(el => grid.appendChild(el));
+        });
+    });
+})();
+</script>
+{% endblock %}
