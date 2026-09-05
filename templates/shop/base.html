@@ -20,12 +20,15 @@
   <body>
     <nav class="navbar">
       <div class="nav-container">
-        <a href="/html/customer-order.html" style="text-decoration: none;">
+        <a href="{% url 'home' %}" style="text-decoration: none;">
           <!-- Logo bên trái -->
           <div class="logo">
             <img src="{% static 'css/pic/STDLogo2.png' %}" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
           </div>
         </a>
+
+        <!-- Link sang trang Landing (app riêng, mở rộng sau) -->
+        <a href="{% url 'landing:landing_home' %}" class="nav-landing-link">Landing</a>
 
         <!-- Thanh tìm kiếm ở giữa -->
         <form class="search-bar" method="post" action="{% url 'search' %}" id="searchForm" autocomplete="off">

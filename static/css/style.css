@@ -15,6 +15,22 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height
 .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
 .nav-container { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; }
 .logo-text { font-size: 28px; font-weight: 800; color: var(--primary); }
+
+.nav-landing-link {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.nav-landing-link:hover {
+    background: #e8f7f4;
+    color: var(--primary-dark);
+}
+
 .nav-menu { display: flex; gap: 30px; list-style: none; }
 .nav-menu a { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.3s; }
 .nav-menu a:hover { color: var(--primary); }
