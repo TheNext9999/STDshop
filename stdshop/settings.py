@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
 
     'shop',
+    'landing',
 ]
 
 # Bắt buộc khi dùng django.contrib.sites (allauth yêu cầu)
