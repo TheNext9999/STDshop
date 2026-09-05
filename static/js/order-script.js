@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupSearchBar() {
         const searchInput = document.getElementById("searchInput");
         const searchWrapper = document.querySelector('.search-wrapper');
+        const searchResults = document.getElementById("searchResults");
+        const searchForm = document.getElementById("searchForm");
 
         if (!searchInput || !searchWrapper) return;
 
@@ -51,6 +53,77 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener("blur", () => {
             if (searchInput.value.trim().length === 0) searchWrapper.classList.remove("has-text");
         });
+
+        // ==================== LIVE SEARCH (gợi ý khi gõ) ====================
+        if (searchResults && searchForm) {
+            let debounceTimer = null;
+
+            function renderSuggestions(data, keyword) {
+                if (!data.results || data.results.length === 0) {
+                    searchResults.innerHTML = `<div class="search-no-result">Không tìm thấy sản phẩm nào cho "${keyword}"</div>`;
+                    searchResults.style.display = "block";
+                    return;
+                }
+
+                let html = data.results.map(p => `
+                    <div class="search-item" data-id="${p.id}">
+                        <img src="${p.image}" alt="${p.name}">
+                        <div class="search-info">
+                            <span class="search-name">${p.name}</span>
+                            <span class="search-price">${Math.round(p.price).toLocaleString('vi-VN')}đ</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                if (data.total > data.results.length) {
+                    html += `<div class="search-view-all">Xem tất cả ${data.total} kết quả →</div>`;
+                }
+
+                searchResults.innerHTML = html;
+                searchResults.style.display = "block";
+
+                searchResults.querySelectorAll('.search-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        window.location.href = `/detail/?id=${item.dataset.id}`;
+                    });
+                });
+
+                const viewAllEl = searchResults.querySelector('.search-view-all');
+                if (viewAllEl) {
+                    viewAllEl.addEventListener('click', () => searchForm.submit());
+                }
+            }
+
+            searchInput.addEventListener("input", function () {
+                const keyword = this.value.trim();
+                clearTimeout(debounceTimer);
+
+                if (keyword.length === 0) {
+                    searchResults.style.display = "none";
+                    searchResults.innerHTML = "";
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/search/suggest/?q=${encodeURIComponent(keyword)}`)
+                        .then(res => res.json())
+                        .then(data => renderSuggestions(data, keyword))
+                        .catch(() => { searchResults.style.display = "none"; });
+                }, 300);
+            });
+
+            // Ẩn dropdown khi click ra ngoài
+            document.addEventListener("click", (e) => {
+                if (!searchForm.contains(e.target)) {
+                    searchResults.style.display = "none";
+                }
+            });
+
+            // Vẫn cho phép Enter submit tìm kiếm đầy đủ như bình thường
+            searchInput.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") searchResults.style.display = "none";
+            });
+        }
     }
 
     /* ==================== SETUP CATEGORY FILTERS ==================== */

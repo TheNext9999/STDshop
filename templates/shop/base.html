@@ -20,7 +20,7 @@
   <body>
     <nav class="navbar">
       <div class="nav-container">
-        <a href="{% url 'home' %}" style="text-decoration: none;">
+        <a href="/html/customer-order.html" style="text-decoration: none;">
           <!-- Logo bên trái -->
           <div class="logo">
             <img src="{% static 'css/pic/STDLogo2.png' %}" alt="STDShop" class="logo-img" /><span class="logo-text">STDShop</span>
@@ -28,13 +28,15 @@
         </a>
 
         <!-- Thanh tìm kiếm ở giữa -->
-        <form class="search-bar" method="post" action="{% url 'search' %}">
+        <form class="search-bar" method="post" action="{% url 'search' %}" id="searchForm" autocomplete="off">
           {% csrf_token %}
           <div class="search-wrapper">
             <i class="fas fa-search search-icon" id="searchIcon"></i>
             <input type="text" id="searchInput" name="searched" placeholder="Tìm sản phẩm dành cho sinh viên..." autocomplete="off" required />
             <button type="submit" class="search-submit-btn"><i class="fas fa-arrow-right"></i></button>
           </div>
+          <!-- Dropdown gợi ý tìm kiếm trực tiếp (live search) -->
+          <div id="searchResults" class="search-results"></div>
         </form>
 
         <!-- Phần bên phải: location + cart + auth -->

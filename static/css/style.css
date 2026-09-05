@@ -1945,6 +1945,7 @@ input:checked + .slider:before { transform: translateX(26px); }
 .search-bar {
     flex: 3;
     margin: 2px 80px;
+    position: relative;
 }
 
 .search-wrapper {
@@ -3107,6 +3108,29 @@ width:6px;
 background:#ddd;
 
 border-radius:10px;
+}
+
+/* Dòng "Xem tất cả X kết quả" cuối dropdown gợi ý tìm kiếm */
+.search-view-all {
+    text-align: center;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    cursor: pointer;
+    border-top: 1px solid #f1f1f1;
+    transition: background 0.2s;
+}
+.search-view-all:hover {
+    background: #f6f6f6;
+}
+
+/* Trạng thái không có kết quả trong dropdown */
+.search-no-result {
+    padding: 20px 14px;
+    text-align: center;
+    font-size: 13px;
+    color: #999;
 }
 
 

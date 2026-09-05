@@ -233,6 +233,29 @@ def search(request):
     return render(request, 'shop/search.html', context)
 
 
+def search_suggest(request):
+    """API gợi ý tìm kiếm trực tiếp khi gõ (live search) - TÍNH NĂNG MỚI,
+    không có trong dự án gốc. Trả JSON, không render template.
+    """
+    q = request.GET.get('q', '').strip()
+    if not q:
+        return JsonResponse({'results': [], 'total': 0})
+
+    qs = Product.objects.filter(name__icontains=q, is_approved=True)
+    total = qs.count()
+
+    results = []
+    for p in qs[:6]:
+        results.append({
+            'id': p.id,
+            'name': p.name,
+            'image': p.ImageURL,
+            'price': p.sale_price,
+        })
+
+    return JsonResponse({'results': results, 'total': total})
+
+
 def category(request):
     categories = Catergory.objects.filter(is_sub=False)
     active_category = request.GET.get('category', '')
