@@ -414,4 +414,3 @@ function cancelOrder(id){
   renderOrders(currentOrderTab);
   showToast('Đơn hàng đã được huỷ. Tiền hoàn lại trong 1-3 ngày làm việc.','warning');
 }
-

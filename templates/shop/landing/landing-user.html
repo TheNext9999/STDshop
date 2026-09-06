@@ -1,4 +1,13 @@
+{% extends "shop/base.html" %}
+{% load static %}
 
+{% block title %}STD Market - Sàn thanh lý đồ cũ sinh viên{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/landing-user.css' %}" />
+{% endblock %}
+
+{% block site_nav %}
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-container">
@@ -7,7 +16,7 @@
     <div class="logo">
       
       <!-- Hình ảnh logo -->
-      <img src="/css/pic/marketlogo.png" alt="STD Logo" class="logo-img">
+      <img src="{% static 'css/pic/marketlogo.png' %}" alt="STD Logo" class="logo-img">
 
       <!-- Text logo -->
       <div class="logo-text" style="padding-right: 10px;">
@@ -36,9 +45,9 @@
         <i class="fas fa-box"></i> Đơn hàng
       </button>
 
-      <a href="/html/landing-seller.html"><button class="nav-btn btn-sell">
+      <button type="button" class="nav-btn btn-sell" onclick="showToast('Trang đăng bán (landing-seller) đang được xây dựng!','warning')">
         <i class="fas fa-plus"></i> Thanh lý
-      </button></a>
+      </button>
 
       <button class="nav-btn btn-login">
         <i class="fas fa-user-circle"></i> Thành Đạt
@@ -47,10 +56,13 @@
 
   </div>
 </nav>
+{% endblock %}
+
+{% block content %}
 
 <!-- HERO -->
 <section class="hero-banner">
-  <img src="/css/pic/banmar1.png" alt="Banner" class="hero-bg">
+  <img src="{% static 'css/pic/banmar1.png' %}" alt="Banner" class="hero-bg">
 </section>
 
 
@@ -480,4 +492,12 @@
 <div class="toast" id="toastEl"></div>
 
 
-<script src="/js/landing-user.js"></script>
+
+{% endblock %}
+
+{% block site_footer %}{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/landing-user.js' %}"></script>
+{% endblock %}

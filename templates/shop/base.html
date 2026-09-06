@@ -18,6 +18,7 @@
     {% block extra_css %}{% endblock %}
   </head>
   <body>
+    {% block site_nav %}
     <nav class="navbar">
       <div class="nav-container">
         <a href="{% url 'home' %}" style="text-decoration: none;">
@@ -93,6 +94,7 @@
         </div>
       </div>
     </nav>
+    {% endblock %}
 
     {% block content %}{% endblock %}
 
