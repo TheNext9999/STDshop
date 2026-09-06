@@ -15,4 +15,4 @@ from shop.views import _base_context
 def landing_home(request):
     """Trang Landing chính. Nội dung thật sẽ được thay khi có thiết kế cụ thể."""
     ctx = _base_context(request)
-    return render(request, 'landing/index.html', ctx)
+    return render(request, 'shop/landing/index.html', ctx)
