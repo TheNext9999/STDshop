@@ -25,3 +25,12 @@ def landing_user(request):
     """
     ctx = _base_context(request)
     return render(request, 'shop/landing/landing-user.html', ctx)
+
+
+def landing_seller(request):
+    """Sàn thanh lý đồ cũ sinh viên (STD Market) - phía người bán (đăng sản
+    phẩm, quản lý đơn hàng, ví). HIỆN TẠI: toàn bộ dữ liệu là DEMO tĩnh phía
+    client (chưa nối model/database thật) - sẽ nối dần khi mở rộng.
+    """
+    ctx = _base_context(request)
+    return render(request, 'shop/landing/landing-seller.html', ctx)

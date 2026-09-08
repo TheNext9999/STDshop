@@ -1,27 +1,20 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STD MarketSeller – Kênh Người Bán</title>
+{% extends "shop/base.html" %}
+{% load static %}
 
+{% block title %}STD MarketSeller - Kenh Nguoi Ban{% endblock %}
+
+{% block extra_css %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/landing-seller.css' %}" />
+{% endblock %}
 
-
-    <link rel="stylesheet" href="/css/landing-seller.css">
-</head>
-<body>
-
-<!-- ===================================================
-     NAVBAR
-=================================================== -->
+{% block site_nav %}
 <nav class="navbar">
   <!-- LOGO -->
   <a class="logo" href="#">
   <div class="logo-mark">
-    <img src="/css/pic/marketlogo.png" alt="Logo">
+    <img src="{% static 'css/pic/marketlogo.png' %}" alt="Logo">
   </div>
 
   <div class="logo-text-block">
@@ -51,7 +44,7 @@
     </button>
 
     <div class="nav-user">
-      <img src="/css/pic/avt.jpg" class="nav-avatar" alt="avatar">
+      <img src="{% static 'css/pic/avt.jpg' %}" class="nav-avatar" alt="avatar">
       <span class="nav-username">Thành Đạt</span>
       <i class="fas fa-chevron-down nav-chevron"></i>
 
@@ -66,6 +59,9 @@
     </div>
   </div>
 </nav>
+{% endblock %}
+
+{% block content %}
 
 <!-- ===================================================
      PAGE WRAPPER
@@ -76,7 +72,7 @@
   <aside class="sidebar">
     <!-- SELLER PROFILE -->
     <div class="seller-profile">
-      <img src="/css/pic/avt.jpg" alt="avatar">
+      <img src="{% static 'css/pic/avt.jpg' %}" alt="avatar">
       <h4>Nguyễn Thành Đạt</h4>
       <p>Thành viên từ 01/2025</p>
       <div class="seller-rating">
@@ -430,7 +426,7 @@
         <!-- Card 1 -->
         <div class="product-card">
   <div class="product-card-img">
-    <img src="/css/pic/asus.webp" alt="Laptop Asus Vivobook 15">
+    <img src="{% static 'css/pic/asus.webp' %}" alt="Laptop Asus Vivobook 15">
 
     <div class="product-status-badge status-approved">
       ✅ Đang rao
@@ -464,7 +460,7 @@
         <!-- Card 2 -->
         <div class="product-card">
           <div class="product-card-img">
-            <img src="/css/pic/gtrinh1.png" alt="Laptop Asus Vivobook 15">
+            <img src="{% static 'css/pic/gtrinh1.png' %}" alt="Laptop Asus Vivobook 15">
             <div class="product-status-badge status-pending">⏳ Chờ duyệt</div>
           </div>
           <div class="product-card-body">
@@ -486,7 +482,7 @@
         <!-- Card 3 -->
         <div class="product-card">
           <div class="product-card-img">
-            <img src="/css/pic/sony.jpg" alt="Laptop Asus Vivobook 15">
+            <img src="{% static 'css/pic/sony.jpg' %}" alt="Laptop Asus Vivobook 15">
             <div class="product-status-badge status-sold">💰 Có người mua</div>
           </div>
           <div class="product-card-body">
@@ -508,7 +504,7 @@
         <!-- Card 4 -->
         <div class="product-card">
           <div class="product-card-img">
-            <img src="/css/pic/xe.jpeg" alt="Laptop Asus Vivobook 15">
+            <img src="{% static 'css/pic/xe.jpeg' %}" alt="Laptop Asus Vivobook 15">
             <div class="product-status-badge status-shipping">🚚 Đang giao</div>
           </div>
           <div class="product-card-body">
@@ -529,7 +525,7 @@
         <!-- Card 5 -->
         <div class="product-card">
           <div class="product-card-img">
-            <img src="/css/pic/bàn.jpg" alt="Laptop Asus Vivobook 15">
+            <img src="{% static 'css/pic/ban.jpg' %}" alt="Laptop Asus Vivobook 15">
             <div class="product-status-badge status-draft">📝 Nháp</div>
           </div>
           <div class="product-card-body">
@@ -551,7 +547,7 @@
         <!-- Card 6 -->
         <div class="product-card">
           <div class="product-card-img">
-            <img src="/css/pic/ip12.webp" alt="Laptop Asus Vivobook 15">
+            <img src="{% static 'css/pic/ip12.webp' %}" alt="Laptop Asus Vivobook 15">
             <div class="product-status-badge status-approved">✅ Đang rao</div>
           </div>
           <div class="product-card-body">
@@ -909,6 +905,11 @@
   <i class="fas fa-check-circle"></i>
   <span id="toastMsg">Thành công!</span>
 </div>
-    <script src="/js/landing-seller.js"></script>
-</body>
-</html>
+{% endblock %}
+
+{% block site_footer %}{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/landing-seller.js' %}"></script>
+{% endblock %}

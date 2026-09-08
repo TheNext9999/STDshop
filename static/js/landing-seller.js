@@ -156,4 +156,3 @@ function showToast(msg) {
 
 // init previews
 renderPreviews();
-
