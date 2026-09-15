@@ -231,7 +231,18 @@
           </div>
         </div>
 
-        <div class="form-body">
+        <form class="form-body" method="post" action="{% url 'landing:landing_seller' %}" enctype="multipart/form-data" id="postProductForm">
+          {% csrf_token %}
+
+          {% if messages %}
+            {% for message in messages %}
+            <div style="padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:.9rem;font-weight:600;
+                        background:{% if message.tags == 'error' %}#FEF2F2{% else %}#e8f7f4{% endif %};
+                        color:{% if message.tags == 'error' %}#DC2626{% else %}#00a68f{% endif %};">
+              {{ message }}
+            </div>
+            {% endfor %}
+          {% endif %}
 
           <!-- SECTION 1: ẢNH -->
           <div class="form-section-title"><i class="fas fa-camera"></i> Hình ảnh sản phẩm</div>
@@ -240,7 +251,7 @@
             <label class="form-label">Ảnh thật của sản phẩm <span class="required">*</span> <span style="font-weight:400; color:var(--text-3);">(bắt buộc tối thiểu 3 ảnh)</span></label>
 
             <div class="upload-zone" id="uploadZone">
-              <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFileSelect(event)">
+              <input type="file" id="fileInput" name="images" accept="image/*" multiple onchange="handleFileSelect(event)">
               <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
               <h4>Kéo thả ảnh vào đây hoặc nhấn để chọn</h4>
               <p>Hỗ trợ JPG, PNG, WEBP · Tối đa 10MB mỗi ảnh<br>Ảnh rõ nét, chụp từ nhiều góc độ sẽ bán được nhanh hơn</p>
@@ -259,32 +270,25 @@
           <div class="form-grid">
             <div class="form-group full">
               <label class="form-label">Tên sản phẩm <span class="required">*</span></label>
-              <input class="form-input" type="text" placeholder="Ví dụ: Laptop Asus Vivobook 15 – Core i5, 8GB RAM, SSD 256GB" maxlength="120" oninput="updateCharCount(this)">
+              <input class="form-input" type="text" name="name" required placeholder="Ví dụ: Laptop Asus Vivobook 15 – Core i5, 8GB RAM, SSD 256GB" maxlength="120" oninput="updateCharCount(this)">
               <span style="font-size:.75rem; color:var(--text-3); margin-top:3px;" id="nameCount">0 / 120 ký tự – Đặt tên rõ ràng, chứa thương hiệu và thông số chính</span>
             </div>
 
             <div class="form-group">
               <label class="form-label">Danh mục <span class="required">*</span></label>
               <div class="select-wrap">
-                <select class="form-select">
+                <select class="form-select" name="category" required>
                   <option value="">-- Chọn danh mục --</option>
-                  <option>💻 Laptop & Máy tính</option>
-                  <option>📱 Điện thoại</option>
-                  <option>🎧 Điện tử & Phụ kiện</option>
-                  <option>📚 Sách & Tài liệu</option>
-                  <option>🛋️ Đồ nội thất</option>
-                  <option>👕 Quần áo & Thời trang</option>
-                  <option>🍳 Đồ gia dụng</option>
-                  <option>🚴 Xe cộ</option>
-                  <option>🎮 Giải trí & Thể thao</option>
-                  <option>📦 Khác</option>
+                  {% for value, label in category_choices %}
+                  <option value="{{ value }}">{{ label }}</option>
+                  {% endfor %}
                 </select>
               </div>
             </div>
 
             <div class="form-group">
               <label class="form-label">Thương hiệu / Xuất xứ</label>
-              <input class="form-input" type="text" placeholder="Asus, Samsung, Việt Nam, Không rõ...">
+              <input class="form-input" type="text" name="brand" placeholder="Asus, Samsung, Việt Nam, Không rõ...">
             </div>
           </div>
 
@@ -297,7 +301,8 @@
               <button class="condition-btn" onclick="selectCondition(this, '70')">🔧 70% – Còn tốt</button>
               <button class="condition-btn" onclick="selectCondition(this, 'minor')">⚠️ Lỗi nhẹ – Vẫn dùng được</button>
             </div>
-            <input type="hidden" id="conditionVal">
+            <input type="hidden" id="conditionVal" name="condition">
+            <input type="hidden" id="shipVal" name="ship_methods">
           </div>
 
           <div class="form-grid">
@@ -306,7 +311,7 @@
               <label class="form-label">Giá bán <span class="required">*</span></label>
               <div class="price-wrap">
                 <span class="price-icon">đ</span>
-                <input class="form-input" type="number" id="priceInput" placeholder="0" oninput="formatPrice()">
+                <input class="form-input" type="number" name="price" id="priceInput" required min="0" placeholder="0" oninput="formatPrice()">
               </div>
               <div class="price-suggestion">
                 <span style="font-size:.75rem; color:var(--text-3);">Gợi ý nhanh:</span>
@@ -324,7 +329,7 @@
               <label class="form-label">Giá gốc (nếu nhớ)</label>
               <div class="price-wrap">
                 <span class="price-icon">đ</span>
-                <input class="form-input" type="number" placeholder="Giá mua ban đầu...">
+                <input class="form-input" type="number" name="old_price" min="0" placeholder="Giá mua ban đầu...">
               </div>
             </div>
 
@@ -332,7 +337,7 @@
             <div class="form-group full">
               <label class="form-label">Lý do thanh lý <span class="required">*</span></label>
               <div class="select-wrap" style="margin-bottom:10px;">
-                <select class="form-select" id="reasonSelect" onchange="toggleCustomReason()">
+                <select class="form-select" name="reason" id="reasonSelect" onchange="toggleCustomReason()">
                   <option value="">-- Chọn lý do --</option>
                   <option value="upgrade">🔄 Nâng cấp lên đồ mới hơn</option>
                   <option value="money">💸 Cần tiền gấp</option>
@@ -342,13 +347,13 @@
                   <option value="other">✏️ Lý do khác...</option>
                 </select>
               </div>
-              <textarea class="form-textarea" id="customReason" placeholder="Mô tả thêm lý do thanh lý (giúp người mua tin tưởng hơn)..." style="display:none;"></textarea>
+              <textarea class="form-textarea" name="custom_reason" id="customReason" placeholder="Mô tả thêm lý do thanh lý (giúp người mua tin tưởng hơn)..." style="display:none;"></textarea>
             </div>
 
             <!-- MÔ TẢ -->
             <div class="form-group full">
               <label class="form-label">Mô tả chi tiết <span class="required">*</span></label>
-              <textarea class="form-textarea" rows="5" placeholder="Mô tả tình trạng thực tế, những hư hỏng (nếu có), thời gian sử dụng, phụ kiện đi kèm...&#10;&#10;Ví dụ: Máy dùng được 1 năm, pin còn 88%, vỏ có 1 vết xước nhỏ cạnh bên phải, kèm túi và sạc zin."></textarea>
+              <textarea class="form-textarea" name="description" rows="5" placeholder="Mô tả tình trạng thực tế, những hư hỏng (nếu có), thời gian sử dụng, phụ kiện đi kèm...&#10;&#10;Ví dụ: Máy dùng được 1 năm, pin còn 88%, vỏ có 1 vết xước nhỏ cạnh bên phải, kèm túi và sạc zin."></textarea>
             </div>
           </div>
 
@@ -359,7 +364,7 @@
             <div class="form-group">
               <label class="form-label">Khu vực của bạn <span class="required">*</span></label>
               <div class="select-wrap">
-                <select class="form-select">
+                <select class="form-select" name="location" required>
                   <option value="">-- Chọn quận/huyện --</option>
                   <option>Cầu Giấy, Hà Nội</option>
                   <option>Đống Đa, Hà Nội</option>
@@ -393,22 +398,21 @@
             </ul>
           </div>
 
-        </div>
-
         <!-- FORM FOOTER -->
         <div class="form-footer">
           <div class="form-footer-left">
             <i class="fas fa-shield-alt"></i> STD Marketplace kiểm duyệt tất cả sản phẩm trước khi hiển thị
           </div>
           <div class="form-actions">
-            <button class="btn-draft" onclick="saveDraft()">
+            <button type="button" class="btn-draft" onclick="saveDraft()">
               <i class="fas fa-save"></i> Lưu nháp
             </button>
-            <button class="btn-submit" onclick="submitProduct()">
+            <button type="submit" class="btn-submit" onclick="return submitProduct()">
               <i class="fas fa-paper-plane"></i> Đăng sản phẩm ngay
             </button>
           </div>
         </div>
+        </form>
       </div>
     </div><!-- /tab-post -->
 

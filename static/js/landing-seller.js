@@ -42,9 +42,19 @@ function renderPreviews() {
   counter.className = 'img-counter ' + (count >= 3 ? 'ok' : 'warn');
 }
 
+/* Đồng bộ danh sách ảnh (kể cả ảnh kéo-thả) trở lại vào <input type="file">.
+   Nếu không làm bước này, ảnh kéo-thả sẽ KHÔNG được gửi lên server khi submit,
+   vì trình duyệt chỉ gửi những file nằm trong chính input đó. */
+function syncFilesToInput() {
+  const dt = new DataTransfer();
+  uploadedFiles.forEach(f => dt.items.add(f));
+  document.getElementById('fileInput').files = dt.files;
+}
+
 function removeImg(idx) {
   uploadedFiles.splice(idx, 1);
   renderPreviews();
+  syncFilesToInput();
 }
 
 // Drag & drop
@@ -57,6 +67,7 @@ zone.addEventListener('drop', e => {
   const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
   files.forEach(f => { if (uploadedFiles.length < 10) uploadedFiles.push(f); });
   renderPreviews();
+  syncFilesToInput();
 });
 
 /* ---- CONDITION SELECT ---- */
@@ -69,6 +80,13 @@ function selectCondition(btn, val) {
 
 function toggleShip(btn) {
   btn.classList.toggle('selected');
+  // Gom các phương thức đang chọn vào hidden input để gửi kèm khi submit
+  const shipVal = document.getElementById('shipVal');
+  if (shipVal) {
+    const selected = Array.from(btn.parentElement.querySelectorAll('.condition-btn.selected'))
+      .map(b => b.textContent.trim());
+    shipVal.value = selected.join(', ');
+  }
 }
 
 /* ---- PRICE ---- */
@@ -94,17 +112,19 @@ function updateCharCount(inp) {
 }
 
 /* ---- FORM SUBMIT ---- */
+/* submitProduct() giờ chỉ VALIDATE phía client rồi trả true/false.
+   Trả true -> form tự submit thật lên Django (views.landing_seller xử lý POST
+   và lưu vào MarketProduct). Trả false -> chặn submit, hiện cảnh báo. */
 function submitProduct() {
   if (uploadedFiles.length < 3) {
     showToast('⚠️ Vui lòng tải lên ít nhất 3 ảnh thật!', true);
-    return;
+    return false;
   }
   if (!document.getElementById('conditionVal').value) {
     showToast('⚠️ Vui lòng chọn tình trạng sản phẩm!', true);
-    return;
+    return false;
   }
-  showToast('🎉 Đã đăng sản phẩm! Chờ STD kiểm duyệt trong 1 giờ.');
-  setTimeout(() => switchTab('listings'), 1800);
+  return true;
 }
 
 function saveDraft() {

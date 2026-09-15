@@ -37,7 +37,13 @@ class MarketProduct(models.Model):
     category = models.CharField("Danh mục", max_length=20, choices=CATEGORY_CHOICES)
     location = models.CharField("Khu vực", max_length=100, blank=True)
 
-    image_url = models.URLField("Ảnh chính", max_length=500, blank=True)
+    brand = models.CharField("Thương hiệu / Xuất xứ", max_length=100, blank=True)
+    ship_methods = models.CharField("Phương thức giao hàng", max_length=255, blank=True)
+
+    # Người bán upload ảnh thật qua form -> lưu file; image_url dùng cho ảnh
+    # nhập sẵn bằng link (ví dụ khi thêm nhanh qua Django Admin).
+    image = models.ImageField("Ảnh sản phẩm (upload)", upload_to='market/', null=True, blank=True)
+    image_url = models.URLField("Ảnh chính (dán link)", max_length=500, blank=True)
 
     is_verified = models.BooleanField("Người bán đã xác minh", default=False)
     is_flash_sale = models.BooleanField("Đang Flash Sale", default=False)
@@ -54,6 +60,16 @@ class MarketProduct(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def ImageURL(self):
+        """Ưu tiên ảnh người bán upload, nếu không có thì dùng link đã dán."""
+        try:
+            if self.image and self.image.url:
+                return self.image.url
+        except Exception:
+            pass
+        return self.image_url or ''
 
     @property
     def discount_percent(self):

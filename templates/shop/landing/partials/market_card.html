@@ -8,7 +8,7 @@
      data-views="{{ product.views }}"
      onclick="openProductById({{ product.id }})">
   <div class="product-img-wrap">
-    <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+    <img src="{{ product.ImageURL }}" alt="{{ product.name }}" loading="lazy">
     {% if product.condition == 'new' %}
       <span class="badge-condition badge-new like-new">Mới 100%</span>
     {% elif product.condition == 'like-new' %}

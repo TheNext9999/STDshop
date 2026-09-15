@@ -7,7 +7,8 @@
 
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 # Dùng lại _base_context() của shop để navbar (giỏ hàng, danh mục,
 # trạng thái đăng nhập) hiển thị đồng bộ với toàn bộ site.
@@ -52,7 +53,7 @@ def landing_user(request):
             'discount': p.discount_percent,
             'condition': p.condition,
             'condLabel': p.condition_label,
-            'img': p.image_url,
+            'img': p.ImageURL,
             'seller': seller_name,
             # sellerRating/sellerSales sẽ có giá trị thật khi hệ thống đánh giá/đơn hàng được nối sau.
             'sellerRating': 0,
@@ -73,9 +74,90 @@ def landing_user(request):
 
 
 def landing_seller(request):
-    """Sàn thanh lý đồ cũ sinh viên (STD Market) - phía người bán (đăng sản
-    phẩm, quản lý đơn hàng, ví). HIỆN TẠI: toàn bộ dữ liệu là DEMO tĩnh phía
-    client (chưa nối model/database thật) - sẽ nối dần khi mở rộng.
+    """Sàn thanh lý đồ cũ sinh viên (STD Market) - phía người bán.
+
+    ĐÃ NỐI THẬT: form "Đăng sản phẩm mới" lưu vào MarketProduct trong database.
+    Các phần còn lại (quản lý đơn hàng, ví, thông báo) VẪN LÀ DEMO tĩnh phía
+    client - sẽ nối tiếp khi mở rộng.
     """
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.error(request, 'Vui lòng đăng nhập để đăng bán sản phẩm.')
+            return redirect('login')
+
+        name = (request.POST.get('name') or '').strip()
+        price = request.POST.get('price')
+        category = request.POST.get('category')
+        condition_raw = request.POST.get('condition')
+        location = (request.POST.get('location') or '').strip()
+
+        if not name or not price or not category:
+            messages.error(request, 'Vui lòng điền đủ Tên sản phẩm, Giá bán và Danh mục.')
+            return redirect('landing:landing_seller')
+
+        # Form có 4 nút tình trạng, model chỉ có 3 giá trị -> map lại cho khớp
+        # đúng bộ lọc đang dùng ở trang /landing/user/.
+        condition_map = {
+            'new': 'new',
+            '90': 'like-new',
+            '70': 'used',
+            'minor': 'used',
+        }
+        condition = condition_map.get(condition_raw, 'used')
+
+        # Gộp lý do thanh lý vào mô tả (model không có field riêng cho lý do).
+        description = (request.POST.get('description') or '').strip()
+        reason = (request.POST.get('reason') or '').strip()
+        custom_reason = (request.POST.get('custom_reason') or '').strip()
+        reason_text = custom_reason or reason
+        if reason_text:
+            description = f"{description}\n\nLý do thanh lý: {reason_text}".strip()
+
+        try:
+            price_val = int(price)
+        except (TypeError, ValueError):
+            messages.error(request, 'Giá bán không hợp lệ.')
+            return redirect('landing:landing_seller')
+
+        old_price_raw = request.POST.get('old_price')
+        try:
+            old_price_val = int(old_price_raw) if old_price_raw else None
+        except (TypeError, ValueError):
+            old_price_val = None
+
+        product = MarketProduct(
+            seller=request.user,
+            name=name,
+            description=description,
+            price=price_val,
+            old_price=old_price_val,
+            condition=condition,
+            category=category,
+            location=location,
+            brand=(request.POST.get('brand') or '').strip(),
+            ship_methods=(request.POST.get('ship_methods') or '').strip(),
+            # Sản phẩm mới đăng chờ admin duyệt trước khi hiện ở /landing/user/
+            is_approved=False,
+        )
+
+        # Người bán có thể chọn nhiều ảnh; model hiện lưu 1 ảnh chính nên lấy
+        # ảnh đầu tiên. Muốn lưu đủ nhiều ảnh cần thêm model MarketProductImage.
+        images = request.FILES.getlist('images')
+        if images:
+            product.image = images[0]
+
+        product.save()
+        messages.success(request, 'Đã đăng sản phẩm! Sản phẩm đang chờ kiểm duyệt.')
+        return redirect('landing:landing_seller')
+
     ctx = _base_context(request)
+
+    my_products = []
+    if request.user.is_authenticated:
+        my_products = MarketProduct.objects.filter(seller=request.user)
+
+    ctx.update({
+        'category_choices': MarketProduct.CATEGORY_CHOICES,
+        'my_products': my_products,
+    })
     return render(request, 'shop/landing/landing-seller.html', ctx)
