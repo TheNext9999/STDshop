@@ -1,11 +1,13 @@
 ﻿// ===== DATA =====
-const products = [
-  {id:1,name:"Laptop Dell Inspiron 15 2022 – i7/16GB/512GB SSD",price:6800000,oldPrice:14000000,discount:51,condition:"like-new",condLabel:"Như mới",img:"https://maytinhquanganh.com/wp-content/uploads/2024/06/z5532090216110_ac965f20c3fc9daaa1e03746c7e387bc.jpg",seller:"Minh Tuấn",sellerRating:4.9,sellerSales:34,verified:true,location:"Nam Từ Liêm",cat:"laptop",flash:false,views:312},
-];
+// Card sản phẩm giờ do DJANGO RENDER SẴN ra HTML (xem partial
+// landing/partials/market_card.html) - JS không còn tự dựng HTML bằng chuỗi
+// template như cách cũ nữa. File này chỉ lo LỌC / SẮP XẾP / TÌM KIẾM bằng
+// cách ẩn-hiện và đổi thứ tự các thẻ .product-card đã có sẵn trong DOM.
+//
+// Biến `products` (mảng JSON dữ liệu thật) vẫn được template khai báo ở thẻ
+// <script> phía trước, dùng để tra thông tin khi mở modal chi tiết sản phẩm.
 
-const flashProducts = products.filter(p => p.flash);
-
-function formatVND(n){ return n.toLocaleString('vi-VN')+'đ' }
+function formatVND(n){ return (n||0).toLocaleString('vi-VN')+'đ' }
 
 function conditionBadge(c){
   const m={new:'badge-new like-new','like-new':'badge-like-new',used:'badge-used'};
@@ -13,63 +15,115 @@ function conditionBadge(c){
   return `<span class="badge-condition ${m[c]||'badge-used'}">${l[c]||c}</span>`;
 }
 
-// ===== RENDER PRODUCTS =====
-function renderProducts(list){
-  const grid = document.getElementById('productGrid');
-  grid.innerHTML = '';
-  list.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.innerHTML = `
-      <div class="product-img-wrap">
-        <img src="${p.img}" alt="${p.name}" loading="lazy">
-        ${conditionBadge(p.condition)}
-        ${p.flash?'<span class="badge-flash">⚡ SALE</span>':''}
-        <button class="wishlist-btn" onclick="event.stopPropagation();toggleWish(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-price-row">
-          <span class="product-price">${formatVND(p.price)}</span>
-          <span class="product-old-price">${formatVND(p.oldPrice)}</span>
-          <span class="product-discount">-${p.discount}%</span>
-        </div>
-        <div class="seller-row">
-          <div class="seller-avatar">${p.seller[0]}</div>
-          <span>${p.seller}</span>
-          ${p.verified?'<i class="fas fa-check-circle verified-icon"></i>':''}
-          <span style="margin-left:auto;color:var(--warning)">★ ${p.sellerRating}</span>
-        </div>
-        <div class="product-location"><i class="fas fa-map-marker-alt"></i>${p.location} · <i class="fas fa-eye"></i> ${p.views}</div>
-      </div>
-    `;
-    card.addEventListener('click', ()=>openProduct(p));
-    grid.appendChild(card);
-  });
+// ===== TRẠNG THÁI BỘ LỌC HIỆN TẠI =====
+const filterState = {
+  cat: 'all',
+  condition: 'all',
+  price: null,     // 'cheap' | 'mid' | 'high'
+  verified: false,
+  flash: false,
+  keyword: '',
+};
+
+function getCards(){
+  return Array.from(document.querySelectorAll('#productGrid .product-card'));
 }
 
-// ===== FLASH SALE =====
-function renderFlash(){
-  const grid = document.getElementById('flashGrid');
-  grid.innerHTML = '';
-  flashProducts.forEach(p=>{
-    const el = document.createElement('div');
-    el.className='flash-item';
-    el.innerHTML=`
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
-      <div class="flash-item-info">
-        <div class="flash-item-name">${p.name}</div>
-        <div class="flash-price">${formatVND(p.price)}</div>
-        <div class="flash-old">${formatVND(p.oldPrice)}</div>
-        <div class="flash-sold">⚡ -${p.discount}% · Đang hot</div>
-      </div>
-    `;
-    el.addEventListener('click',()=>openProduct(p));
-    grid.appendChild(el);
+function getProductById(id){
+  return products.find(p => String(p.id) === String(id));
+}
+
+// ===== ÁP DỤNG BỘ LỌC (ẩn/hiện card có sẵn) =====
+function applyFilters(){
+  let visibleCount = 0;
+
+  getCards().forEach(card => {
+    const p = getProductById(card.dataset.id) || {};
+    const price = parseInt(card.dataset.price) || 0;
+    let show = true;
+
+    if (filterState.cat !== 'all' && card.dataset.cat !== filterState.cat) show = false;
+    if (filterState.condition !== 'all' && p.condition !== filterState.condition) show = false;
+
+    if (filterState.price === 'cheap' && price >= 200000) show = false;
+    if (filterState.price === 'mid'   && (price < 200000 || price > 1000000)) show = false;
+    if (filterState.price === 'high'  && price <= 1000000) show = false;
+
+    if (filterState.verified && !p.verified) show = false;
+    if (filterState.flash && !p.flash) show = false;
+
+    if (filterState.keyword) {
+      const hay = (card.dataset.name || '') + ' ' + (card.dataset.seller || '');
+      if (!hay.includes(filterState.keyword)) show = false;
+    }
+
+    card.style.display = show ? '' : 'none';
+    if (show) visibleCount++;
   });
+
+  const noResult = document.getElementById('noResultMsg');
+  if (noResult) noResult.style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+// ===== CATEGORY FILTER =====
+function filterCat(cat, el){
+  document.querySelectorAll('.cat-item').forEach(c=>c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  filterState.cat = cat;
+  applyFilters();
+}
+
+// ===== FILTER TAGS =====
+function toggleFilter(el, group, value){
+  if (group === 'condition' || group === 'price') {
+    // Trong cùng 1 nhóm chỉ chọn được 1 giá trị
+    document.querySelectorAll(`.filter-tag`).forEach(t => {
+      const onclickAttr = t.getAttribute('onclick') || '';
+      if (onclickAttr.includes(`'${group}'`)) t.classList.remove('active');
+    });
+    el.classList.add('active');
+
+    if (group === 'condition') filterState.condition = value;
+    if (group === 'price') filterState.price = value;
+
+  } else if (group === 'special') {
+    // Các tag đặc biệt bật/tắt độc lập
+    const isActive = el.classList.toggle('active');
+    if (value === 'verified') filterState.verified = isActive;
+    if (value === 'flash') filterState.flash = isActive;
+  }
+
+  applyFilters();
+}
+
+// ===== SẮP XẾP (đổi thứ tự card trong DOM) =====
+function sortProducts(mode){
+  const grid = document.getElementById('productGrid');
+  if (!grid) return;
+
+  const sorted = getCards().sort((a, b) => {
+    const pa = getProductById(a.dataset.id) || {};
+    const pb = getProductById(b.dataset.id) || {};
+    const priceA = parseInt(a.dataset.price) || 0;
+    const priceB = parseInt(b.dataset.price) || 0;
+
+    if (mode === 'Giá thấp → cao')  return priceA - priceB;
+    if (mode === 'Giá cao → thấp')  return priceB - priceA;
+    if (mode === 'Phổ biến nhất')   return (parseInt(b.dataset.views)||0) - (parseInt(a.dataset.views)||0);
+    if (mode === 'Đánh giá cao')    return (pb.sellerRating||0) - (pa.sellerRating||0);
+    return (pb.id||0) - (pa.id||0); // Mới nhất: id lớn hơn = mới hơn
+  });
+
+  sorted.forEach(card => grid.appendChild(card));
 }
 
 // ===== OPEN PRODUCT MODAL =====
+// Card render từ Django chỉ truyền id, nên tra dữ liệu đầy đủ từ mảng products.
+function openProductById(id){
+  const p = getProductById(id);
+  if (p) openProduct(p);
+}
+
 function openProduct(p){
   document.getElementById('modalTitle').textContent = p.name;
   document.getElementById('modalName').textContent = p.name;
@@ -84,7 +138,7 @@ function openProduct(p){
     <div class="meta-item"><label>Giảm</label><span style="color:var(--danger)">-${p.discount}%</span></div>
   `;
   document.getElementById('modalSellerCard').innerHTML = `
-    <div class="seller-avatar-lg">${p.seller[0]}</div>
+    <div class="seller-avatar-lg">${p.seller ? p.seller[0] : '?'}</div>
     <div>
       <div class="seller-name">${p.seller} ${p.verified?'<i class="fas fa-check-circle" style="color:var(--primary);font-size:.85rem"></i>':''}</div>
       <div class="seller-meta">
@@ -95,18 +149,6 @@ function openProduct(p){
     </div>
   `;
   openModal('productModal');
-}
-
-// ===== CATEGORY FILTER =====
-function filterCat(cat, el){
-  document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  const filtered = cat==='all' ? products : products.filter(p=>p.cat===cat);
-  renderProducts(filtered);
-}
-
-function toggleFilter(el){
-  el.classList.toggle('active');
 }
 
 // ===== MODAL =====
@@ -186,16 +228,24 @@ setInterval(()=>{
   document.getElementById('fs').textContent=String(s).padStart(2,'0');
 }, 1000);
 
-// ===== SEARCH =====
-document.getElementById('searchInput').addEventListener('input', function(){
-  const q = this.value.toLowerCase();
-  if(!q){ renderProducts(products); return; }
-  renderProducts(products.filter(p=>p.name.toLowerCase().includes(q)||p.seller.toLowerCase().includes(q)));
-});
 
-// ===== INIT =====
-renderProducts(products);
-renderFlash();
+// ===== INIT: gắn sự kiện tìm kiếm & sắp xếp =====
+document.addEventListener('DOMContentLoaded', () => {
+  const searchBox = document.getElementById('searchInput');
+  if (searchBox) {
+    searchBox.addEventListener('input', function(){
+      filterState.keyword = this.value.toLowerCase().trim();
+      applyFilters();
+    });
+  }
+
+  const sortSelect = document.querySelector('.sort-select');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function(){
+      sortProducts(this.value);
+    });
+  }
+});
 
 // ===== ORDER MANAGEMENT =====
 const ordersData = [

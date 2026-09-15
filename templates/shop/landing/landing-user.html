@@ -181,7 +181,18 @@
       <option>Đánh giá cao</option>
     </select>
   </div>
-  <div class="product-grid" id="productGrid"></div>
+  <div class="product-grid" id="productGrid">
+    {% for product in products %}
+      {% include "shop/landing/partials/market_card.html" %}
+    {% empty %}
+      <p id="noProductMsg" style="grid-column:1/-1;text-align:center;color:#888;padding:40px 0;">
+        Chưa có sản phẩm thanh lý nào. Hãy là người đầu tiên đăng bán!
+      </p>
+    {% endfor %}
+    <p id="noResultMsg" style="display:none;grid-column:1/-1;text-align:center;color:#888;padding:40px 0;">
+      Không tìm thấy sản phẩm nào phù hợp với bộ lọc.
+    </p>
+  </div>
   <div style="text-align:center;margin-top:28px">
     <button class="nav-btn btn-sell" style="padding:12px 32px;font-size:1rem" onclick="showToast('Đang tải thêm sản phẩm...','')"><i class="fas fa-plus"></i> Hiển thị thêm sản phẩm</button>
   </div>
@@ -499,5 +510,9 @@
 
 {% block extra_js %}
 {{ block.super }}
+<script>
+    // Dữ liệu sản phẩm thật từ MarketProduct (database) - thay cho mảng cứng cũ.
+    const products = {{ products_json|safe }};
+</script>
 <script src="{% static 'js/landing-user.js' %}"></script>
 {% endblock %}

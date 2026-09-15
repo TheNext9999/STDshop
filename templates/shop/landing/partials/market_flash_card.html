@@ -1,0 +1,10 @@
+{% load shop_filters %}
+<div class="flash-item" data-id="{{ product.id }}" onclick="openProductById({{ product.id }})">
+  <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+  <div class="flash-item-info">
+    <div class="flash-item-name">{{ product.name }}</div>
+    <div class="flash-price">{{ product.price|vnd }}</div>
+    {% if product.old_price %}<div class="flash-old">{{ product.old_price|vnd }}</div>{% endif %}
+    <div class="flash-sold">⚡ -{{ product.discount_percent }}% · Đang hot</div>
+  </div>
+</div>

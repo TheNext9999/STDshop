@@ -1,0 +1,35 @@
+{% load shop_filters %}
+<div class="product-card"
+     data-id="{{ product.id }}"
+     data-cat="{{ product.category }}"
+     data-name="{{ product.name|lower }}"
+     data-seller="{{ product.seller.username|lower }}"
+     data-price="{{ product.price }}"
+     data-views="{{ product.views }}"
+     onclick="openProductById({{ product.id }})">
+  <div class="product-img-wrap">
+    <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+    {% if product.condition == 'new' %}
+      <span class="badge-condition badge-new like-new">Mới 100%</span>
+    {% elif product.condition == 'like-new' %}
+      <span class="badge-condition badge-like-new">Như mới</span>
+    {% else %}
+      <span class="badge-condition badge-used">Đã dùng</span>
+    {% endif %}
+    {% if product.is_flash_sale %}<span class="badge-flash">⚡ SALE</span>{% endif %}
+  </div>
+  <div class="product-info">
+    <div class="product-name">{{ product.name }}</div>
+    <div class="product-price-row">
+      <span class="product-price">{{ product.price|vnd }}</span>
+      {% if product.old_price %}<span class="product-old-price">{{ product.old_price|vnd }}</span>{% endif %}
+      {% if product.discount_percent %}<span class="product-discount">-{{ product.discount_percent }}%</span>{% endif %}
+    </div>
+    <div class="seller-row">
+      <div class="seller-avatar">{{ product.seller.username|first|upper }}</div>
+      <span>{{ product.seller.get_full_name|default:product.seller.username }}</span>
+      {% if product.is_verified %}<i class="fas fa-check-circle verified-icon"></i>{% endif %}
+    </div>
+    <div class="product-location"><i class="fas fa-map-marker-alt"></i> {{ product.location }} · <i class="fas fa-eye"></i> {{ product.views }}</div>
+  </div>
+</div>
