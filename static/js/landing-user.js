@@ -231,6 +231,16 @@ setInterval(()=>{
 
 // ===== INIT: gắn sự kiện tìm kiếm & sắp xếp =====
 document.addEventListener('DOMContentLoaded', () => {
+  // Dropdown tài khoản (dùng chung cơ chế .user-menu.open như navbar chính)
+  const navUser = document.getElementById('navUser');
+  if (navUser) {
+    navUser.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navUser.classList.toggle('open');
+    });
+    document.addEventListener('click', () => navUser.classList.remove('open'));
+  }
+
   const searchBox = document.getElementById('searchInput');
   if (searchBox) {
     searchBox.addEventListener('input', function(){

@@ -43,20 +43,26 @@
       <i class="fas fa-plus"></i> Đăng sản phẩm
     </button>
 
+    {% if user.is_authenticated %}
     <div class="nav-user">
-      <img src="{% static 'css/pic/avt.jpg' %}" class="nav-avatar" alt="avatar">
-      <span class="nav-username">Thành Đạt</span>
+      <div class="nav-avatar" style="display:flex;align-items:center;justify-content:center;background:var(--primary,#00C9B0);color:#fff;font-weight:700;">{{ user.username|first|upper }}</div>
+      <span class="nav-username">{{ user.first_name|default:user.username }}</span>
       <i class="fas fa-chevron-down nav-chevron"></i>
 
       <div class="nav-dropdown">
-        <a href="#"><i class="fas fa-user"></i> Hồ sơ người bán</a>
-        <a href="#"><i class="fas fa-star"></i> Đánh giá & Phản hồi</a>
-        <a href="#"><i class="fas fa-chart-bar"></i> Thống kê</a>
-        <a href="#"><i class="fas fa-cog"></i> Cài đặt cửa hàng</a>
+        <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Hồ sơ cá nhân</a>
+        <a href="{% url 'my_products' %}"><i class="fas fa-boxes"></i> Sản phẩm tôi đã đăng</a>
+        <a href="{% url 'order_history' %}"><i class="fas fa-box"></i> Đơn hàng của tôi</a>
+        <a href="{% url 'home' %}"><i class="fas fa-store"></i> Về STDShop</a>
         <div class="sep"></div>
-        <a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+        <a href="{% url 'logout' %}" class="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
       </div>
     </div>
+    {% else %}
+    <a href="{% url 'login' %}" class="nav-user" style="text-decoration:none;">
+      <span class="nav-username"><i class="fas fa-user-circle"></i> Đăng nhập</span>
+    </a>
+    {% endif %}
   </div>
 </nav>
 {% endblock %}
@@ -73,8 +79,8 @@
     <!-- SELLER PROFILE -->
     <div class="seller-profile">
       <img src="{% static 'css/pic/avt.jpg' %}" alt="avatar">
-      <h4>Nguyễn Thành Đạt</h4>
-      <p>Thành viên từ 01/2025</p>
+      <h4>{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Khách{% endif %}</h4>
+      <p>{% if user.is_authenticated %}Thành viên từ {{ user.date_joined|date:"m/Y" }}{% else %}Vui lòng đăng nhập{% endif %}</p>
       <div class="seller-rating">
         <i class="fas fa-star"></i>
         <i class="fas fa-star"></i>
