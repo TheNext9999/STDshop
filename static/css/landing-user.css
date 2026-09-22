@@ -406,3 +406,8 @@ img{max-width:100%;display:block}
   align-items:center;
   justify-content:center;
 }
+
+/* Đảm bảo dropdown tài khoản (dùng chung với navbar chính STDShop) luôn nổi
+   lên trên mọi section khác của trang STD Market (hero banner, product-card...) */
+.user-menu { position: relative; z-index: 3000; }
+.user-dropdown { z-index: 3000; }

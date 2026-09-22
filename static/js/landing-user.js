@@ -231,14 +231,21 @@ setInterval(()=>{
 
 // ===== INIT: gắn sự kiện tìm kiếm & sắp xếp =====
 document.addEventListener('DOMContentLoaded', () => {
-  // Dropdown tài khoản (dùng chung cơ chế .user-menu.open như navbar chính)
+  // Dropdown tài khoản (dùng chung cơ chế .user-menu.open như navbar chính,
+  // đồng thời set trực tiếp display để chắc chắn hoạt động dù CSS cascade
+  // trên trang này có bị ảnh hưởng bởi rule nào khác).
   const navUser = document.getElementById('navUser');
-  if (navUser) {
+  const userDropdown = document.getElementById('userDropdown');
+  if (navUser && userDropdown) {
     navUser.addEventListener('click', (e) => {
       e.stopPropagation();
-      navUser.classList.toggle('open');
+      const isOpen = navUser.classList.toggle('open');
+      userDropdown.style.display = isOpen ? 'block' : 'none';
     });
-    document.addEventListener('click', () => navUser.classList.remove('open'));
+    document.addEventListener('click', () => {
+      navUser.classList.remove('open');
+      userDropdown.style.display = 'none';
+    });
   }
 
   const searchBox = document.getElementById('searchInput');

@@ -225,7 +225,19 @@ body::before {
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: dropIn .2s ease;
-  z-index: 10;
+  z-index: 2000;
+}
+
+/* Cầu nối vô hình lấp khoảng gap 10px phía trên - nếu không có phần này,
+   rê chuột từ nút xuống dropdown sẽ đi qua khoảng trống không thuộc .nav-user
+   khiến :hover bị ngắt giữa chừng, dropdown biến mất trước khi chạm tới. */
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
 }
 
 @keyframes dropIn {
