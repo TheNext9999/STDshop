@@ -50,12 +50,12 @@
       </button></a>
 
       {% if user.is_authenticated %}
-      <div class="user-menu" id="navUser" style="position:relative;">
+      <div class="user-menu" id="marketNavUser" style="position:relative;">
         <button type="button" class="nav-btn btn-login">
           <i class="fas fa-user-circle"></i> {{ user.first_name|default:user.username }}
           <i class="fas fa-caret-down" style="margin-left:4px;"></i>
         </button>
-        <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown" id="marketUserDropdown">
           <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Hồ sơ cá nhân</a>
           <a href="{% url 'order_history' %}"><i class="fas fa-box"></i> Đơn hàng của tôi</a>
           <a href="{% url 'home' %}"><i class="fas fa-store"></i> Về STDShop</a>

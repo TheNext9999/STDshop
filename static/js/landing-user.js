@@ -234,8 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Dropdown tài khoản (dùng chung cơ chế .user-menu.open như navbar chính,
   // đồng thời set trực tiếp display để chắc chắn hoạt động dù CSS cascade
   // trên trang này có bị ảnh hưởng bởi rule nào khác).
-  const navUser = document.getElementById('navUser');
-  const userDropdown = document.getElementById('userDropdown');
+  const navUser = document.getElementById('marketNavUser');
+  const userDropdown = document.getElementById('marketUserDropdown');
   if (navUser && userDropdown) {
     navUser.addEventListener('click', (e) => {
       e.stopPropagation();
