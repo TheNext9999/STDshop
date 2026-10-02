@@ -15,6 +15,7 @@
          vì nhiều file định nghĩa lại cùng class (body, .nav-container, .footer,
          .cart-sidebar, .logo-img...) và sẽ ghi đè lẫn nhau nếu load chung. -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/ai-chat.css' %}" />
     {% block extra_css %}{% endblock %}
   </head>
   <body>
@@ -99,11 +100,45 @@
     {% block content %}{% endblock %}
 
     {% block site_footer %}
-    <!-- FLOATING CART (góc phải dưới) -->
-    <a href="chat.html" class="floating-chat-btn">
-      <i class="fas fa-comments"></i>
-      <span class="chat-badge">3</span>
-    </a>
+    <!-- ==================== AI CHAT WIDGET ==================== -->
+    <div id="aiChatWidget" class="ai-chat-widget">
+
+      <!-- Bong bóng nổi - bấm để mở/đóng khung chat -->
+      <button type="button" id="aiChatBubbleBtn" class="ai-chat-bubble-btn" title="Trò chuyện với STDShop AI">
+        <i class="fas fa-comment-dots"></i>
+        <span class="ai-chat-bubble-icon-close"><i class="fas fa-times"></i></span>
+      </button>
+
+      <!-- Khung chat - mặc định ẩn, JS toggle hiển thị -->
+      <div id="aiChatPanel" class="ai-chat-panel">
+        <div class="ai-chat-header">
+          <div class="ai-chat-header-info">
+            <div class="ai-chat-avatar"><i class="fas fa-robot"></i></div>
+            <div>
+              <div class="ai-chat-title">STDShop AI</div>
+              <div class="ai-chat-status"><span class="ai-status-dot"></span> Đang hoạt động</div>
+            </div>
+          </div>
+          <div class="ai-chat-header-actions">
+            <button type="button" id="aiExpandBtn" class="ai-icon-btn" title="Phóng to">
+              <i class="fas fa-expand-alt"></i>
+            </button>
+            <button type="button" id="aiCloseBtn" class="ai-icon-btn" title="Đóng">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="aiChatMessages" class="ai-chat-messages"></div>
+
+        <div class="ai-chat-input-bar">
+          <input type="text" id="aiChatInput" placeholder="Nhập tin nhắn..." autocomplete="off">
+          <button type="button" id="aiSendBtn" class="ai-send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- CART SIDEBAR -->
     <div id="cartSidebar" class="cart-sidebar">
@@ -203,6 +238,10 @@
       </div>
     </footer>
     {% endblock %}
+
+    <!-- Load cố định, không nằm trong block extra_js vì nhiều trang ghi đè
+         block đó mà không gọi {{ block.super }} - sẽ làm mất luôn Chat AI -->
+    <script src="{% static 'js/ai-chat.js' %}"></script>
 
     {% block extra_js %}
     <script src="{% static 'js/order-script.js' %}"></script>

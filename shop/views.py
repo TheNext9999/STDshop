@@ -513,7 +513,7 @@ def chat_ai(request):
         ])
 
         system_prompt = f"""
-Bạn là nhân viên bán hàng vui vẻ, nhiệt tình của **Lotus Shop**.
+Bạn là nhân viên bán hàng vui vẻ, nhiệt tình của **STDShop**.
 
 [QUY TẮC GIAO TIẾP]
 1. Chỉ chào ở tin nhắn đầu tiên. Từ tin thứ 2, vào thẳng vấn đề.
@@ -1964,7 +1964,7 @@ def zalo_callback(request):
         login(request, user)
 
         if created:
-            messages.success(request, f'Chào mừng {display_name or "bạn"} đã tham gia Lotus Shop qua Zalo! 🎉')
+            messages.success(request, f'Chào mừng {display_name or "bạn"} đã tham gia STDShop qua Zalo! 🎉')
         else:
             messages.success(request, f'Chào mừng trở lại, {display_name or user.username}!')
 
