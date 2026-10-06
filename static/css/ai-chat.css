@@ -218,6 +218,11 @@
     overflow-x: auto;
     padding-bottom: 4px;
     max-width: 100%;
+    margin-top: 10px;
+    /* .ai-msg dùng white-space: pre-wrap (để giữ xuống dòng trong câu trả lời
+       của AI) -> thuộc tính này bị kế thừa xuống thẻ sản phẩm, khiến mọi dấu
+       xuống dòng/thụt lề trong HTML hiện thành khoảng trống lớn. Reset lại. */
+    white-space: normal;
 }
 .ai-product-card {
     flex-shrink: 0;

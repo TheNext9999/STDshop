@@ -509,7 +509,7 @@ def chat_ai(request):
             matched_products = Product.objects.filter(is_approved=True)[:6]
 
         product_info = "\n".join([
-            f"- {p.name} | Giá: {p.price:,} VNĐ" for p in matched_products
+            f"- {p.name} | Giá: {int(p.price):,} VNĐ" for p in matched_products
         ])
 
         system_prompt = f"""
