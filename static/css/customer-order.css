@@ -248,6 +248,16 @@
     gap: 20px;
 }
 
+/* Khoảng cách giữa các khu vực sản phẩm ở trang chủ.
+   Trước đây 2 section này nằm liền nhau và không có padding/margin nào, nên
+   card ở khu "Tất cả sản phẩm" bị dính sát vào card ở khu "Gợi ý hôm nay". */
+.trending-section {
+    padding: 30px 0 20px;
+}
+.dishes-section {
+    padding: 10px 0 30px;
+}
+
 /* Card tổng thể */
 .product-card {
     width: 100%;
