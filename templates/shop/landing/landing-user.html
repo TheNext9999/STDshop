@@ -524,7 +524,11 @@
 {% block site_footer %}{% endblock %}
 
 {% block extra_js %}
-{{ block.super }}
+{% comment %}
+KHÔNG gọi block.super ở trang này: trang STD Market có navbar/logic riêng, nếu nạp
+thêm order-script.js của STDShop thì script đó bắt click mọi .product-card và đá
+sang /detail/?id=... (trang chi tiết sản phẩm của STDShop) thay vì mở modal.
+{% endcomment %}
 <script>
     // Dữ liệu sản phẩm thật từ MarketProduct (database) - thay cho mảng cứng cũ.
     const products = {{ products_json|safe }};

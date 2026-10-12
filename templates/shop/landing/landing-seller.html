@@ -920,6 +920,9 @@
 {% block site_footer %}{% endblock %}
 
 {% block extra_js %}
-{{ block.super }}
+{% comment %}
+Không gọi block.super: trang kênh người bán có JS riêng (landing-seller.js) và dropdown
+tài khoản chạy bằng CSS hover, không cần order-script.js / customer-order.js của STDShop.
+{% endcomment %}
 <script src="{% static 'js/landing-seller.js' %}"></script>
 {% endblock %}
