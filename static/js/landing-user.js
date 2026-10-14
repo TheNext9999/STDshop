@@ -256,6 +256,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Nhận từ khóa từ ô tìm kiếm ở trang chi tiết (/landing/user/?q=...)
+  const initialQuery = new URLSearchParams(window.location.search).get('q');
+  if (initialQuery && searchBox) {
+    searchBox.value = initialQuery;
+    filterState.keyword = initialQuery.toLowerCase().trim();
+    applyFilters();
+  }
+
   const sortSelect = document.querySelector('.sort-select');
   if (sortSelect) {
     sortSelect.addEventListener('change', function(){

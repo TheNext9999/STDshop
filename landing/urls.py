@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.landing_home, name='landing_home'),
     path('user/', views.landing_user, name='landing_user'),
     path('seller/', views.landing_seller, name='landing_seller'),
+    path('product/<int:pk>/', views.landing_product, name='landing_product'),
 ]
