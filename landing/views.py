@@ -7,14 +7,17 @@
 
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.db.models import F
+from django.http import Http404
+from django.urls import reverse
 
 # Dùng lại _base_context() của shop để navbar (giỏ hàng, danh mục,
 # trạng thái đăng nhập) hiển thị đồng bộ với toàn bộ site.
 from shop.views import _base_context
 
-from .models import MarketProduct
+from .models import MarketProduct, MarketReview, MarketWishlist
 
 
 def landing_home(request):
@@ -71,6 +74,161 @@ def landing_user(request):
         'products_json': json.dumps(products_data, ensure_ascii=False).replace('</', '<\\/'),
     })
     return render(request, 'shop/landing/landing-user.html', ctx)
+
+
+def landing_product(request, pk):
+    """Trang chi tiết 1 sản phẩm thanh lý trên STD Market.
+
+    Chức năng thật (lưu database):
+      - Hiển thị thông tin sản phẩm + người bán, đếm lượt xem (mỗi phiên 1 lần)
+      - Lưu / bỏ lưu tin (MarketWishlist)
+      - Đánh giá + bình luận (MarketReview): thêm/cập nhật/xóa
+      - Chủ tin đánh dấu "đã bán" / mở bán lại
+      - Gợi ý sản phẩm cùng danh mục
+
+    Chat với người bán và đặt mua chưa làm (cần model riêng cho tin nhắn/đơn
+    hàng) - sẽ bổ sung ở bước sau.
+    """
+    product = get_object_or_404(MarketProduct.objects.select_related('seller'), pk=pk)
+
+    user = request.user
+    is_owner = user.is_authenticated and user == product.seller
+    can_manage = is_owner or (user.is_authenticated and user.is_staff)
+
+    # Tin chưa được duyệt: chỉ chủ tin / admin mới xem được
+    if not product.is_approved and not can_manage:
+        raise Http404("Sản phẩm không tồn tại hoặc đang chờ duyệt.")
+
+    detail_url = reverse('landing:landing_product', args=[product.pk])
+
+    # ==================== XỬ LÝ THAO TÁC (POST) ====================
+    if request.method == 'POST':
+        if not user.is_authenticated:
+            messages.error(request, 'Vui lòng đăng nhập để thực hiện thao tác này.')
+            return redirect('login')
+
+        action = request.POST.get('action')
+        anchor_suffix = ''
+
+        if action == 'toggle_wish':
+            if is_owner:
+                messages.error(request, 'Bạn không thể lưu tin của chính mình.')
+            else:
+                wish, created = MarketWishlist.objects.get_or_create(user=user, product=product)
+                if created:
+                    messages.success(request, 'Đã lưu tin vào danh sách yêu thích.')
+                else:
+                    wish.delete()
+                    messages.success(request, 'Đã bỏ lưu tin này.')
+
+        elif action == 'add_review':
+            anchor_suffix = '#reviews'
+            if is_owner:
+                messages.error(request, 'Bạn không thể đánh giá sản phẩm của chính mình.')
+            else:
+                try:
+                    rating = int(request.POST.get('rating', 0))
+                except (TypeError, ValueError):
+                    rating = 0
+                comment = (request.POST.get('comment') or '').strip()
+
+                if rating not in range(1, 6) or not comment:
+                    messages.error(request, 'Vui lòng chọn số sao và nhập nội dung đánh giá.')
+                else:
+                    _, created = MarketReview.objects.update_or_create(
+                        product=product, user=user,
+                        defaults={'rating': rating, 'comment': comment},
+                    )
+                    messages.success(
+                        request,
+                        'Cảm ơn bạn đã đánh giá!' if created else 'Đã cập nhật đánh giá của bạn.'
+                    )
+
+        elif action == 'delete_review':
+            anchor_suffix = '#reviews'
+            review_id = request.POST.get('review_id') or ''
+            if review_id.isdigit():
+                qs = MarketReview.objects.filter(pk=int(review_id), product=product)
+                if not user.is_staff:
+                    qs = qs.filter(user=user)   # người thường chỉ xóa được đánh giá của chính mình
+                deleted, _ = qs.delete()
+                if deleted:
+                    messages.success(request, 'Đã xóa đánh giá.')
+                else:
+                    messages.error(request, 'Không tìm thấy đánh giá hoặc bạn không có quyền xóa.')
+
+        elif action == 'toggle_sold':
+            if can_manage:
+                product.is_sold = not product.is_sold
+                product.save(update_fields=['is_sold'])
+                messages.success(
+                    request,
+                    'Đã đánh dấu sản phẩm là ĐÃ BÁN.' if product.is_sold else 'Đã mở bán lại sản phẩm.'
+                )
+            else:
+                messages.error(request, 'Bạn không có quyền thực hiện thao tác này.')
+
+        return redirect(detail_url + anchor_suffix)
+
+    # ==================== HIỂN THỊ (GET) ====================
+    # Đếm lượt xem: mỗi phiên chỉ tính 1 lần cho mỗi sản phẩm, không tính chủ tin
+    if not is_owner:
+        viewed = request.session.get('market_viewed', [])
+        if product.pk not in viewed:
+            MarketProduct.objects.filter(pk=product.pk).update(views=F('views') + 1)
+            product.views += 1
+            viewed.append(product.pk)
+            request.session['market_viewed'] = viewed
+
+    reviews = list(product.reviews.select_related('user'))
+    total_reviews = len(reviews)
+    average = round(sum(r.rating for r in reviews) / total_reviews, 1) if total_reviews else 0
+
+    star_counts = {s: 0 for s in range(1, 6)}
+    for r in reviews:
+        star_counts[r.rating] += 1
+    rating_bars = [
+        {
+            'star': s,
+            'count': star_counts[s],
+            'percent': round(star_counts[s] * 100 / total_reviews) if total_reviews else 0,
+        }
+        for s in (5, 4, 3, 2, 1)
+    ]
+
+    user_review = None
+    in_wishlist = False
+    if user.is_authenticated:
+        user_review = next((r for r in reviews if r.user_id == user.id), None)
+        in_wishlist = MarketWishlist.objects.filter(user=user, product=product).exists()
+
+    related = (
+        MarketProduct.objects
+        .filter(category=product.category, is_approved=True, is_sold=False)
+        .exclude(pk=product.pk)
+        .select_related('seller')[:4]
+    )
+
+    seller_products = MarketProduct.objects.filter(seller=product.seller, is_approved=True)
+
+    ctx = _base_context(request)
+    ctx.update({
+        'product': product,
+        'seller_name': product.seller.get_full_name() or product.seller.username,
+        'is_owner': is_owner,
+        'can_manage': can_manage,
+        'reviews': reviews,
+        'total_reviews': total_reviews,
+        'average': average,
+        'rating_bars': rating_bars,
+        'user_review': user_review,
+        'in_wishlist': in_wishlist,
+        'wish_count': product.wishlisted_by.count(),
+        'related': related,
+        'seller_active_count': seller_products.filter(is_sold=False).count(),
+        'seller_sold_count': seller_products.filter(is_sold=True).count(),
+    })
+    return render(request, 'shop/landing/landing-detail.html', ctx)
 
 
 def landing_seller(request):

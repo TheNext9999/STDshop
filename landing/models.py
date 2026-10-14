@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.contrib.auth.models import User
 
 
@@ -72,6 +73,16 @@ class MarketProduct(models.Model):
         return self.image_url or ''
 
     @property
+    def average_rating(self):
+        """Điểm đánh giá trung bình (0 nếu chưa có đánh giá)."""
+        avg = self.reviews.aggregate(avg=Avg('rating'))['avg']
+        return round(avg, 1) if avg else 0
+
+    @property
+    def review_count(self):
+        return self.reviews.count()
+
+    @property
     def discount_percent(self):
         if self.old_price and self.old_price > self.price:
             return round((1 - self.price / self.old_price) * 100)
@@ -80,3 +91,41 @@ class MarketProduct(models.Model):
     @property
     def condition_label(self):
         return dict(self.CONDITION_CHOICES).get(self.condition, self.condition)
+
+
+class MarketWishlist(models.Model):
+    """Tin thanh lý mà người dùng đã bấm "Lưu tin" (yêu thích)."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='market_wishlist')
+    product = models.ForeignKey(MarketProduct, on_delete=models.CASCADE, related_name='wishlisted_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')
+        ordering = ['-created_at']
+        verbose_name = "Tin đã lưu"
+        verbose_name_plural = "Tin đã lưu"
+
+    def __str__(self):
+        return f"{self.user.username} ♥ {self.product.name}"
+
+
+class MarketReview(models.Model):
+    """Đánh giá + bình luận của người mua cho 1 sản phẩm thanh lý.
+    Mỗi người chỉ có 1 đánh giá cho mỗi sản phẩm (gửi lại sẽ là cập nhật)."""
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+    product = models.ForeignKey(MarketProduct, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='market_reviews')
+    rating = models.PositiveSmallIntegerField("Số sao", choices=RATING_CHOICES, default=5)
+    comment = models.TextField("Nội dung")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('product', 'user')
+        ordering = ['-created_at']
+        verbose_name = "Đánh giá sản phẩm thanh lý"
+        verbose_name_plural = "Đánh giá sản phẩm thanh lý"
+
+    def __str__(self):
+        return f"{self.product.name} - {self.rating}★ bởi {self.user.username}"

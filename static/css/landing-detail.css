@@ -1,0 +1,320 @@
+/* ============================================================
+   TRANG CHI TIẾT SẢN PHẨM THANH LÝ - STD Market
+   Dùng chung hệ thống màu/navbar của landing-user.css, mọi class riêng
+   của trang này đều có tiền tố "ld-" để không đụng class của trang khác.
+   ============================================================ */
+
+.ld-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+}
+
+/* ---- Breadcrumb ---- */
+.ld-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: .82rem;
+    color: #6b7c78;
+    margin-bottom: 16px;
+}
+.ld-breadcrumb a { color: var(--primary-dark, #00a68f); text-decoration: none; font-weight: 600; }
+.ld-breadcrumb a:hover { text-decoration: underline; }
+.ld-breadcrumb i { font-size: .65rem; opacity: .6; }
+.ld-bc-current { color: #222; font-weight: 600; max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- Thông báo ---- */
+.ld-msg {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: .9rem;
+    font-weight: 600;
+}
+.ld-msg-success { background: #e8f7f4; color: #00806e; }
+.ld-msg-error { background: #fef2f2; color: #dc2626; }
+
+/* ---- Khối chính: ảnh + thông tin ---- */
+.ld-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 28px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+    margin-bottom: 20px;
+}
+
+.ld-image-box {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #eef5f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ld-image-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ld-no-image { display: flex; flex-direction: column; align-items: center; gap: 8px; color: #9aaaa6; }
+.ld-no-image i { font-size: 3rem; }
+.ld-sold-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ld-sold-overlay span {
+    border: 4px solid #fff;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    padding: 8px 28px;
+    border-radius: 12px;
+    transform: rotate(-12deg);
+}
+
+/* Các khung bao trong lưới - min-width:0 để nội dung dài không làm tràn cột */
+.ld-gallery, .ld-info, .ld-review-main { min-width: 0; }
+
+/* ---- Badge ---- */
+.ld-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.ld-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .74rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 30px;
+}
+.ld-badge-new { background: #dcfce7; color: #15803d; }
+.ld-badge-likenew { background: #e0f2fe; color: #0369a1; }
+.ld-badge-used { background: #fef3c7; color: #92400e; }
+.ld-badge-flash { background: #fee2e2; color: #dc2626; }
+.ld-badge-verified { background: #e8f7f4; color: #00806e; }
+.ld-badge-sold { background: #e5e7eb; color: #4b5563; }
+.ld-badge-pending { background: #ede9fe; color: #6d28d9; }
+
+/* ---- Tiêu đề, thống kê, giá ---- */
+.ld-title { font-size: 1.6rem; font-weight: 800; line-height: 1.3; color: #1a2321; margin: 0 0 12px; }
+
+.ld-stats { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: .86rem; color: #6b7c78; margin-bottom: 16px; }
+.ld-stats i { color: var(--primary, #00C9B0); margin-right: 4px; }
+.ld-rating { display: inline-flex; align-items: center; gap: 6px; }
+.ld-rating strong { color: #222; }
+
+.ld-price-box {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: #f1fbf9;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+}
+.ld-price { font-size: 2rem; font-weight: 800; color: var(--primary-dark, #00a68f); }
+.ld-old-price { font-size: 1.05rem; color: #9aa5a2; text-decoration: line-through; }
+.ld-save-badge { background: #ef4444; color: #fff; font-size: .78rem; font-weight: 700; padding: 4px 12px; border-radius: 30px; }
+
+/* ---- Sao (kể cả nửa sao do filter star_rating tạo ra) ---- */
+.ld-stars { color: #f59e0b; letter-spacing: 1px; white-space: nowrap; }
+.ld-stars-lg { font-size: 1.4rem; margin: 6px 0; }
+.ld-stars .star-half {
+    position: relative;
+    display: inline-block;
+    color: #e2e5ea;
+}
+.ld-stars .star-half::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+    color: #f59e0b;
+}
+
+/* ---- Bảng thông tin ---- */
+.ld-meta { margin: 0 0 18px; border-top: 1px solid #edf2f1; }
+.ld-meta > div {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #edf2f1;
+    font-size: .9rem;
+}
+.ld-meta dt { color: #6b7c78; margin: 0; }
+.ld-meta dd { color: #1a2321; font-weight: 600; margin: 0; }
+
+/* ---- Nút ---- */
+.ld-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.ld-inline-form { display: inline; margin: 0; }
+.ld-manage-form { margin: 0 0 16px; }
+
+.ld-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 12px;
+    font-size: .92rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    font-family: inherit;
+    transition: all .2s ease;
+}
+.ld-btn-wish { background: #fff; color: var(--primary-dark, #00a68f); border-color: var(--primary, #00C9B0); }
+.ld-btn-wish:hover { background: #f1fbf9; }
+.ld-btn-wish.active { background: var(--primary, #00C9B0); color: #fff; }
+.ld-btn-ghost { background: #f4f6f6; color: #46524f; }
+.ld-btn-ghost:hover { background: #e8eceb; }
+.ld-btn-manage { background: #fff7ed; color: #c2410c; border-color: #fdba74; width: 100%; }
+.ld-btn-manage:hover { background: #ffedd5; }
+.ld-btn-primary { background: var(--primary, #00C9B0); color: #fff; }
+.ld-btn-primary:hover { background: var(--primary-dark, #00a68f); }
+.ld-btn-outline { background: #fff; color: var(--primary-dark, #00a68f); border-color: var(--primary, #00C9B0); }
+.ld-btn-outline:hover { background: #f1fbf9; }
+
+.ld-owner-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 700;
+    font-size: .88rem;
+    padding: 11px 18px;
+    border-radius: 12px;
+}
+
+/* ---- Hộp mua bán an toàn ---- */
+.ld-safe-box { background: #f8fafa; border-radius: 14px; padding: 14px 18px; font-size: .84rem; color: #46524f; }
+.ld-safe-title { font-weight: 700; color: #1a2321; margin-bottom: 6px; }
+.ld-safe-title i { color: var(--primary, #00C9B0); margin-right: 6px; }
+.ld-safe-box ul { margin: 0; padding-left: 18px; line-height: 1.7; }
+
+/* ---- Thẻ nội dung chung ---- */
+.ld-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+    margin-bottom: 20px;
+}
+.ld-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1a2321;
+    margin: 0 0 16px;
+    padding-left: 12px;
+    border-left: 4px solid var(--primary, #00C9B0);
+}
+.ld-muted { color: #8a9894; font-size: .84rem; }
+.ld-description { font-size: .93rem; line-height: 1.7; color: #33403d; }
+.ld-description p { margin: 0 0 10px; }
+
+/* ---- Người bán ---- */
+.ld-seller-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
+.ld-seller-left { display: flex; align-items: center; gap: 14px; }
+.ld-seller-avatar,
+.ld-review-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary, #00C9B0), var(--primary-dark, #00a68f));
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.ld-review-avatar { width: 40px; height: 40px; font-size: 1rem; }
+.ld-seller-name { font-weight: 800; font-size: 1.05rem; color: #1a2321; }
+.ld-verified { color: var(--primary, #00C9B0); font-size: .95rem; margin-left: 4px; }
+.ld-seller-stats { display: flex; gap: 36px; }
+.ld-seller-stats div { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ld-seller-stats span { font-size: .78rem; color: #8a9894; }
+.ld-seller-stats strong { font-size: 1.2rem; color: var(--primary-dark, #00a68f); }
+
+/* ---- Đánh giá ---- */
+.ld-reviews-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; }
+
+.ld-rating-summary { text-align: center; background: #f8fafa; border-radius: 16px; padding: 20px 16px; align-self: start; }
+.ld-rating-big { font-size: 3rem; font-weight: 800; color: var(--primary-dark, #00a68f); line-height: 1; }
+.ld-bars { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.ld-bar-row { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: #6b7c78; }
+.ld-bar { flex: 1; height: 8px; background: #e5eceb; border-radius: 10px; overflow: hidden; }
+.ld-bar-fill { height: 100%; background: #f59e0b; border-radius: 10px; transition: width .4s ease; }
+.ld-bar-count { width: 22px; text-align: right; }
+
+.ld-review-form {
+    background: #f8fafa;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.ld-review-form-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-weight: 700; font-size: .92rem; }
+.ld-star-input { display: inline-flex; gap: 4px; cursor: pointer; }
+.ld-star-input i { font-size: 1.5rem; color: #d6dcdb; transition: color .15s ease, transform .15s ease; }
+.ld-star-input i.active { color: #f59e0b; }
+.ld-star-input i:hover { transform: scale(1.15); }
+.ld-review-form textarea {
+    width: 100%;
+    border: 1.5px solid #dbe3e1;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: .9rem;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+.ld-review-form textarea:focus { border-color: var(--primary, #00C9B0); }
+.ld-review-form .ld-btn { align-self: flex-start; }
+.ld-review-note { margin: 0 0 16px; }
+
+.ld-review-list { display: flex; flex-direction: column; }
+.ld-review-item { display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid #edf2f1; }
+.ld-review-item:last-child { border-bottom: none; }
+.ld-review-body { flex: 1; min-width: 0; }
+.ld-review-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 4px; font-size: .9rem; }
+.ld-review-body p { margin: 0 0 6px; font-size: .9rem; line-height: 1.6; color: #33403d; word-break: break-word; }
+.ld-link-danger { background: none; border: none; color: #dc2626; font-size: .8rem; font-weight: 600; cursor: pointer; padding: 0; font-family: inherit; }
+.ld-link-danger:hover { text-decoration: underline; }
+
+.ld-empty { text-align: center; padding: 30px 0; color: #9aa5a2; }
+.ld-empty i { font-size: 2.2rem; display: block; margin-bottom: 10px; color: #cfd8d6; }
+.ld-empty p { margin: 0; font-size: .9rem; }
+
+/* ---- Sản phẩm liên quan ---- */
+.ld-related { margin-top: 10px; }
+.ld-related-grid { margin-top: 4px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+    .ld-main { grid-template-columns: 1fr; padding: 16px; }
+    .ld-reviews-grid { grid-template-columns: 1fr; }
+    .ld-title { font-size: 1.3rem; }
+    .ld-price { font-size: 1.6rem; }
+    .ld-meta > div { grid-template-columns: 120px 1fr; }
+}

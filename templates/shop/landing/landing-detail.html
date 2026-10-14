@@ -1,0 +1,317 @@
+{% extends "shop/base.html" %}
+{% load static shop_filters %}
+
+{% block title %}{{ product.name }} - STD Market{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/landing-user.css' %}" />
+<link rel="stylesheet" href="{% static 'css/landing-detail.css' %}" />
+{% endblock %}
+
+{% block site_nav %}
+<nav class="navbar">
+  <div class="nav-container">
+
+    <a href="{% url 'landing:landing_user' %}" class="logo" style="text-decoration:none;">
+      <img src="{% static 'css/pic/marketlogo.png' %}" alt="STD Logo" class="logo-img">
+      <div class="logo-text" style="padding-right: 10px;">
+        <span>STD Market</span>
+        <span class="logo-badge">THANH LÝ</span>
+      </div>
+    </a>
+
+    <form class="search-bar" action="{% url 'landing:landing_user' %}" method="get" style="margin:0;">
+      <i class="fas fa-search"></i>
+      <input type="text" name="q" placeholder="Tìm laptop, áo, sách, tai nghe... cũ giá rẻ" autocomplete="off">
+    </form>
+
+    <div class="nav-right">
+      <a href="{% url 'landing:landing_seller' %}"><button type="button" class="nav-btn btn-sell">
+        <i class="fas fa-plus"></i> Thanh lý
+      </button></a>
+
+      {% if user.is_authenticated %}
+      <div class="user-menu" id="marketNavUser" style="position:relative;">
+        <button type="button" class="nav-btn btn-login">
+          <i class="fas fa-user-circle"></i> {{ user.first_name|default:user.username }}
+          <i class="fas fa-caret-down" style="margin-left:4px;"></i>
+        </button>
+        <div class="user-dropdown" id="marketUserDropdown">
+          <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Hồ sơ cá nhân</a>
+          <a href="{% url 'landing:landing_seller' %}"><i class="fas fa-store"></i> Kênh người bán</a>
+          <a href="{% url 'home' %}"><i class="fas fa-shopping-bag"></i> Về STDShop</a>
+          <a href="{% url 'logout' %}" style="color:#e74c3c;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+        </div>
+      </div>
+      {% else %}
+      <a href="{% url 'login' %}"><button type="button" class="nav-btn btn-login">
+        <i class="fas fa-user-circle"></i> Đăng nhập
+      </button></a>
+      {% endif %}
+    </div>
+
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="ld-wrap">
+
+  <!-- ===== BREADCRUMB ===== -->
+  <div class="ld-breadcrumb">
+    <a href="{% url 'landing:landing_user' %}">STD Market</a>
+    <i class="fas fa-chevron-right"></i>
+    <span>{{ product.get_category_display }}</span>
+    <i class="fas fa-chevron-right"></i>
+    <span class="ld-bc-current">{{ product.name }}</span>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div class="ld-msg {% if message.tags == 'error' %}ld-msg-error{% else %}ld-msg-success{% endif %}">
+      <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- ===== KHỐI CHÍNH: ẢNH + THÔNG TIN ===== -->
+  <div class="ld-main">
+
+    <div class="ld-gallery">
+      <div class="ld-image-box">
+        {% if product.ImageURL %}
+          <img src="{{ product.ImageURL }}" alt="{{ product.name }}">
+        {% else %}
+          <div class="ld-no-image"><i class="fas fa-image"></i><span>Chưa có ảnh</span></div>
+        {% endif %}
+        {% if product.is_sold %}
+          <div class="ld-sold-overlay"><span>ĐÃ BÁN</span></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ld-info">
+
+      <div class="ld-badges">
+        {% if product.condition == 'new' %}
+          <span class="ld-badge ld-badge-new">Mới 100%</span>
+        {% elif product.condition == 'like-new' %}
+          <span class="ld-badge ld-badge-likenew">Như mới</span>
+        {% else %}
+          <span class="ld-badge ld-badge-used">Đã dùng</span>
+        {% endif %}
+        {% if product.is_flash_sale %}<span class="ld-badge ld-badge-flash">⚡ Flash Sale</span>{% endif %}
+        {% if product.is_verified %}<span class="ld-badge ld-badge-verified"><i class="fas fa-check-circle"></i> Người bán đã xác minh</span>{% endif %}
+        {% if product.is_sold %}<span class="ld-badge ld-badge-sold">Đã bán</span>{% endif %}
+        {% if not product.is_approved %}<span class="ld-badge ld-badge-pending">Đang chờ duyệt</span>{% endif %}
+      </div>
+
+      <h1 class="ld-title">{{ product.name }}</h1>
+
+      <div class="ld-stats">
+        <span class="ld-rating">
+          <span class="ld-stars">{{ average|star_rating }}</span>
+          <strong>{{ average }}</strong> ({{ total_reviews }} đánh giá)
+        </span>
+        <span><i class="fas fa-eye"></i> {{ product.views }} lượt xem</span>
+        <span><i class="fas fa-heart"></i> {{ wish_count }} lượt lưu</span>
+      </div>
+
+      <div class="ld-price-box">
+        <span class="ld-price">{{ product.price|vnd }}</span>
+        {% if product.old_price %}<span class="ld-old-price">{{ product.old_price|vnd }}</span>{% endif %}
+        {% if product.discount_percent %}<span class="ld-save-badge">Tiết kiệm {{ product.discount_percent }}%</span>{% endif %}
+      </div>
+
+      <dl class="ld-meta">
+        <div><dt>Tình trạng</dt><dd>{{ product.condition_label }}</dd></div>
+        <div><dt>Danh mục</dt><dd>{{ product.get_category_display }}</dd></div>
+        {% if product.brand %}<div><dt>Thương hiệu / Xuất xứ</dt><dd>{{ product.brand }}</dd></div>{% endif %}
+        <div><dt>Khu vực</dt><dd>{{ product.location|default:"Chưa cập nhật" }}</dd></div>
+        <div><dt>Giao hàng</dt><dd>{{ product.ship_methods|default:"Chưa cập nhật" }}</dd></div>
+        <div><dt>Ngày đăng</dt><dd>{{ product.created_at|date:"d/m/Y" }}</dd></div>
+      </dl>
+
+      <!-- ===== NÚT HÀNH ĐỘNG ===== -->
+      <div class="ld-actions">
+        {% if is_owner %}
+          <div class="ld-owner-note"><i class="fas fa-user-shield"></i> Đây là tin đăng của bạn</div>
+        {% elif user.is_authenticated %}
+          <form method="post" class="ld-inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="toggle_wish">
+            <button type="submit" class="ld-btn ld-btn-wish {% if in_wishlist %}active{% endif %}">
+              <i class="{% if in_wishlist %}fas{% else %}far{% endif %} fa-heart"></i>
+              {% if in_wishlist %}Đã lưu tin{% else %}Lưu tin{% endif %}
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="ld-btn ld-btn-wish"><i class="far fa-heart"></i> Đăng nhập để lưu tin</a>
+        {% endif %}
+
+        <button type="button" id="ldShareBtn" class="ld-btn ld-btn-ghost">
+          <i class="fas fa-share-alt"></i> Chia sẻ
+        </button>
+      </div>
+
+      {% if can_manage %}
+      <form method="post" class="ld-manage-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="toggle_sold">
+        <button type="submit" class="ld-btn ld-btn-manage">
+          {% if product.is_sold %}
+            <i class="fas fa-undo"></i> Mở bán lại sản phẩm
+          {% else %}
+            <i class="fas fa-check-double"></i> Đánh dấu là đã bán
+          {% endif %}
+        </button>
+      </form>
+      {% endif %}
+
+      <div class="ld-safe-box">
+        <div class="ld-safe-title"><i class="fas fa-shield-alt"></i> Mua bán an toàn</div>
+        <ul>
+          <li>Kiểm tra kỹ sản phẩm trước khi thanh toán</li>
+          <li>Ưu tiên gặp trực tiếp tại nơi công cộng, đông người</li>
+          <li>Không chuyển khoản đặt cọc cho người lạ khi chưa xác minh</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MÔ TẢ ===== -->
+  <section class="ld-card">
+    <h2 class="ld-section-title">Mô tả sản phẩm</h2>
+    {% if product.description %}
+      <div class="ld-description">{{ product.description|linebreaks }}</div>
+    {% else %}
+      <p class="ld-muted">Người bán chưa cập nhật mô tả cho sản phẩm này.</p>
+    {% endif %}
+  </section>
+
+  <!-- ===== NGƯỜI BÁN ===== -->
+  <section class="ld-card ld-seller-card">
+    <div class="ld-seller-left">
+      <div class="ld-seller-avatar">{{ seller_name|first|upper }}</div>
+      <div>
+        <div class="ld-seller-name">
+          {{ seller_name }}
+          {% if product.is_verified %}<i class="fas fa-check-circle ld-verified"></i>{% endif %}
+        </div>
+        <div class="ld-muted">Tham gia từ {{ product.seller.date_joined|date:"m/Y" }}</div>
+      </div>
+    </div>
+    <div class="ld-seller-stats">
+      <div><span>Đang bán</span><strong>{{ seller_active_count }}</strong></div>
+      <div><span>Đã bán</span><strong>{{ seller_sold_count }}</strong></div>
+    </div>
+  </section>
+
+  <!-- ===== ĐÁNH GIÁ & BÌNH LUẬN ===== -->
+  <section class="ld-card" id="reviews">
+    <h2 class="ld-section-title">Đánh giá &amp; Bình luận</h2>
+
+    <div class="ld-reviews-grid">
+
+      <div class="ld-rating-summary">
+        <div class="ld-rating-big">{{ average }}</div>
+        <div class="ld-stars ld-stars-lg">{{ average|star_rating }}</div>
+        <div class="ld-muted">{{ total_reviews }} đánh giá</div>
+
+        <div class="ld-bars">
+          {% for bar in rating_bars %}
+          <div class="ld-bar-row">
+            <span>{{ bar.star }}★</span>
+            <div class="ld-bar"><div class="ld-bar-fill" style="width: {{ bar.percent }}%;"></div></div>
+            <span class="ld-bar-count">{{ bar.count }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ld-review-main">
+
+        {% if is_owner %}
+          <p class="ld-muted ld-review-note">Bạn không thể đánh giá sản phẩm của chính mình.</p>
+        {% elif user.is_authenticated %}
+          <form method="post" class="ld-review-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_review">
+            <input type="hidden" name="rating" id="ldRatingInput" value="{% if user_review %}{{ user_review.rating }}{% else %}5{% endif %}">
+
+            <div class="ld-review-form-head">
+              <span>{% if user_review %}Cập nhật đánh giá của bạn:{% else %}Đánh giá của bạn:{% endif %}</span>
+              <div class="ld-star-input" id="ldStarInput">
+                <i class="fas fa-star" data-value="1"></i>
+                <i class="fas fa-star" data-value="2"></i>
+                <i class="fas fa-star" data-value="3"></i>
+                <i class="fas fa-star" data-value="4"></i>
+                <i class="fas fa-star" data-value="5"></i>
+              </div>
+            </div>
+            <textarea name="comment" rows="3" required placeholder="Chia sẻ cảm nhận của bạn về sản phẩm / người bán...">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+            <button type="submit" class="ld-btn ld-btn-primary">
+              <i class="fas fa-paper-plane"></i> {% if user_review %}Cập nhật đánh giá{% else %}Gửi đánh giá{% endif %}
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="ld-btn ld-btn-outline"><i class="fas fa-sign-in-alt"></i> Đăng nhập để đánh giá</a>
+        {% endif %}
+
+        <div class="ld-review-list">
+          {% for review in reviews %}
+          <div class="ld-review-item">
+            <div class="ld-review-avatar">{{ review.user.username|first|upper }}</div>
+            <div class="ld-review-body">
+              <div class="ld-review-head">
+                <strong>{{ review.user.get_full_name|default:review.user.username }}</strong>
+                <span class="ld-stars">{{ review.rating|star_rating }}</span>
+                <span class="ld-muted">{{ review.created_at|date:"d/m/Y H:i" }}</span>
+              </div>
+              <p>{{ review.comment|linebreaksbr }}</p>
+              {% if review.user == user or user.is_staff %}
+              <form method="post" class="ld-inline-form" onsubmit="return confirm('Xóa đánh giá này?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_review">
+                <input type="hidden" name="review_id" value="{{ review.id }}">
+                <button type="submit" class="ld-link-danger"><i class="fas fa-trash-alt"></i> Xóa</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+          {% empty %}
+          <div class="ld-empty">
+            <i class="fas fa-comment-slash"></i>
+            <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SẢN PHẨM LIÊN QUAN ===== -->
+  <section class="ld-related">
+    <h2 class="ld-section-title">Sản phẩm cùng danh mục</h2>
+    <div class="product-grid ld-related-grid">
+      {% for product in related %}
+        {% include "shop/landing/partials/market_card.html" %}
+      {% empty %}
+        <p class="ld-muted">Chưa có sản phẩm nào khác trong danh mục này.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block site_footer %}{% endblock %}
+
+{% block extra_js %}
+{% comment %}
+Không gọi block.super: trang STD Market tự có navbar và JS riêng, không nạp order-script.js
+của STDShop (script đó bắt click mọi .product-card và chuyển sang trang chi tiết của shop).
+{% endcomment %}
+<script src="{% static 'js/landing-detail.js' %}"></script>
+{% endblock %}
