@@ -137,6 +137,11 @@ img{max-width:100%;display:block}
 /* ===== MODAL OVERLAY ===== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.3s}
 .modal-overlay.active{opacity:1;visibility:visible}
+/* Chống đụng class .modal: style.css (CSS dùng chung toàn site, nạp trên mọi trang) cũng có
+   .modal { display:none; position:fixed; height:100%; z-index:3000; ... } cho popup của STDShop.
+   Nếu không reset, khung trắng bên trong .modal-overlay bị display:none -> chỉ thấy lớp phủ tối
+   mà không thấy popup. Selector 2 class nên luôn thắng rule 1 class của style.css. */
+.modal-overlay .modal{display:block;top:auto;left:auto;height:auto;z-index:auto}
 .modal{background:white;border-radius:16px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:white;z-index:2}
 .modal-header h3{font-size:1.15rem;font-weight:700}

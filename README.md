@@ -143,6 +143,10 @@ EMAIL_HOST_PASSWORD=your-app-password
 
 ### Bước 6: Khởi tạo database và tài khoản quản trị
 ```powershell
+# Khởi tạo 
+python manage.py makemigrations landing
+python manage.py makemigrations 
+
 # Áp dụng migration
 python manage.py migrate
 

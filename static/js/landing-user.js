@@ -119,9 +119,10 @@ function sortProducts(mode){
 
 // ===== OPEN PRODUCT MODAL =====
 // Card render từ Django chỉ truyền id, nên tra dữ liệu đầy đủ từ mảng products.
+// Click vào sản phẩm mở thẳng TRANG CHI TIẾT (/landing/product/<id>/) thay vì popup.
+// Giữ tên hàm này để card cũ (nếu còn gọi openProductById) vẫn chuyển đúng trang.
 function openProductById(id){
-  const p = getProductById(id);
-  if (p) openProduct(p);
+  window.location.href = '/landing/product/' + encodeURIComponent(id) + '/';
 }
 
 function openProduct(p){
