@@ -5,10 +5,16 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== ĐẾM NGƯỢC FLASH SALE ====================
-    let timeLeft = 15 * 60 + 59;
-    setInterval(() => {
-        if (timeLeft <= 0) return;
-        timeLeft--;
+    // Đếm ngược tới 24:00 hôm nay (theo giờ máy người xem) - cùng cách tính với
+    // trang Flash Sale (/flash-sale/), thay cho số giả 15:59 luôn reset mỗi lần tải trang.
+    function secondsUntilMidnight() {
+        const now = new Date();
+        const end = new Date(now);
+        end.setHours(24, 0, 0, 0);
+        return Math.max(0, Math.floor((end - now) / 1000));
+    }
+    function renderCountdown() {
+        const timeLeft = secondsUntilMidnight();
         const hours   = Math.floor(timeLeft / 3600);
         const minutes = Math.floor((timeLeft % 3600) / 60);
         const seconds = timeLeft % 60;
@@ -18,7 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hEl) hEl.textContent = String(hours).padStart(2, '0');
         if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
         if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
-    }, 1000);
+    }
+    renderCountdown();
+    setInterval(renderCountdown, 1000);
 
     // ==================== NÚT CUỘN FLASH SALE ====================
     const flashLeftBtn = document.getElementById('flashLeft');

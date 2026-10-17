@@ -837,11 +837,34 @@ def compare(request):
 
 
 def flash_sale(request):
-    """Trang Flash Sale — lọc sản phẩm thật có is_flash_sale=True."""
-    ctx = _base_context(request)
-    sale_products = Product.objects.filter(is_flash_sale=True, discount_percent__gt=0, is_approved=True)
+    """Trang Flash Sale — liệt kê sản phẩm thật đang Flash Sale.
 
-    ctx.update({'sale_products': sale_products, 'page_title': 'Flash Sale'})
+    Dùng CÙNG tiêu chí với khu Flash Sale ở trang chủ (is_flash_sale=True và đã duyệt)
+    để "Xem tất cả" luôn hiện đủ những gì trang chủ đang quảng cáo. Trước đây trang này
+    chỉ lấy sản phẩm có discount_percent > 0 nên sẽ trống nếu sản phẩm chưa đặt % giảm.
+    Sản phẩm giảm nhiều nhất xếp trước, sau đó tới bán chạy nhất.
+    """
+    ctx = _base_context(request)
+    sale_products = (
+        Product.objects
+        .filter(is_flash_sale=True, is_approved=True)
+        .prefetch_related('catergory')
+        .order_by('-discount_percent', '-sold', '-id')
+    )
+
+    # Danh mục thật của các sản phẩm đang Flash Sale -> dùng làm tab lọc
+    flash_categories = (
+        Catergory.objects
+        .filter(product__is_flash_sale=True, product__is_approved=True)
+        .distinct()
+        .order_by('name')
+    )
+
+    ctx.update({
+        'sale_products': sale_products,
+        'flash_categories': flash_categories,
+        'page_title': 'Flash Sale',
+    })
     return render(request, 'shop/flash_sale.html', ctx)
 
 

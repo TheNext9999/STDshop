@@ -161,7 +161,7 @@
               <span id="seconds">59</span>
             </div>
           </div>
-          <a href="/html/flash-sale.html" class="view-all" style="text-decoration: none; color: inherit;">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+          <a href="{% url 'flash_sale' %}" class="view-all" style="text-decoration: none; color: inherit;">Xem tất cả <i class="fas fa-arrow-right"></i></a>
         </div>
 
         <div class="flash-sale-wrapper">
@@ -170,7 +170,7 @@
           <div class="flash-sale-grid" id="flashSaleGrid">
             {% load shop_filters %}
             {% for product in products|flash_sale_only %}
-            <div class="flash-card">
+            <a href="{% url 'detail' %}?id={{ product.id }}" class="flash-card" style="display:block;color:inherit;text-decoration:none;">
                 <div style="position:relative;">
                     <img src="{{ product.ImageURL }}" alt="{{ product.name }}">
                     {% if product.discount_percent %}
@@ -185,7 +185,7 @@
                     {% endif %}
                     <div class="sold-badge">BÁN CHẠY • {{ product.sold }}</div>
                 </div>
-            </div>
+            </a>
             {% empty %}
             <p style="color:white;">Chưa có sản phẩm Flash Sale nào.</p>
             {% endfor %}
