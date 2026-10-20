@@ -261,6 +261,7 @@
 
 /* ---- Sản phẩm gợi ý ---- */
 .pd-related { margin-top: 10px; }
+.pd-related-grid { margin-top: 4px; }
 
 /* ---- Không tìm thấy ---- */
 .pd-notfound { text-align: center; padding: 90px 20px; color: #6b7c78; }

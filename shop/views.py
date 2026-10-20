@@ -288,7 +288,12 @@ def detail(request):
         user_notlogin = 'visible'
 
     id = request.GET.get('id', '')
-    products = Product.objects.filter(id=id)
+    # id thiếu hoặc không phải số (vd /detail/ hoặc ?id=abc) -> coi như không tìm thấy
+    # sản phẩm, thay vì để filter(id='') báo lỗi 500.
+    if str(id).isdigit():
+        products = Product.objects.filter(id=int(id))
+    else:
+        products = Product.objects.none()
     categories = Catergory.objects.filter(is_sub=False)
     product = products.first()
 
@@ -448,9 +453,42 @@ def detail(request):
             extra = Product.objects.filter(is_approved=True).exclude(id__in=existing_ids)[:extra_needed]
             related_products = list(related_products) + list(extra)
 
+    # ── Thông tin người bán. seller=None nghĩa là sản phẩm của chính STDShop,
+    #    filter(seller=None) sẽ tự hiểu là "seller IS NULL" nên dùng chung được cho cả 2 trường hợp
+    #    (trước đây sản phẩm của shop luôn hiện "0 sản phẩm"). ──
     seller_product_count = 0
-    if product and product.seller:
-        seller_product_count = Product.objects.filter(seller=product.seller, is_approved=True).count()
+    seller_sold = 0
+    if product:
+        seller_products = Product.objects.filter(seller=product.seller, is_approved=True)
+        seller_product_count = seller_products.count()
+        seller_sold = seller_products.aggregate(total=Sum('sold'))['total'] or 0
+
+    # ── Thông tin hiển thị thêm trên trang chi tiết ──
+    wish_count = 0        # số người đã lưu sản phẩm vào yêu thích
+    savings = 0           # số tiền tiết kiệm được khi đang giảm giá
+    rating_bars = []      # phân bố số sao (5→1) của các đánh giá gốc đã duyệt
+    if product:
+        from django.db.models import Count
+        wish_count = Wishlist.objects.filter(product=product).count()
+        if product.discount_percent and product.discount_percent > 0:
+            savings = round(product.price - product.sale_price)
+
+        star_counts = dict(
+            Review.objects
+            .filter(product=product, is_approved=True, parent__isnull=True)
+            .order_by()
+            .values_list('rating')
+            .annotate(c=Count('id'))
+        )
+        total_stars = sum(star_counts.values())
+        rating_bars = [
+            {
+                'star': star,
+                'count': star_counts.get(star, 0),
+                'percent': round(star_counts.get(star, 0) * 100 / total_stars) if total_stars else 0,
+            }
+            for star in (5, 4, 3, 2, 1)
+        ]
 
     context = {
         'items': items, 'order': order, 'cartItems': cartItems,
@@ -464,6 +502,10 @@ def detail(request):
         'related_products': related_products,
         'wishlisted_ids': _get_wishlisted_ids(request),
         'seller_product_count': seller_product_count,
+        'seller_sold': seller_sold,
+        'wish_count': wish_count,
+        'savings': savings,
+        'rating_bars': rating_bars,
     }
     return render(request, 'shop/detail.html', context)
 

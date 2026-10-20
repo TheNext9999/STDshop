@@ -86,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
             [addBtn, buyBtn].forEach(btn => { if (btn) btn.disabled = state; });
         }
 
+        // Bấm "Mua ngay" khóa nút rồi chuyển sang giỏ hàng. Nếu người dùng bấm nút Quay lại,
+        // trình duyệt có thể khôi phục trang từ bộ nhớ đệm (bfcache) với nút vẫn đang bị khóa
+        // -> mở khóa lại khi trang được khôi phục.
+        window.addEventListener('pageshow', (e) => { if (e.persisted) setBusy(false); });
+
         if (addBtn) {
             addBtn.addEventListener('click', async () => {
                 if (busy) return;
