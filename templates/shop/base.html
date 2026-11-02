@@ -76,6 +76,7 @@
               <a href="{% url 'post_product' %}"><i class="fas fa-store"></i> Đăng bán sản phẩm</a>
               <a href="{% url 'my_products' %}"><i class="fas fa-boxes"></i> Sản phẩm tôi đã đăng</a>
               <a href="{% url 'voucher' %}"><i class="fas fa-ticket-alt"></i> Voucher &amp; Điểm</a>
+              <a href="#" target="_blank" rel="noopener"><i class="fa-brands fa-nfc-directional"></i> Quét sản phẩm</a>
               {% if user.is_staff %}
               <a href="{% url 'admin_dashboard' %}" style="color:#7c3aed;"><i class="fas fa-shield-alt"></i> Admin Panel</a>
               {% endif %}

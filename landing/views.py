@@ -9,15 +9,19 @@ import json
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.db.models import F
-from django.http import Http404
+from django.db.models import F, Count, Q, Avg
+from django.http import Http404, JsonResponse
 from django.urls import reverse
 
 # Dùng lại _base_context() của shop để navbar (giỏ hàng, danh mục,
 # trạng thái đăng nhập) hiển thị đồng bộ với toàn bộ site.
 from shop.views import _base_context
 
-from .models import MarketProduct, MarketReview, MarketWishlist
+from .models import (
+    MarketProduct, MarketReview, MarketWishlist, MarketOrder, MarketNotification,
+)
+from .notifications import notify
+from . import services
 
 
 def landing_home(request):
@@ -117,6 +121,8 @@ def landing_product(request, pk):
                 wish, created = MarketWishlist.objects.get_or_create(user=user, product=product)
                 if created:
                     messages.success(request, 'Đã lưu tin vào danh sách yêu thích.')
+                    notify(product.seller, 'product', 'Có người lưu tin của bạn',
+                           f'{user.username} vừa lưu sản phẩm "{product.name}" vào danh sách yêu thích.', detail_url)
                 else:
                     wish.delete()
                     messages.success(request, 'Đã bỏ lưu tin này.')
@@ -143,6 +149,10 @@ def landing_product(request, pk):
                         request,
                         'Cảm ơn bạn đã đánh giá!' if created else 'Đã cập nhật đánh giá của bạn.'
                     )
+                    if created:
+                        notify(product.seller, 'review', f'Đánh giá {rating}★ mới cho sản phẩm của bạn',
+                               f'{user.username} đã đánh giá "{product.name}": {comment[:120]}',
+                               detail_url + '#reviews')
 
         elif action == 'delete_review':
             anchor_suffix = '#reviews'
@@ -157,14 +167,28 @@ def landing_product(request, pk):
                 else:
                     messages.error(request, 'Không tìm thấy đánh giá hoặc bạn không có quyền xóa.')
 
+        elif action == 'place_order':
+            anchor_suffix = '#order-box'
+            order, msg = services.place_order(
+                product, user,
+                request.POST.get('receiver_name'), request.POST.get('phone'),
+                request.POST.get('address'), request.POST.get('note'),
+            )
+            (messages.success if order else messages.error)(request, msg)
+
+        elif action == 'cancel_my_order':
+            anchor_suffix = '#order-box'
+            order_id = request.POST.get('order_id') or ''
+            if order_id.isdigit():
+                ok, msg = services.cancel_order_by_buyer(int(order_id), user)
+            else:
+                ok, msg = False, 'Không tìm thấy đơn hàng.'
+            (messages.success if ok else messages.error)(request, msg)
+
         elif action == 'toggle_sold':
             if can_manage:
-                product.is_sold = not product.is_sold
-                product.save(update_fields=['is_sold'])
-                messages.success(
-                    request,
-                    'Đã đánh dấu sản phẩm là ĐÃ BÁN.' if product.is_sold else 'Đã mở bán lại sản phẩm.'
-                )
+                ok, msg = services.set_product_sold(product, not product.is_sold)
+                (messages.success if ok else messages.error)(request, msg)
             else:
                 messages.error(request, 'Bạn không có quyền thực hiện thao tác này.')
 
@@ -211,8 +235,26 @@ def landing_product(request, pk):
 
     seller_products = MarketProduct.objects.filter(seller=product.seller, is_approved=True)
 
+    # ---- Đặt mua: trạng thái đơn của người xem + sản phẩm có đang được giữ cho người khác không ----
+    my_order = None
+    if user.is_authenticated and not is_owner:
+        my_order = MarketOrder.objects.filter(product=product, buyer=user).order_by('-created_at').first()
+    my_order_active = bool(my_order and my_order.is_active)
+
+    holding_qs = MarketOrder.objects.filter(product=product, status__in=MarketOrder.HOLDING_STATUSES)
+    holding_other = (holding_qs.exclude(buyer=user) if user.is_authenticated else holding_qs).exists()
+
+    can_order = bool(
+        user.is_authenticated and not is_owner and product.is_approved and not product.is_sold
+        and not my_order_active and not holding_other
+    )
+
     ctx = _base_context(request)
     ctx.update({
+        'my_order': my_order,
+        'my_order_active': my_order_active,
+        'holding_other': holding_other,
+        'can_order': can_order,
         'product': product,
         'seller_name': product.seller.get_full_name() or product.seller.username,
         'is_owner': is_owner,
@@ -231,6 +273,139 @@ def landing_product(request, pk):
     return render(request, 'shop/landing/landing-detail.html', ctx)
 
 
+# Nhãn / class hiển thị trạng thái thẻ sản phẩm ở tab "Sản phẩm" của người bán
+LISTING_STATUS = {
+    'approved': ('status-approved', '✅ Đang rao', 'approved'),
+    'buyer':    ('status-sold',     '💰 Có người mua', 'trading'),
+    'shipping': ('status-shipping', '🚚 Đang giao', 'trading'),
+    'pending':  ('status-pending',  '⏳ Chờ duyệt', 'pending'),
+    'sold':     ('status-draft',    '🏷️ Đã bán', 'sold'),
+}
+
+
+def _flash(request, ok, message):
+    (messages.success if ok else messages.error)(request, message)
+
+
+def _handle_seller_action(request, action):
+    """Xử lý mọi thao tác POST ở kênh người bán, rồi quay lại đúng tab đang làm việc."""
+    user = request.user
+    tab = 'listings'
+    ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+    if action in ('product_toggle_sold', 'product_delete'):
+        tab = 'listings'
+        pid = request.POST.get('product_id') or ''
+        product = MarketProduct.objects.filter(pk=int(pid), seller=user).first() if pid.isdigit() else None
+        if product is None:
+            messages.error(request, 'Không tìm thấy sản phẩm hoặc bạn không phải người đăng.')
+        elif action == 'product_toggle_sold':
+            _flash(request, *services.set_product_sold(product, not product.is_sold))
+        else:
+            _flash(request, *services.delete_product(product))
+
+    elif action.startswith('order_'):
+        tab = 'orders'
+        oid = request.POST.get('order_id') or ''
+        if oid.isdigit():
+            _flash(request, *services.seller_update_order(int(oid), user, action[len('order_'):]))
+        else:
+            messages.error(request, 'Không tìm thấy đơn hàng.')
+
+    elif action in ('notif_read', 'notif_read_all'):
+        tab = 'notifs'
+        qs = MarketNotification.objects.filter(user=user, is_read=False)
+        if action == 'notif_read':
+            nid = request.POST.get('notif_id') or ''
+            qs = qs.filter(pk=int(nid)) if nid.isdigit() else qs.none()
+        qs.update(is_read=True)
+        if ajax:
+            return JsonResponse({
+                'ok': True,
+                'unread': MarketNotification.objects.filter(user=user, is_read=False).count(),
+            })
+        if action == 'notif_read_all':
+            messages.success(request, 'Đã đánh dấu tất cả thông báo là đã đọc.')
+
+    else:
+        messages.error(request, 'Thao tác không hợp lệ.')
+
+    if ajax:
+        return JsonResponse({'ok': False}, status=400)
+    return redirect(reverse('landing:landing_seller') + f'?tab={tab}')
+
+
+def _seller_dashboard_context(user):
+    """Số liệu thật cho kênh người bán: sản phẩm, đơn hàng, thông báo và các con số thống kê."""
+    ctx = {
+        'my_products': [], 'seller_orders': [], 'notifications': [],
+        'listing_counts': {'all': 0, 'approved': 0, 'trading': 0, 'pending': 0, 'sold': 0},
+        'order_counts': {'all': 0, 'pending': 0, 'confirmed': 0, 'shipping': 0, 'completed': 0, 'cancelled': 0},
+        'notif_unread': 0, 'seller_total_views': 0, 'seller_completion_rate': None,
+        'seller_rating': 0, 'seller_review_count': 0,
+        'seller_star_classes': ['far fa-star'] * 5,
+    }
+    if not user.is_authenticated:
+        return ctx
+
+    # ---- Sản phẩm ----
+    products = list(
+        MarketProduct.objects.filter(seller=user)
+        .annotate(
+            wish_total=Count('wishlisted_by', distinct=True),
+            pending_orders=Count('orders', filter=Q(orders__status='pending'), distinct=True),
+            holding_orders=Count('orders', filter=Q(orders__status__in=MarketOrder.HOLDING_STATUSES), distinct=True),
+            shipping_orders=Count('orders', filter=Q(orders__status='shipping'), distinct=True),
+        )
+        .order_by('-created_at')
+    )
+    listing_counts = {'all': len(products), 'approved': 0, 'trading': 0, 'pending': 0, 'sold': 0}
+    for p in products:
+        if p.is_sold:
+            key = 'sold'
+        elif not p.is_approved:
+            key = 'pending'
+        elif p.shipping_orders:
+            key = 'shipping'
+        elif p.holding_orders or p.pending_orders:
+            key = 'buyer'
+        else:
+            key = 'approved'
+        p.status_class, p.status_text, p.filter_key = LISTING_STATUS[key]
+        listing_counts[p.filter_key] += 1
+
+    # ---- Đơn hàng ----
+    orders = list(MarketOrder.objects.filter(seller=user).select_related('product', 'buyer'))
+    order_counts = {'all': len(orders), 'pending': 0, 'confirmed': 0, 'shipping': 0, 'completed': 0, 'cancelled': 0}
+    for o in orders:
+        order_counts[o.status] += 1
+    finished = order_counts['completed'] + order_counts['cancelled']
+    completion_rate = round(order_counts['completed'] * 100 / finished) if finished else None
+
+    # ---- Đánh giá của người bán (trung bình các đánh giá trên mọi sản phẩm của họ) ----
+    agg = MarketReview.objects.filter(product__seller=user).aggregate(avg=Avg('rating'), n=Count('id'))
+    rating = round(agg['avg'], 1) if agg['avg'] else 0
+    star_classes = [
+        'fas fa-star' if rating >= i else ('fas fa-star-half-alt' if rating >= i - 0.5 else 'far fa-star')
+        for i in range(1, 6)
+    ]
+
+    ctx.update({
+        'my_products': products,
+        'seller_orders': orders,
+        'notifications': list(MarketNotification.objects.filter(user=user)[:50]),
+        'listing_counts': listing_counts,
+        'order_counts': order_counts,
+        'notif_unread': MarketNotification.objects.filter(user=user, is_read=False).count(),
+        'seller_total_views': sum(p.views for p in products),
+        'seller_completion_rate': completion_rate,
+        'seller_rating': rating,
+        'seller_review_count': agg['n'],
+        'seller_star_classes': star_classes,
+    })
+    return ctx
+
+
 def landing_seller(request):
     """Sàn thanh lý đồ cũ sinh viên (STD Market) - phía người bán.
 
@@ -242,6 +417,11 @@ def landing_seller(request):
         if not request.user.is_authenticated:
             messages.error(request, 'Vui lòng đăng nhập để đăng bán sản phẩm.')
             return redirect('login')
+
+        # Các thao tác ở tab Sản phẩm / Đơn hàng / Thông báo đều gửi kèm `action`
+        action = (request.POST.get('action') or '').strip()
+        if action:
+            return _handle_seller_action(request, action)
 
         name = (request.POST.get('name') or '').strip()
         price = request.POST.get('price')
@@ -306,16 +486,13 @@ def landing_seller(request):
 
         product.save()
         messages.success(request, 'Đã đăng sản phẩm! Sản phẩm đang chờ kiểm duyệt.')
-        return redirect('landing:landing_seller')
+        notify(request.user, 'product', 'Tin đăng đang chờ duyệt',
+               f'Sản phẩm "{product.name}" đã được gửi và đang chờ kiểm duyệt. '
+               'Bạn sẽ nhận thông báo khi tin được duyệt.',
+               reverse('landing:landing_seller') + '?tab=listings')
+        return redirect(reverse('landing:landing_seller') + '?tab=listings')
 
     ctx = _base_context(request)
-
-    my_products = []
-    if request.user.is_authenticated:
-        my_products = MarketProduct.objects.filter(seller=request.user)
-
-    ctx.update({
-        'category_choices': MarketProduct.CATEGORY_CHOICES,
-        'my_products': my_products,
-    })
+    ctx['category_choices'] = MarketProduct.CATEGORY_CHOICES
+    ctx.update(_seller_dashboard_context(request.user))
     return render(request, 'shop/landing/landing-seller.html', ctx)

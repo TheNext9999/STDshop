@@ -129,3 +129,114 @@ class MarketReview(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.rating}★ bởi {self.user.username}"
+
+
+class MarketOrder(models.Model):
+    """Đơn đặt mua 1 sản phẩm thanh lý.
+    Luồng: pending (chờ xác nhận) -> confirmed -> shipping -> completed, hoặc cancelled."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Chờ xác nhận'),
+        ('confirmed', 'Đã xác nhận'),
+        ('shipping', 'Đang giao'),
+        ('completed', 'Hoàn thành'),
+        ('cancelled', 'Đã hủy'),
+    ]
+    ACTIVE_STATUSES = ('pending', 'confirmed', 'shipping')   # đơn còn đang xử lý
+    HOLDING_STATUSES = ('confirmed', 'shipping')             # đang giữ hàng cho đúng 1 người mua
+
+    PLATFORM_FEE_PERCENT = 2
+
+    # PROTECT: không cho xóa sản phẩm đã có đơn (tránh mất lịch sử giao dịch)
+    product = models.ForeignKey(MarketProduct, on_delete=models.PROTECT, related_name='orders')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='market_orders_bought')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='market_orders_sold')
+
+    price = models.PositiveIntegerField("Giá chốt (đ)")
+    receiver_name = models.CharField("Người nhận", max_length=100)
+    phone = models.CharField("Số điện thoại", max_length=20)
+    address = models.CharField("Địa chỉ nhận hàng", max_length=255)
+    note = models.TextField("Ghi chú", blank=True)
+
+    status = models.CharField("Trạng thái", max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Đơn hàng thanh lý"
+        verbose_name_plural = "Đơn hàng thanh lý"
+
+    def __str__(self):
+        return f"{self.order_code} - {self.product.name}"
+
+    @property
+    def order_code(self):
+        return f"#STD{self.pk:04d}"
+
+    @property
+    def status_label(self):
+        return dict(self.STATUS_CHOICES).get(self.status, self.status)
+
+    @property
+    def status_class(self):
+        return {
+            'pending': 'os-pending', 'confirmed': 'os-buyer', 'shipping': 'os-shipping',
+            'completed': 'os-done', 'cancelled': 'os-cancel',
+        }.get(self.status, 'os-pending')
+
+    @property
+    def status_icon(self):
+        return {
+            'pending': 'fa-clock', 'confirmed': 'fa-check', 'shipping': 'fa-truck',
+            'completed': 'fa-check-double', 'cancelled': 'fa-times',
+        }.get(self.status, 'fa-clock')
+
+    @property
+    def is_active(self):
+        return self.status in self.ACTIVE_STATUSES
+
+    @property
+    def platform_fee(self):
+        return self.price * self.PLATFORM_FEE_PERCENT // 100
+
+    @property
+    def seller_receive(self):
+        return self.price - self.platform_fee
+
+
+class MarketNotification(models.Model):
+    """Thông báo của STD Market gửi tới người dùng (đơn hàng, sản phẩm, đánh giá...).
+    Tách riêng với Notification của STDShop để 2 hệ thống độc lập."""
+
+    KIND_CHOICES = [
+        ('order', 'Đơn hàng'),
+        ('product', 'Sản phẩm'),
+        ('review', 'Đánh giá'),
+        ('system', 'Hệ thống'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='market_notifications')
+    kind = models.CharField("Loại", max_length=20, choices=KIND_CHOICES, default='system')
+    title = models.CharField("Tiêu đề", max_length=200)
+    message = models.TextField("Nội dung", blank=True)
+    link = models.CharField("Liên kết", max_length=300, blank=True)
+    is_read = models.BooleanField("Đã đọc", default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Thông báo STD Market"
+        verbose_name_plural = "Thông báo STD Market"
+
+    def __str__(self):
+        return f"{self.user.username}: {self.title}"
+
+    @property
+    def icon_class(self):
+        return {'order': 'fa-shopping-bag', 'product': 'fa-check-circle',
+                'review': 'fa-star', 'system': 'fa-bell'}.get(self.kind, 'fa-bell')
+
+    @property
+    def color_class(self):
+        return {'order': 'cyan', 'product': 'green', 'review': 'orange', 'system': 'blue'}.get(self.kind, 'blue')
