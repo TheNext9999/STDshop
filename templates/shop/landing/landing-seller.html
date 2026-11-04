@@ -1,5 +1,5 @@
 {% extends "shop/base.html" %}
-{% load static %}
+{% load static shop_filters landing_extras %}
 
 {% block title %}STD MarketSeller - Kenh Nguoi Ban{% endblock %}
 
@@ -82,22 +82,18 @@
       <h4>{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Khách{% endif %}</h4>
       <p>{% if user.is_authenticated %}Thành viên từ {{ user.date_joined|date:"m/Y" }}{% else %}Vui lòng đăng nhập{% endif %}</p>
       <div class="seller-rating">
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star-half-alt"></i>
-        <span style="margin-left:4px; color:var(--text);">4.8</span>
-        <span style="color:var(--text-3);">(32)</span>
+        {% for star_class in seller_star_classes %}<i class="{{ star_class }}"></i>{% endfor %}
+        <span style="margin-left:4px; color:var(--text);">{% if seller_review_count %}{{ seller_rating }}{% else %}Chưa có đánh giá{% endif %}</span>
+        {% if seller_review_count %}<span style="color:var(--text-3);">({{ seller_review_count }})</span>{% endif %}
       </div>
     </div>
 
     <!-- MINI STATS -->
     <div class="side-stats">
-      <div class="side-stat"><div class="num">12</div><div class="lbl">Đang rao</div></div>
-      <div class="side-stat"><div class="num">28</div><div class="lbl">Đã bán</div></div>
-      <div class="side-stat"><div class="num">3</div><div class="lbl">Chờ duyệt</div></div>
-      <div class="side-stat"><div class="num">98%</div><div class="lbl">Hoàn thành</div></div>
+      <div class="side-stat"><div class="num">{{ listing_counts.approved|add:listing_counts.trading }}</div><div class="lbl">Đang rao</div></div>
+      <div class="side-stat"><div class="num">{{ listing_counts.sold }}</div><div class="lbl">Đã bán</div></div>
+      <div class="side-stat"><div class="num">{{ listing_counts.pending }}</div><div class="lbl">Chờ duyệt</div></div>
+      <div class="side-stat"><div class="num">{% if seller_completion_rate is None %}—{% else %}{{ seller_completion_rate }}%{% endif %}</div><div class="lbl">Hoàn thành</div></div>
     </div>
 
     <!-- NAV -->
@@ -108,11 +104,11 @@
     </div>
     <div class="sidebar-item" onclick="switchTab('listings')">
       <i class="fas fa-box-open"></i> Sản phẩm của tôi
-      <span class="sidebar-badge">12</span>
+      {% if listing_counts.all %}<span class="sidebar-badge">{{ listing_counts.all }}</span>{% endif %}
     </div>
     <div class="sidebar-item" onclick="switchTab('orders')">
       <i class="fas fa-receipt"></i> Quản lý đơn hàng
-      <span class="sidebar-badge orange">2</span>
+      {% if order_counts.pending %}<span class="sidebar-badge orange" id="sideOrderBadge">{{ order_counts.pending }}</span>{% endif %}
     </div>
     <div class="sidebar-item" onclick="switchTab('wallet')">
       <i class="fas fa-wallet"></i> Ví & Thu nhập
@@ -120,7 +116,7 @@
 
     <div class="sidebar-item" onclick="switchTab('notifs')">
       <i class="fas fa-bell"></i> Thông báo
-      <span class="sidebar-badge green">4</span>
+      {% if notif_unread %}<span class="sidebar-badge green" id="sideNotifBadge">{{ notif_unread }}</span>{% endif %}
     </div>
   </aside>
 
@@ -146,21 +142,21 @@
       </div>
       <div class="stat-card">
         <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
-        <div class="num">3</div>
+        <div class="num">{{ listing_counts.pending }}</div>
         <div class="lbl">Sản phẩm chờ duyệt</div>
-        <div class="change" style="color:#f97316;">Đang xem xét</div>
+        <div class="change" style="color:#f97316;">{% if listing_counts.pending %}Đang xem xét{% else %}Không có tin chờ duyệt{% endif %}</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon green"><i class="fas fa-handshake"></i></div>
-        <div class="num">2</div>
+        <div class="num">{{ order_counts.pending }}</div>
         <div class="lbl">Đơn hàng cần xử lý</div>
-        <div class="change" style="color:#22c55e;">Hành động ngay</div>
+        <div class="change" style="color:#22c55e;">{% if order_counts.pending %}Hành động ngay{% else %}Không có đơn mới{% endif %}</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon blue"><i class="fas fa-eye"></i></div>
-        <div class="num">248</div>
-        <div class="lbl">Lượt xem hôm nay</div>
-        <div class="change">↑ +18% so với hôm qua</div>
+        <div class="num">{{ seller_total_views }}</div>
+        <div class="lbl">Tổng lượt xem các tin</div>
+        <div class="change">Cộng dồn trên mọi tin đăng</div>
       </div>
     </div>
 
@@ -176,22 +172,22 @@
         <div class="pip-step done">
           <div class="pip-circle"><i class="fas fa-check"></i></div>
           <div class="pip-label">Đang duyệt</div>
-          <div class="pip-count">3 đang chờ</div>
+          <div class="pip-count">{{ listing_counts.pending }} đang chờ</div>
         </div>
         <div class="pip-step active">
           <div class="pip-circle"><i class="fas fa-shopping-cart"></i></div>
           <div class="pip-label">Có người mua</div>
-          <div class="pip-count">2 đơn mới</div>
+          <div class="pip-count">{{ order_counts.pending }} đơn mới</div>
         </div>
         <div class="pip-step">
           <div class="pip-circle"><i class="fas fa-truck"></i></div>
           <div class="pip-label">Gửi hàng</div>
-          <div class="pip-count">Chờ xử lý</div>
+          <div class="pip-count">{{ order_counts.shipping }} đang giao</div>
         </div>
         <div class="pip-step">
           <div class="pip-circle"><i class="fas fa-wallet"></i></div>
           <div class="pip-label">Nhận tiền</div>
-          <div class="pip-count">Sau xác nhận</div>
+          <div class="pip-count">{{ order_counts.completed }} hoàn tất</div>
         </div>
       </div>
     </div>
@@ -199,21 +195,31 @@
     <!-- ======================================
          TABS
     ====================================== -->
+    {% if messages %}
+    <div class="sl-messages">
+      {% for message in messages %}
+      <div class="sl-msg {% if message.tags == 'error' %}sl-msg-error{% else %}sl-msg-success{% endif %}">
+        <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i> {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="tabs" id="mainTabs">
       <button class="tab-btn active" onclick="switchTab('post')">
         <i class="fas fa-plus"></i> Đăng bán <span class="cnt">Mới</span>
       </button>
       <button class="tab-btn" onclick="switchTab('listings')">
-        <i class="fas fa-box"></i> Sản phẩm <span class="cnt">12</span>
+        <i class="fas fa-box"></i> Sản phẩm <span class="cnt">{{ listing_counts.all }}</span>
       </button>
       <button class="tab-btn" onclick="switchTab('orders')">
-        <i class="fas fa-receipt"></i> Đơn hàng <span class="cnt">2</span>
+        <i class="fas fa-receipt"></i> Đơn hàng {% if order_counts.pending %}<span class="cnt" id="orderTabCnt">{{ order_counts.pending }}</span>{% endif %}
       </button>
       <button class="tab-btn" onclick="switchTab('wallet')">
         <i class="fas fa-wallet"></i> Ví tiền
       </button>
       <button class="tab-btn" onclick="switchTab('notifs')">
-        <i class="fas fa-bell"></i> Thông báo <span class="cnt">4</span>
+        <i class="fas fa-bell"></i> Thông báo {% if notif_unread %}<span class="cnt" id="notifTabCnt">{{ notif_unread }}</span>{% endif %}
       </button>
     </div>
 
@@ -233,16 +239,6 @@
 
         <form class="form-body" method="post" action="{% url 'landing:landing_seller' %}" enctype="multipart/form-data" id="postProductForm">
           {% csrf_token %}
-
-          {% if messages %}
-            {% for message in messages %}
-            <div style="padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:.9rem;font-weight:600;
-                        background:{% if message.tags == 'error' %}#FEF2F2{% else %}#e8f7f4{% endif %};
-                        color:{% if message.tags == 'error' %}#DC2626{% else %}#00a68f{% endif %};">
-              {{ message }}
-            </div>
-            {% endfor %}
-          {% endif %}
 
           <!-- SECTION 1: ẢNH -->
           <div class="form-section-title"><i class="fas fa-camera"></i> Hình ảnh sản phẩm</div>
@@ -420,160 +416,67 @@
          TAB: SẢN PHẨM CỦA TÔI
     ====================================== -->
     <div class="tab-panel" id="tab-listings">
-      <div class="listing-filters">
-        <span class="filter-chip active">Tất cả (12)</span>
-        <span class="filter-chip">Đang rao (6)</span>
-        <span class="filter-chip">Chờ duyệt (3)</span>
-        <span class="filter-chip">Đã bán (2)</span>
-        <span class="filter-chip">Nháp (1)</span>
+      <div class="listing-filters" id="listingFilters">
+        <div class="filter-chip active" data-filter="all">Tất cả ({{ listing_counts.all }})</div>
+        <div class="filter-chip" data-filter="approved">Đang rao ({{ listing_counts.approved }})</div>
+        <div class="filter-chip" data-filter="trading">Đang giao dịch ({{ listing_counts.trading }})</div>
+        <div class="filter-chip" data-filter="pending">Chờ duyệt ({{ listing_counts.pending }})</div>
+        <div class="filter-chip" data-filter="sold">Đã bán ({{ listing_counts.sold }})</div>
         <div class="search-input-wrap">
           <i class="fas fa-search"></i>
-          <input type="text" placeholder="Tìm theo tên sản phẩm...">
+          <input type="text" id="listingSearch" placeholder="Tìm theo tên sản phẩm..." autocomplete="off">
         </div>
       </div>
 
-      <div class="product-grid">
-        <!-- Card 1 -->
-        <div class="product-card">
-  <div class="product-card-img">
-    <img src="{% static 'css/pic/asus.webp' %}" alt="Laptop Asus Vivobook 15">
-
-    <div class="product-status-badge status-approved">
-      ✅ Đang rao
-    </div>
-  </div>
-
-  <div class="product-card-body">
-    <h4>Laptop Asus Vivobook 15</h4>
-
-    <div class="product-card-meta">
-      <span class="cond-tag">90%</span>
-      <span><i class="fas fa-eye"></i> 128 lượt xem</span>
-    </div>
-
-    <div class="product-card-footer">
-      <div class="product-price">4.200.000đ</div>
-
-      <div class="card-actions">
-        <button class="card-btn">
-          <i class="fas fa-edit"></i>
-        </button>
-
-        <button class="card-btn danger">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-        <!-- Card 2 -->
-        <div class="product-card">
+      <div class="product-grid" id="listingGrid">
+        {% for p in my_products %}
+        <div class="product-card" data-status="{{ p.filter_key }}" data-name="{{ p.name|lower }}">
           <div class="product-card-img">
-            <img src="{% static 'css/pic/gtrinh1.png' %}" alt="Laptop Asus Vivobook 15">
-            <div class="product-status-badge status-pending">⏳ Chờ duyệt</div>
+            {% if p.ImageURL %}
+              <img src="{{ p.ImageURL }}" alt="{{ p.name }}">
+            {% else %}
+              <div class="listing-noimg"><i class="fas fa-image"></i></div>
+            {% endif %}
+            <div class="product-status-badge {{ p.status_class }}">{{ p.status_text }}</div>
           </div>
           <div class="product-card-body">
-            <h4>Bộ sách Kế toán năm 3</h4>
+            <h4><a href="{% url 'landing:landing_product' p.id %}">{{ p.name }}</a></h4>
             <div class="product-card-meta">
-              <span class="cond-tag">Mới</span>
-              <span><i class="fas fa-clock"></i> Đăng 2h trước</span>
+              <span class="cond-tag">{{ p.condition_label }}</span>
+              <span><i class="fas fa-eye"></i> {{ p.views }}</span>
+              <span><i class="fas fa-heart"></i> {{ p.wish_total }}</span>
             </div>
             <div class="product-card-footer">
-              <div class="product-price">150.000đ</div>
-              <div class="card-actions">
-                <button class="card-btn"><i class="fas fa-edit"></i></button>
-                <button class="card-btn danger"><i class="fas fa-trash"></i></button>
+              <div class="product-price">{{ p.price|vnd }}</div>
+              <div class="sl-card-actions">
+                <a class="card-btn" href="{% url 'landing:landing_product' p.id %}" title="Xem tin"><i class="fas fa-eye"></i></a>
+                <form method="post" class="sl-row-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="product_toggle_sold">
+                  <input type="hidden" name="product_id" value="{{ p.id }}">
+                  <button type="submit" class="card-btn" title="{% if p.is_sold %}Mở bán lại{% else %}Đánh dấu đã bán{% endif %}">
+                    <i class="fas {% if p.is_sold %}fa-undo{% else %}fa-check-double{% endif %}"></i>
+                  </button>
+                </form>
+                <form method="post" class="sl-row-form" onsubmit="return confirm('Xóa sản phẩm này? Thao tác không thể hoàn tác.');">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="product_delete">
+                  <input type="hidden" name="product_id" value="{{ p.id }}">
+                  <button type="submit" class="card-btn danger" title="Xóa"><i class="fas fa-trash"></i></button>
+                </form>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Card 3 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="{% static 'css/pic/sony.jpg' %}" alt="Laptop Asus Vivobook 15">
-            <div class="product-status-badge status-sold">💰 Có người mua</div>
-          </div>
-          <div class="product-card-body">
-            <h4>Tai nghe Sony WH-1000XM4</h4>
-            <div class="product-card-meta">
-              <span class="cond-tag">90%</span>
-              <span><i class="fas fa-fire"></i> 3 người quan tâm</span>
-            </div>
-            <div class="product-card-footer">
-              <div class="product-price">2.100.000đ</div>
-              <div class="card-actions">
-                <button class="card-btn"><i class="fas fa-eye"></i></button>
-                <button class="card-btn danger"><i class="fas fa-times"></i></button>
-              </div>
-            </div>
-          </div>
+        {% empty %}
+        <div class="sl-empty">
+          <i class="fas fa-box-open"></i>
+          <p>{% if user.is_authenticated %}Bạn chưa đăng sản phẩm nào. Hãy đăng sản phẩm đầu tiên ở tab "Đăng bán"!{% else %}Vui lòng đăng nhập để xem sản phẩm của bạn.{% endif %}</p>
         </div>
-
-        <!-- Card 4 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="{% static 'css/pic/xe.jpeg' %}" alt="Laptop Asus Vivobook 15">
-            <div class="product-status-badge status-shipping">🚚 Đang giao</div>
-          </div>
-          <div class="product-card-body">
-            <h4>Xe đạp Nhật cũ</h4>
-            <div class="product-card-meta">
-              <span class="cond-tag">70%</span>
-              <span><i class="fas fa-truck"></i> Shipper đang lấy</span>
-            </div>
-            <div class="product-card-footer">
-              <div class="product-price">800.000đ</div>
-              <div class="card-actions">
-                <button class="card-btn"><i class="fas fa-map-marker-alt"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="{% static 'css/pic/ban.jpg' %}" alt="Laptop Asus Vivobook 15">
-            <div class="product-status-badge status-draft">📝 Nháp</div>
-          </div>
-          <div class="product-card-body">
-            <h4>Bàn học gấp</h4>
-            <div class="product-card-meta">
-              <span class="cond-tag">Mới</span>
-              <span style="color:#f97316;"><i class="fas fa-images"></i> Thiếu ảnh</span>
-            </div>
-            <div class="product-card-footer">
-              <div class="product-price">250.000đ</div>
-              <div class="card-actions">
-                <button class="card-btn" onclick="switchTab('post')"><i class="fas fa-edit"></i></button>
-                <button class="card-btn danger"><i class="fas fa-trash"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="product-card">
-          <div class="product-card-img">
-            <img src="{% static 'css/pic/ip12.webp' %}" alt="Laptop Asus Vivobook 15">
-            <div class="product-status-badge status-approved">✅ Đang rao</div>
-          </div>
-          <div class="product-card-body">
-            <h4>iPhone 12 – 64GB Đen</h4>
-            <div class="product-card-meta">
-              <span class="cond-tag">90%</span>
-              <span><i class="fas fa-eye"></i> 85 lượt xem</span>
-            </div>
-            <div class="product-card-footer">
-              <div class="product-price">5.500.000đ</div>
-              <div class="card-actions">
-                <button class="card-btn"><i class="fas fa-edit"></i></button>
-                <button class="card-btn danger"><i class="fas fa-trash"></i></button>
-              </div>
-            </div>
-          </div>
+        {% endfor %}
+        <div class="sl-empty" id="listingNoResult" style="display:none;">
+          <i class="fas fa-search"></i>
+          <p>Không có sản phẩm nào phù hợp với bộ lọc.</p>
         </div>
       </div>
     </div><!-- /tab-listings -->
@@ -582,8 +485,17 @@
          TAB: ĐƠN HÀNG
     ====================================== -->
     <div class="tab-panel" id="tab-orders">
+      <div class="listing-filters" id="orderFilters">
+        <div class="filter-chip active" data-filter="all">Tất cả ({{ order_counts.all }})</div>
+        <div class="filter-chip" data-filter="pending">Chờ xác nhận ({{ order_counts.pending }})</div>
+        <div class="filter-chip" data-filter="confirmed">Đã xác nhận ({{ order_counts.confirmed }})</div>
+        <div class="filter-chip" data-filter="shipping">Đang giao ({{ order_counts.shipping }})</div>
+        <div class="filter-chip" data-filter="completed">Hoàn thành ({{ order_counts.completed }})</div>
+        <div class="filter-chip" data-filter="cancelled">Đã hủy ({{ order_counts.cancelled }})</div>
+      </div>
+
       <div class="order-table-wrap">
-        <table class="order-table">
+        <table class="order-table" id="orderTable">
           <thead>
             <tr>
               <th>Sản phẩm</th>
@@ -591,114 +503,62 @@
               <th>Thời gian</th>
               <th>Giá</th>
               <th>Trạng thái</th>
-              <th>Hành động</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            {% for o in seller_orders %}
+            <tr data-status="{{ o.status }}">
               <td>
                 <div class="order-product">
-                  <div class="order-product-thumb">🎧</div>
+                  <div class="order-product-thumb">{% if o.product.ImageURL %}<img src="{{ o.product.ImageURL }}" alt="">{% endif %}</div>
                   <div class="order-product-info">
-                    <h5>Tai nghe Sony WH-1000XM4</h5>
-                    <p>90% · Có hộp</p>
+                    <h5>{{ o.product.name }}</h5>
+                    <p>{{ o.order_code }} · {{ o.product.condition_label }}</p>
                   </div>
                 </div>
               </td>
+              <td><strong>{{ o.receiver_name }}</strong><br><span class="sl-sub">@{{ o.buyer.username }}</span></td>
+              <td>{{ o.created_at|time_ago }}</td>
+              <td><strong>{{ o.price|vnd }}</strong></td>
+              <td><span class="order-status {{ o.status_class }}"><i class="fas {{ o.status_icon }}"></i> {{ o.status_label }}</span></td>
               <td>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <img src="https://ui-avatars.com/api/?name=Minh+Anh&background=00C9B0&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
-                  <span style="font-weight:600;">Minh Anh</span>
-                </div>
-              </td>
-              <td style="color:var(--text-3); font-size:.82rem;">30 phút trước</td>
-              <td><strong style="color:var(--cyan);">2.100.000đ</strong></td>
-              <td><span class="order-status os-buyer"><i class="fas fa-user"></i> Đã có người mua</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="action-btn-sm primary" onclick="confirmOrder()">Xác nhận & Gửi hàng</button>
-                  <button class="action-btn-sm" onclick="openModal()">Chi tiết</button>
-                </div>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <div class="order-product">
-                  <div class="order-product-thumb">💻</div>
-                  <div class="order-product-info">
-                    <h5>Laptop Asus Vivobook 15</h5>
-                    <p>90% · Kèm túi + sạc</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <img src="https://ui-avatars.com/api/?name=Huu+Duc&background=3b82f6&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
-                  <span style="font-weight:600;">Hữu Đức</span>
-                </div>
-              </td>
-              <td style="color:var(--text-3); font-size:.82rem;">2 giờ trước</td>
-              <td><strong style="color:var(--cyan);">4.200.000đ</strong></td>
-              <td><span class="order-status os-shipping"><i class="fas fa-truck"></i> Đang giao hàng</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="action-btn-sm">Theo dõi đơn</button>
-                  <button class="action-btn-sm" onclick="openModal()">Chi tiết</button>
+                <div class="sl-order-actions">
+                  <button type="button" class="sl-act" onclick="openOrderModal(this)"
+                          data-code="{{ o.order_code }}"
+                          data-product="{{ o.product.name }}"
+                          data-img="{{ o.product.ImageURL }}"
+                          data-buyer="{{ o.receiver_name }} (@{{ o.buyer.username }})"
+                          data-phone="{{ o.phone }}"
+                          data-address="{{ o.address }}"
+                          data-note="{{ o.note }}"
+                          data-time="{{ o.created_at|date:'d/m/Y H:i' }}"
+                          data-status="{{ o.status_label }}"
+                          data-price="{{ o.price|vnd }}"
+                          data-fee="{{ o.platform_fee|vnd }}"
+                          data-net="{{ o.seller_receive|vnd }}"><i class="fas fa-eye"></i> Chi tiết</button>
+              {% if o.status == 'pending' %}
+                <form method="post" class="sl-row-form">{% csrf_token %}<input type="hidden" name="action" value="order_confirm"><input type="hidden" name="order_id" value="{{ o.id }}"><button type="submit" class="sl-act sl-act-primary"><i class="fas fa-check"></i> Xác nhận</button></form>
+                <form method="post" class="sl-row-form" onsubmit="return confirm('Từ chối đơn {{ o.order_code }}?');">{% csrf_token %}<input type="hidden" name="action" value="order_cancel"><input type="hidden" name="order_id" value="{{ o.id }}"><button type="submit" class="sl-act sl-act-danger"><i class="fas fa-times"></i> Từ chối</button></form>
+              {% elif o.status == 'confirmed' %}
+                <form method="post" class="sl-row-form">{% csrf_token %}<input type="hidden" name="action" value="order_ship"><input type="hidden" name="order_id" value="{{ o.id }}"><button type="submit" class="sl-act sl-act-primary"><i class="fas fa-truck"></i> Bắt đầu giao</button></form>
+                <form method="post" class="sl-row-form" onsubmit="return confirm('Hủy đơn {{ o.order_code }}?');">{% csrf_token %}<input type="hidden" name="action" value="order_cancel"><input type="hidden" name="order_id" value="{{ o.id }}"><button type="submit" class="sl-act sl-act-danger"><i class="fas fa-times"></i> Hủy</button></form>
+              {% elif o.status == 'shipping' %}
+                <form method="post" class="sl-row-form" onsubmit="return confirm('Xác nhận người mua đã nhận hàng và hoàn tất giao dịch {{ o.order_code }}?');">{% csrf_token %}<input type="hidden" name="action" value="order_complete"><input type="hidden" name="order_id" value="{{ o.id }}"><button type="submit" class="sl-act sl-act-primary"><i class="fas fa-check-double"></i> Hoàn tất</button></form>
+                <form method="post" class="sl-row-form" onsubmit="return confirm('Hủy đơn {{ o.order_code }}?');">{% csrf_token %}<input type="hidden" name="action" value="order_cancel"><input type="hidden" name="order_id" value="{{ o.id }}"><button type="submit" class="sl-act sl-act-danger"><i class="fas fa-times"></i> Hủy</button></form>
+              {% endif %}
                 </div>
               </td>
             </tr>
-
-            <tr>
-              <td>
-                <div class="order-product">
-                  <div class="order-product-thumb">🚲</div>
-                  <div class="order-product-info">
-                    <h5>Xe đạp Nhật cũ</h5>
-                    <p>70% · Gặp mặt trực tiếp</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <img src="https://ui-avatars.com/api/?name=Le+Huong&background=f97316&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
-                  <span style="font-weight:600;">Lê Hương</span>
-                </div>
-              </td>
-              <td style="color:var(--text-3); font-size:.82rem;">Hôm qua</td>
-              <td><strong style="color:var(--cyan);">800.000đ</strong></td>
-              <td><span class="order-status os-done"><i class="fas fa-check-circle"></i> Hoàn thành</span></td>
-              <td>
-                <button class="action-btn-sm primary" onclick="showToast('💰 Tiền đã được chuyển vào ví của bạn!')">Nhận 800.000đ</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <div class="order-product">
-                  <div class="order-product-thumb">📚</div>
-                  <div class="order-product-info">
-                    <h5>Bộ sách giáo trình Kế toán</h5>
-                    <p>Mới · Nguyên seal</p>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <img src="https://ui-avatars.com/api/?name=Tran+Nam&background=22c55e&color=fff&size=32" style="border-radius:50%; width:30px; height:30px;">
-                  <span style="font-weight:600;">Trần Nam</span>
-                </div>
-              </td>
-              <td style="color:var(--text-3); font-size:.82rem;">Đang chờ</td>
-              <td><strong style="color:var(--cyan);">150.000đ</strong></td>
-              <td><span class="order-status os-pending"><i class="fas fa-clock"></i> Chờ xác nhận</span></td>
-              <td>
-                <div style="display:flex;gap:6px;">
-                  <button class="action-btn-sm primary" onclick="showToast('✅ Đã xác nhận đơn hàng!')">Xác nhận</button>
-                  <button class="action-btn-sm" style="color:#e03e3e;" onclick="showToast('❌ Đã từ chối đơn hàng')">Từ chối</button>
-                </div>
-              </td>
-            </tr>
+            {% empty %}
+            <tr id="orderEmptyRow"><td colspan="6">
+              <div class="sl-empty">
+                <i class="fas fa-receipt"></i>
+                <p>{% if user.is_authenticated %}Chưa có đơn đặt mua nào. Khi có người đặt mua, đơn sẽ hiện ở đây.{% else %}Vui lòng đăng nhập để xem đơn hàng.{% endif %}</p>
+              </div>
+            </td></tr>
+            {% endfor %}
+            <tr id="orderNoResult" style="display:none;"><td colspan="6"><div class="sl-empty"><i class="fas fa-search"></i><p>Không có đơn hàng nào ở trạng thái này.</p></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -792,64 +652,34 @@
          TAB: THÔNG BÁO
     ====================================== -->
     <div class="tab-panel" id="tab-notifs">
-      <div class="notif-list">
-        <div class="notif-item unread" onclick="this.classList.remove('unread')">
-          <div class="notif-icon cyan"><i class="fas fa-shopping-bag"></i></div>
-          <div class="notif-body">
-            <h5>🎉 Có người muốn mua Tai nghe Sony WH-1000XM4!</h5>
-            <p>Minh Anh (Đại học Ngoại Thương) muốn mua với giá 2.100.000đ. Xác nhận ngay để giữ đơn hàng.</p>
-            <div class="notif-time">30 phút trước</div>
-          </div>
-          <div class="notif-dot"></div>
-        </div>
+      <div class="sl-notif-toolbar">
+        <span id="notifSummary">{% if notif_unread %}{{ notif_unread }} thông báo chưa đọc{% else %}Bạn đã đọc hết thông báo{% endif %}</span>
+        {% if notifications %}
+        <form method="post" class="sl-row-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="notif_read_all">
+          <button type="submit" class="sl-act"><i class="fas fa-check-double"></i> Đánh dấu tất cả đã đọc</button>
+        </form>
+        {% endif %}
+      </div>
 
-        <div class="notif-item unread" onclick="this.classList.remove('unread')">
-          <div class="notif-icon green"><i class="fas fa-check-circle"></i></div>
+      <div class="notif-list" id="notifList">
+        {% for n in notifications %}
+        <div class="notif-item {% if not n.is_read %}unread{% endif %}" data-notif-id="{{ n.id }}" data-link="{{ n.link }}">
+          <div class="notif-icon {{ n.color_class }}"><i class="fas {{ n.icon_class }}"></i></div>
           <div class="notif-body">
-            <h5>✅ Sản phẩm đã được duyệt!</h5>
-            <p>Bộ sách giáo trình Kế toán năm 3 của bạn đã được STD kiểm duyệt và hiển thị trên sàn.</p>
-            <div class="notif-time">2 giờ trước</div>
+            <h5>{{ n.title }}</h5>
+            <p>{{ n.message }}</p>
+            <div class="notif-time">{{ n.created_at|time_ago }}</div>
           </div>
-          <div class="notif-dot"></div>
+          {% if not n.is_read %}<div class="notif-dot"></div>{% endif %}
         </div>
-
-        <div class="notif-item unread" onclick="this.classList.remove('unread')">
-          <div class="notif-icon orange"><i class="fas fa-star"></i></div>
-          <div class="notif-body">
-            <h5>⭐ Người mua vừa để lại đánh giá 5 sao!</h5>
-            <p>Lê Hương đánh giá: "Người bán rất nhiệt tình, hàng đúng mô tả, giao hàng nhanh. Rất hài lòng!"</p>
-            <div class="notif-time">3 giờ trước</div>
-          </div>
-          <div class="notif-dot"></div>
+        {% empty %}
+        <div class="sl-empty">
+          <i class="fas fa-bell-slash"></i>
+          <p>{% if user.is_authenticated %}Chưa có thông báo nào.{% else %}Vui lòng đăng nhập để xem thông báo.{% endif %}</p>
         </div>
-
-        <div class="notif-item unread" onclick="this.classList.remove('unread')">
-          <div class="notif-icon blue"><i class="fas fa-wallet"></i></div>
-          <div class="notif-body">
-            <h5>💰 Tiền đã vào ví!</h5>
-            <p>800.000đ từ giao dịch xe đạp Nhật đã được chuyển vào ví của bạn. Rút về ngân hàng ngay!</p>
-            <div class="notif-time">4 giờ trước</div>
-          </div>
-          <div class="notif-dot"></div>
-        </div>
-
-        <div class="notif-item">
-          <div class="notif-icon cyan"><i class="fas fa-eye"></i></div>
-          <div class="notif-body">
-            <h5>👀 iPhone 12 của bạn đang hot!</h5>
-            <p>Sản phẩm iPhone 12 của bạn vừa đạt 80 lượt xem. Có 2 người đang quan tâm nhắn tin.</p>
-            <div class="notif-time">Hôm qua</div>
-          </div>
-        </div>
-
-        <div class="notif-item">
-          <div class="notif-icon green"><i class="fas fa-bullhorn"></i></div>
-          <div class="notif-body">
-            <h5>📣 Mẹo bán hàng từ STD Marketplace</h5>
-            <p>Thêm video ngắn cho sản phẩm giúp tăng 40% tỉ lệ chốt đơn. Thử ngay tính năng mới!</p>
-            <div class="notif-time">2 ngày trước</div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div><!-- /tab-notifs -->
 
@@ -862,50 +692,28 @@
 <div class="modal-overlay" id="orderModal" onclick="closeModalOutside(event)">
   <div class="modal-box">
     <div class="modal-header">
-      <h3><i class="fas fa-receipt"></i> Chi tiết đơn hàng #STD2845</h3>
-      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      <h3><i class="fas fa-receipt"></i> Chi tiết đơn <span id="omCode"></span></h3>
+      <button type="button" class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body">
-      <div class="modal-info-row">
-        <span>Sản phẩm</span>
-        <span>Tai nghe Sony WH-1000XM4</span>
+      <div class="sl-om-product">
+        <div class="sl-om-thumb"><img id="omImg" alt=""></div>
+        <div>
+          <div class="sl-om-name" id="omProduct"></div>
+          <div class="sl-sub" id="omStatus"></div>
+        </div>
       </div>
-      <div class="modal-info-row">
-        <span>Tình trạng</span>
-        <span>90% – Như mới, kèm hộp</span>
-      </div>
-      <div class="modal-info-row">
-        <span>Người mua</span>
-        <span>Minh Anh (ĐH Ngoại Thương)</span>
-      </div>
-      <div class="modal-info-row">
-        <span>Số điện thoại</span>
-        <span style="color:var(--cyan);">0912 *** 456</span>
-      </div>
-      <div class="modal-info-row">
-        <span>Địa chỉ nhận hàng</span>
-        <span>KTX Mễ Trì, Cầu Giấy, Hà Nội</span>
-      </div>
-      <div class="modal-info-row">
-        <span>Phương thức giao</span>
-        <span>Gặp mặt trực tiếp</span>
-      </div>
-      <div class="modal-info-row">
-        <span>Giá trị đơn</span>
-        <span style="color:var(--cyan); font-size:1.1rem;">2.100.000đ</span>
-      </div>
-      <div class="modal-info-row">
-        <span>Phí nền tảng (2%)</span>
-        <span style="color:#e03e3e;">– 42.000đ</span>
-      </div>
-      <div class="modal-info-row" style="border-bottom:none; background:var(--cyan-light); border-radius:var(--radius-sm); padding:14px; margin-top:6px;">
-        <span style="font-weight:700; color:var(--text);">Bạn nhận được</span>
-        <span style="color:var(--cyan); font-size:1.25rem; font-weight:800;">2.058.000đ</span>
-      </div>
+      <div class="modal-info-row"><span>Người mua</span><span id="omBuyer"></span></div>
+      <div class="modal-info-row"><span>Số điện thoại</span><span id="omPhone"></span></div>
+      <div class="modal-info-row"><span>Địa chỉ nhận hàng</span><span id="omAddress" class="sl-wrap"></span></div>
+      <div class="modal-info-row"><span>Ghi chú</span><span id="omNote" class="sl-wrap"></span></div>
+      <div class="modal-info-row"><span>Thời gian đặt</span><span id="omTime"></span></div>
+      <div class="modal-info-row"><span>Giá bán</span><span id="omPrice"></span></div>
+      <div class="modal-info-row"><span>Phí nền tảng (2%)</span><span id="omFee"></span></div>
+      <div class="modal-info-row"><span>Bạn nhận được</span><span id="omNet" style="color:var(--cyan);"></span></div>
     </div>
     <div class="modal-footer">
-      <button class="action-btn-sm" onclick="closeModal()">Đóng</button>
-      <button class="action-btn-sm primary" onclick="closeModal(); showToast('✅ Đã xác nhận giao hàng!')">Xác nhận giao hàng</button>
+      <button type="button" class="btn-draft" onclick="closeModal()">Đóng</button>
     </div>
   </div>
 </div>

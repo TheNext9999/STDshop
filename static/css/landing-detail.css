@@ -318,3 +318,45 @@
     .ld-price { font-size: 1.6rem; }
     .ld-meta > div { grid-template-columns: 120px 1fr; }
 }
+
+/* ---- Đặt mua ---- */
+.ld-order-box { margin: 0 0 14px; display: flex; flex-direction: column; gap: 10px; }
+.ld-btn-buy { width: 100%; padding: 14px 24px; font-size: 1rem; }
+.ld-order-info {
+    display: flex; align-items: center; gap: 8px;
+    background: #f4f6f6; color: #46524f;
+    font-weight: 600; font-size: .88rem;
+    padding: 11px 16px; border-radius: 12px;
+}
+.ld-order-sold { background: #e5e7eb; color: #4b5563; }
+.ld-order-last { background: #f8fafa; color: #6b7c78; font-weight: 500; }
+
+.ld-order-status {
+    display: flex; flex-direction: column; gap: 6px;
+    border-radius: 14px; padding: 14px 16px;
+    border: 1.5px solid #cdeee8; background: #f1fbf9;
+}
+.ld-order-status.ld-os-pending { background: #fff7ed; border-color: #fed7aa; }
+.ld-order-status.ld-os-shipping { background: #eff6ff; border-color: #bfdbfe; }
+.ld-order-status-head { font-weight: 700; color: #1a2321; }
+
+.ld-order-form {
+    display: flex; flex-direction: column; gap: 12px;
+    background: #f8fafa; border-radius: 16px; padding: 16px;
+}
+.ld-order-form[hidden] { display: none !important; }
+.ld-order-form-title { font-weight: 800; color: #1a2321; }
+.ld-order-form label {
+    display: flex; flex-direction: column; gap: 5px;
+    font-size: .84rem; font-weight: 600; color: #33403d;
+}
+.ld-order-form input,
+.ld-order-form textarea {
+    border: 1.5px solid #dbe3e1; border-radius: 10px;
+    padding: 10px 12px; font-size: .9rem; font-family: inherit;
+    outline: none; box-sizing: border-box; width: 100%;
+}
+.ld-order-form input:focus,
+.ld-order-form textarea:focus { border-color: var(--primary, #00C9B0); }
+.ld-order-summary { font-size: .86rem; color: #46524f; }
+.ld-order-form-actions { display: flex; gap: 10px; flex-wrap: wrap; }

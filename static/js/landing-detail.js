@@ -47,6 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
         starBox.addEventListener('mouseleave', () => paint(Number(ratingInput.value) || 5));
     }
 
+    // ===== 3a. ĐẶT MUA: mở / đóng form thông tin nhận hàng =====
+    const buyBtn = document.getElementById('ldBuyBtn');
+    const orderForm = document.getElementById('ldOrderForm');
+    const orderCancel = document.getElementById('ldOrderCancel');
+    if (buyBtn && orderForm) {
+        buyBtn.addEventListener('click', () => {
+            orderForm.hidden = false;
+            buyBtn.style.display = 'none';
+            const phone = orderForm.querySelector('input[name="phone"]');
+            if (phone) phone.focus();
+        });
+        if (orderCancel) {
+            orderCancel.addEventListener('click', () => {
+                orderForm.hidden = true;
+                buyBtn.style.display = '';
+            });
+        }
+    }
+
     // ===== 3. CHIA SẺ = SAO CHÉP LIÊN KẾT TRANG =====
     const shareBtn = document.getElementById('ldShareBtn');
     if (shareBtn) {
