@@ -232,3 +232,4 @@ STDshop/
 - **Dự án**: STDShop - E-Commerce Platform for Students
 - **Phát triển bởi**: Đội ngũ phát triển STDShop
 - Mọi đóng góp (Pull Request), phản hồi hoặc báo lỗi vui lòng mở mục **Issues** trên kho lưu trữ.
+- Chức năng của nó được kế thừa toàn bộ từ dự án [Lotus Shop](https://github.com/TheNext9999/Python_Web)
