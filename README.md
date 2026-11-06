@@ -1,3 +1,4 @@
+tôi đây
 # STDShop - Nền Tảng Thương Mại Điện Tử Dành Cho Sinh Viên
 
 STDShop là nền tảng thương mại điện tử toàn diện được xây dựng trên nền tảng **Django**, thiết kế chuyên biệt cho nhu cầu mua sắm và trao đổi đồ dùng của sinh viên (sách vở, giáo trình, thiết bị điện tử, đồ gia dụng, thời trang, v.v.).
