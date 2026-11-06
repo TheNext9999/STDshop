@@ -47,8 +47,9 @@ urlpatterns = [
     path('faq/',                  views.faq,                name='faq'),
     path('policy/',               views.policy,             name='policy'),
 
-    # ── AI Chat API ──────────────────────────────────────────────────────
+    # ── AI Chat API & Dedicated Page ─────────────────────────────────────
     path('api/chat/',             views.chat_ai,            name='chat_ai'),
+    path('uni-ai/',               views.uni_ai_chat,        name='uni_ai_chat'),
 
     # ── Quản trị Admin (custom panel) ────────────────────────────────────
     path('admin-panel/',                  views.admin_dashboard,      name='admin_dashboard'),

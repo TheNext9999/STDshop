@@ -1,0 +1,1248 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% load shop_filters %}
+
+{% block title %}UNI_AI Chatbot - Trợ Lý Mua Sắm Thông Minh Dành Cho Sinh Viên{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   UNI_AI CHATBOT THEME: EXACT REPLICA OF DESIGN MOCKUP
+   Tone: White & Cyan / Mint Teal Glassmorphism
+   ============================================================ */
+:root {
+  --uni-mint-bg: #e6f7f3;
+  --uni-cyan-primary: #06b6d4;
+  --uni-cyan-deep: #0891b2;
+  --uni-teal-dark: #0f766e;
+  --uni-teal-light: #ccfbf1;
+  --uni-badge-student: #14b8a6;
+  --uni-surface-glass: rgba(255, 255, 255, 0.94);
+  --uni-border-glass: rgba(255, 255, 255, 0.85);
+  --uni-shadow-soft: 0 16px 36px -12px rgba(13, 148, 136, 0.12), 0 4px 14px rgba(0, 0, 0, 0.03);
+  --uni-card-radius: 24px;
+}
+
+/* Ẩn widget góc màn hình khi đã mở trang chuyên biệt này */
+#aiChatWidget {
+  display: none !important;
+}
+
+/* Khung nền tổng thể lan toả ánh sáng cyan / mint */
+.uni-page-wrapper {
+  background: radial-gradient(circle at 10% 20%, #ccfbf1 0%, transparent 45%),
+              radial-gradient(circle at 90% 75%, #bae6fd 0%, transparent 50%),
+              linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #ecfeff 100%);
+  min-height: calc(100vh - 120px);
+  padding: 36px 20px 60px;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
+}
+
+.uni-main-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+/* ================= SIDEBAR TRÁI ================= */
+.uni-glass-sidebar {
+  background: var(--uni-surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--uni-border-glass);
+  border-radius: var(--uni-card-radius);
+  padding: 24px 20px;
+  box-shadow: var(--uni-shadow-soft);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 690px;
+}
+
+/* Header Sidebar có Logo ảnh tùy biến */
+.uni-sidebar-header {
+  padding-bottom: 18px;
+  border-bottom: 1px dashed rgba(203, 213, 225, 0.6);
+}
+
+.uni-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+/* KHỐI LOGO SIDEBAR - BẠN CÓ THỂ THAY ĐỔI ẢNH LOGO TẠI ĐÂY */
+.uni-logo-box {
+  width: 58px;
+  height: 58px;
+
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.uni-logo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.uni-logo-box .uni-logo-fallback {
+  color: #ffffff;
+  font-size: 26px;
+}
+
+.uni-brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.uni-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #0d9488 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.uni-pill-student {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0891b2;
+  -webkit-text-fill-color: #0891b2;
+  background: #cffafe;
+  border: 1px solid #a5f3fc;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.uni-brand-desc {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+/* Section Gợi ý câu hỏi */
+.uni-sidebar-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 18px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uni-sidebar-title i {
+  color: #0d9488;
+}
+
+.uni-prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.uni-prompt-card {
+  background: #ffffff;
+  border: 1px solid #e6f4f2;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.22s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  line-height: 1.35;
+}
+
+.uni-prompt-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #ecfeff;
+  color: #0891b2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.uni-prompt-card:hover {
+  background: #f0fdfa;
+  border-color: #5eead4;
+  transform: translateX(4px);
+  box-shadow: 0 6px 14px -3px rgba(13, 148, 136, 0.15);
+}
+
+.uni-prompt-card:hover .uni-prompt-icon {
+  background: #0d9488;
+  color: #ffffff;
+}
+
+/* Các tag sinh viên nhanh */
+.uni-quick-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 18px 0;
+}
+
+.uni-quick-tag {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uni-quick-tag:hover {
+  background: #ccfbf1;
+  color: #0f766e;
+  border-color: #99f6e4;
+}
+
+/* Nút làm mới hội thoại */
+.uni-btn-reset {
+  width: 100%;
+  background: #ffffff;
+  color: #0f766e;
+  border: 1.5px solid #99f6e4;
+  border-radius: 16px;
+  padding: 11px 16px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.22s ease;
+  box-shadow: 0 3px 10px rgba(13, 148, 136, 0.08);
+}
+
+.uni-btn-reset:hover {
+  background: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 8px 18px -4px rgba(6, 182, 212, 0.4);
+}
+
+/* ================= MAIN CHAT PANEL (KHUNG PHẢI) ================= */
+.uni-glass-chat {
+  background: var(--uni-surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--uni-border-glass);
+  border-radius: var(--uni-card-radius);
+  box-shadow: var(--uni-shadow-soft);
+  display: flex;
+  flex-direction: column;
+  height: 690px;
+  overflow: hidden;
+}
+
+/* Header Khung Chat */
+.uni-chat-header {
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.uni-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* LOGO NHỎ TRÊN HEADER CHAT - BẠN CÓ THỂ ĐỔI ẢNH ĐỒNG BỘ */
+.uni-mini-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  position: relative;
+}
+
+.uni-mini-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uni-mini-logo .uni-logo-fallback {
+  color: #fff;
+  font-size: 20px;
+}
+
+.uni-header-text h2 {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #0284c7 0%, #06b6d4 45%, #0d9488 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  line-height: 1.25;
+  filter: drop-shadow(0 2px 8px rgba(6, 182, 212, 0.18));
+}
+
+.uni-online-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.uni-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.uni-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uni-badge-mode {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.uni-action-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.uni-action-icon-btn:hover {
+  background: #f0fdfa;
+  border-color: #5eead4;
+  color: #0f766e;
+}
+
+/* Khu vực cuộn tin nhắn */
+.uni-chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgba(248, 250, 252, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  scroll-behavior: smooth;
+}
+
+/* Message Rows */
+.uni-msg-item {
+  display: flex;
+  gap: 12px;
+  max-width: 85%;
+  animation: slideInMsg 0.28s ease-out forwards;
+}
+
+@keyframes slideInMsg {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.uni-msg-item.bot {
+  align-self: flex-start;
+}
+
+.uni-msg-item.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.uni-msg-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+}
+
+.uni-msg-item.bot .uni-msg-icon-box {
+  background: #ffffff;
+  border: 1.5px solid #a5f3fc;
+  color: #0891b2;
+  box-shadow: 0 4px 8px rgba(6, 182, 212, 0.12);
+}
+
+.uni-msg-item.user .uni-msg-icon-box {
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.uni-msg-item.user .uni-msg-icon-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uni-msg-bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.uni-msg-bubble {
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.uni-msg-item.bot .uni-msg-bubble {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-top-left-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.uni-msg-item.user .uni-msg-bubble {
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+  color: #ffffff;
+  border-top-right-radius: 4px;
+  box-shadow: 0 6px 18px rgba(13, 148, 136, 0.25);
+}
+
+/* ================= PRODUCT CAROUSEL SECTION ================= */
+.uni-products-carousel-wrap {
+  margin-top: 14px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.uni-carousel-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.uni-carousel-nav-btn:hover {
+  background: #0d9488;
+  color: #ffffff;
+  border-color: #0d9488;
+}
+
+.uni-carousel-nav-btn.prev { left: -16px; }
+.uni-carousel-nav-btn.next { right: -16px; }
+
+.uni-products-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 4px 2px 10px;
+  width: 100%;
+}
+
+.uni-products-track::-webkit-scrollbar {
+  height: 6px;
+}
+.uni-products-track::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+/* Card Sản Phẩm Chuẩn Mockup */
+.uni-card-item {
+  min-width: 215px;
+  max-width: 215px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.uni-card-item:hover {
+  transform: translateY(-4px);
+  border-color: #5eead4;
+  box-shadow: 0 12px 24px -6px rgba(13, 148, 136, 0.2);
+}
+
+.uni-card-img-wrap {
+  width: 100%;
+  height: 140px;
+  position: relative;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.uni-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.uni-card-item:hover .uni-card-img-wrap img {
+  transform: scale(1.05);
+}
+
+/* Badges kép trên ảnh sản phẩm */
+.uni-card-top-badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.uni-badge-discount {
+  background: #0d9488;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.uni-badge-student-tag {
+  background: #14b8a6;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+/* Đánh giá góc dưới bên phải ảnh */
+.uni-card-rating {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  color: #eab308;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.uni-card-rating span {
+  color: #1e293b;
+}
+
+.uni-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.uni-card-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+}
+
+.uni-card-price {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #0d9488;
+  margin-bottom: 10px;
+}
+
+/* 2 nút thao tác Xem chi tiết & Thêm vào giỏ */
+.uni-card-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.uni-btn-detail {
+  background: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  color: #0f766e;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 4px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.uni-btn-detail:hover {
+  background: #ccfbf1;
+  color: #042f2e;
+}
+
+.uni-btn-cart {
+  background: #0d9488;
+  border: 1px solid #0d9488;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.uni-btn-cart:hover {
+  background: #0f766e;
+}
+
+/* ================= LOADING EFFECT ================= */
+.uni-loading-dots {
+  background: #ffffff;
+  border: 1px solid #a5f3fc;
+  border-radius: 16px;
+  padding: 12px 18px;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.uni-loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0d9488;
+  animation: pulseDot 1.4s infinite ease-in-out both;
+}
+
+.uni-loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.uni-loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes pulseDot {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ================= INPUT FOOTER (CHÂN TRANG CHAT) ================= */
+.uni-chat-footer {
+  padding: 14px 24px 18px;
+  background: #ffffff;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.uni-footer-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1.5px solid #ccfbf1;
+  border-radius: 999px;
+  padding: 6px 8px 6px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.uni-footer-bar:focus-within {
+  border-color: #0d9488;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+}
+
+.uni-attach-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+}
+
+.uni-tool-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.uni-tool-btn:hover {
+  color: #0d9488;
+  transform: scale(1.1);
+}
+
+.uni-input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.92rem;
+  color: #0f172a;
+  padding: 6px 0;
+  font-family: inherit;
+}
+
+.uni-input-field::placeholder {
+  color: #94a3b8;
+}
+
+.uni-btn-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3);
+  transition: all 0.2s ease;
+}
+
+.uni-btn-send:hover:not(:disabled) {
+  transform: scale(1.08);
+  box-shadow: 0 6px 14px rgba(13, 148, 136, 0.45);
+}
+
+.uni-btn-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.uni-copyright-hint {
+  font-size: 0.73rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .uni-main-grid {
+    grid-template-columns: 1fr;
+  }
+  .uni-glass-sidebar {
+    min-height: auto;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="uni-page-wrapper">
+  <div class="uni-main-grid">
+    
+    <!-- CỘT 1: SIDEBAR TRÁI -->
+    <aside class="uni-glass-sidebar">
+      <div>
+        <!-- BRAND & LOGO TÙY BIẾN -->
+        <div class="uni-sidebar-header">
+          <div class="uni-brand-row">
+            <!-- Ô LOGO CHÍNH (Bạn có thể đổi src ảnh theo ý muốn) -->
+            <div class="uni-logo-box" title="UNI_AI Logo">
+              <img 
+                src="{% static 'css/pic/UNIAI.png' %}" 
+                alt="UNI_AI Logo" 
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              />
+              <i class="fas fa-robot uni-logo-fallback" style="display:none;"></i>
+            </div>
+            <div class="uni-brand-info">
+              <div class="uni-brand-title">
+              <span class="uni-pill-student">Sinh Viên</span>
+              </div>
+            </div>
+          </div>
+          <div class="uni-brand-desc">
+            Trợ lý AI tư vấn và tìm kiếm đồ dùng, giáo trình thông minh cho sinh viên
+          </div>
+        </div>
+
+        <!-- GỢI Ý CÂU HỎI -->
+        <div class="uni-sidebar-title">
+          <i class="fas fa-bolt"></i> Gợi ý câu hỏi sinh viên
+        </div>
+        <div class="uni-prompt-list">
+          <button type="button" class="uni-prompt-card" data-prompt="Tìm giáo trình & sách cũ giá sinh viên">
+            <span class="uni-prompt-icon"><i class="fas fa-book"></i></span>
+            <span>Tìm giáo trình & sách cũ giá sinh viên</span>
+          </button>
+          <button type="button" class="uni-prompt-card" data-prompt="Chuột, bàn phím máy tính giá rẻ">
+            <span class="uni-prompt-icon"><i class="fas fa-keyboard"></i></span>
+            <span>Chuột, bàn phím máy tính giá rẻ</span>
+          </button>
+          <button type="button" class="uni-prompt-card" data-prompt="Thời trang giá rẻ cho sinh viên">
+            <span class="uni-prompt-icon"><i class="fas fa-tshirt"></i></span>
+            <span>Thời trang giá rẻ cho sinh viên</span>
+          </button>
+          <button type="button" class="uni-prompt-card" data-prompt="Đồ decor bàn học phòng trọ">
+            <span class="uni-prompt-icon"><i class="fas fa-paint-roller"></i></span>
+            <span>Đồ decor bàn học phòng trọ</span>
+          </button>
+          <button type="button" class="uni-prompt-card" data-prompt="Chính sách freeship & đổi trả">
+            <span class="uni-prompt-icon"><i class="fas fa-truck-fast"></i></span>
+            <span>Chính sách freeship & đổi trả</span>
+          </button>
+        </div>
+
+        <!-- QUICK CHIPS -->
+        <div class="uni-quick-tags">
+          <span class="uni-quick-tag" data-prompt="Sản phẩm giá dưới 100k">Dưới 100k</span>
+          <span class="uni-quick-tag" data-prompt="Các món đồ pass lại cũ giá rẻ">Pass đồ cũ</span>
+          <span class="uni-quick-tag" data-prompt="Các sản phẩm có hỗ trợ freeship KTX">Freeship KTX</span>
+        </div>
+      </div>
+
+      <!-- NÚT LÀM MỚI -->
+      <div style="margin-top: 14px;">
+        <button type="button" class="uni-btn-reset" id="uniResetBtn">
+          <i class="fas fa-rotate-right"></i> Làm mới hội thoại
+        </button>
+      </div>
+    </aside>
+
+    <!-- CỘT 2: KHUNG CHAT CHÍNH (THEO ĐÚNG ẢNH MOCKUP) -->
+    <main class="uni-glass-chat">
+      <!-- Chat Header -->
+      <header class="uni-chat-header">
+        <div class="uni-header-brand">
+          <!-- LOGO MINI TRÊN HEADER CHAT (Bạn có thể đổi src ảnh theo ý muốn) -->
+          <div class="uni-mini-logo" title="UNI_AI">
+            <img 
+              src="{% static 'css/pic/UNIAI.png' %}" 
+              alt="UNI_AI Logo" 
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            />
+            <i class="fas fa-robot uni-logo-fallback" style="display:none;"></i>
+          </div>
+          <div class="uni-header-text">
+            <h2>UNI_AI Chatbot</h2>
+            <div class="uni-online-indicator">
+              <span class="uni-online-dot"></span> Sẵn sàng hỗ trợ 24/7
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions bên phải Header -->
+        <div class="uni-header-actions">
+          <div class="uni-badge-mode">
+            <i class="fas fa-graduation-cap"></i> Trình sinh viên
+          </div>
+          <button type="button" class="uni-action-icon-btn" title="Lưu hội thoại">
+            <i class="fas fa-bookmark"></i>
+          </button>
+          <a href="{% url 'home' %}" class="uni-action-icon-btn" title="Về trang chủ">
+            <i class="fas fa-house"></i>
+          </a>
+        </div>
+      </header>
+
+      <!-- Chat Body Stream -->
+      <div class="uni-chat-body" id="uniChatBody">
+        <!-- Tin nhắn mở đầu của UNI_AI -->
+        <div class="uni-msg-item bot">
+          <div class="uni-msg-icon-box">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="uni-msg-bubble-wrap">
+            <div class="uni-msg-bubble">
+              Xin chào bạn! 👋 Mình là <strong>UNI_AI Chatbot</strong>. Mình ở đây để giúp bạn tìm kiếm sách vở, đồ dùng học tập, công nghệ hoặc giải đáp thắc mắc mua sắm của sinh viên. Bạn đang cần tìm món đồ gì hôm nay?
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Footer -->
+      <footer class="uni-chat-footer">
+        <form id="uniMsgForm" class="uni-footer-bar">
+          <div class="uni-attach-tools">
+            <button type="button" class="uni-tool-btn" title="Đính kèm file"><i class="fas fa-paperclip"></i></button>
+            <button type="button" class="uni-tool-btn" title="Ghi âm giọng nói"><i class="fas fa-microphone"></i></button>
+            <button type="button" class="uni-tool-btn" title="Gửi hình ảnh"><i class="far fa-image"></i></button>
+          </div>
+          <input 
+            type="text" 
+            id="uniMsgInput" 
+            class="uni-input-field" 
+            placeholder="Nhập yêu cầu bằng ngôn ngữ tự nhiên (VD: Cần tìm bàn phím hoặc balo đi học giá dưới 300k)..." 
+            autocomplete="off"
+            required
+          />
+          <button type="submit" id="uniSubmitBtn" class="uni-btn-send" title="Gửi tin nhắn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+        <div class="uni-copyright-hint">
+          <i class="fas fa-shield-halved"></i> UNI_AI kết nối trực tiếp với kho sản phẩm sinh viên STDShop theo thời gian thực.
+        </div>
+      </footer>
+    </main>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const chatBody   = document.getElementById('uniChatBody');
+  const msgInput   = document.getElementById('uniMsgInput');
+  const msgForm    = document.getElementById('uniMsgForm');
+  const submitBtn  = document.getElementById('uniSubmitBtn');
+  const resetBtn   = document.getElementById('uniResetBtn');
+  const promptBtns = document.querySelectorAll('.uni-prompt-card, .uni-quick-tag');
+
+  let chatHistory = [];
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  function formatVND(n) {
+    return (n || 0).toLocaleString('vi-VN') + 'đ';
+  }
+
+  function scrollToBottom() {
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Thêm tin nhắn của User
+  function appendUserMsg(text) {
+    const item = document.createElement('div');
+    item.className = 'uni-msg-item user';
+    item.innerHTML = `
+      <div class="uni-msg-icon-box">
+        <img src="{% static 'css/pic/STDLogo2.png' %}" alt="User Avatar" onerror="this.src='/static/css/pic/STDLogo2.png'">
+      </div>
+      <div class="uni-msg-bubble-wrap">
+        <div class="uni-msg-bubble">${escapeHtml(text)}</div>
+      </div>
+    `;
+    chatBody.appendChild(item);
+    scrollToBottom();
+  }
+
+  // Hiệu ứng đang suy nghĩ
+  function showThinking() {
+    const item = document.createElement('div');
+    item.className = 'uni-msg-item bot';
+    item.id = 'uniThinkingBubble';
+    item.innerHTML = `
+      <div class="uni-msg-icon-box"><i class="fas fa-robot"></i></div>
+      <div class="uni-msg-bubble-wrap">
+        <div class="uni-loading-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    `;
+    chatBody.appendChild(item);
+    scrollToBottom();
+    submitBtn.disabled = true;
+    msgInput.disabled = true;
+  }
+
+  function removeThinking() {
+    const bubble = document.getElementById('uniThinkingBubble');
+    if (bubble) bubble.remove();
+    submitBtn.disabled = false;
+    msgInput.disabled = false;
+    msgInput.focus();
+  }
+
+  // Thêm tin nhắn của Bot + Carousel Sản Phẩm chuẩn Mockup
+  function appendBotMsg(replyText, products) {
+    const item = document.createElement('div');
+    item.className = 'uni-msg-item bot';
+
+    let productsHtml = '';
+    if (products && products.length > 0) {
+      let cardsHtml = '';
+      products.forEach(p => {
+        cardsHtml += `
+          <div class="uni-card-item">
+            <div class="uni-card-img-wrap">
+              <div class="uni-card-top-badges">
+                <span class="uni-badge-discount">-35%</span>
+                <span class="uni-badge-student-tag">Sinh viên</span>
+              </div>
+              <img src="${p.image || '/static/css/pic/STDLogo2.png'}" alt="${escapeHtml(p.name)}" onerror="this.src='/static/css/pic/STDLogo2.png'">
+              <div class="uni-card-rating">
+                <i class="fas fa-star"></i> <span>4.8</span>
+              </div>
+            </div>
+            <div class="uni-card-body">
+              <div class="uni-card-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
+              <div class="uni-card-price">${formatVND(p.price)}</div>
+              <div class="uni-card-btns">
+                <a href="/detail/?id=${p.id}" class="uni-btn-detail">Xem chi tiết</a>
+                <button type="button" class="uni-btn-cart update-cart" data-product="${p.id}" data-action="add">Thêm vào giỏ</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      productsHtml = `
+        <div class="uni-products-carousel-wrap">
+          <button type="button" class="uni-carousel-nav-btn prev" onclick="scrollTrack(this, -230)"><i class="fas fa-chevron-left"></i></button>
+          <div class="uni-products-track">
+            ${cardsHtml}
+          </div>
+          <button type="button" class="uni-carousel-nav-btn next" onclick="scrollTrack(this, 230)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      `;
+    }
+
+    item.innerHTML = `
+      <div class="uni-msg-icon-box"><i class="fas fa-robot"></i></div>
+      <div class="uni-msg-bubble-wrap" style="width: 100%;">
+        <div class="uni-msg-bubble">${escapeHtml(replyText)}</div>
+        ${productsHtml}
+      </div>
+    `;
+
+    chatBody.appendChild(item);
+    scrollToBottom();
+
+    // Kích hoạt sự kiện thêm giỏ hàng nếu có hàm trong customer-order.js / order-script.js
+    bindCartButtons(item);
+  }
+
+  // Hàm trượt carousel ngang
+  window.scrollTrack = function(btn, distance) {
+    const track = btn.parentElement.querySelector('.uni-products-track');
+    if (track) {
+      track.scrollBy({ left: distance, behavior: 'smooth' });
+    }
+  };
+
+  // Nối với hàm update-cart của shop
+  function bindCartButtons(container) {
+    const buttons = container.querySelectorAll('.update-cart');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productId = this.dataset.product;
+        const action = this.dataset.action;
+        if (typeof updateUserOrder === 'function') {
+          updateUserOrder(productId, action);
+        } else {
+          // Fallback fetch nếu hàm updateUserOrder chưa tải
+          fetch('/update_item/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ productId: productId, action: action })
+          })
+          .then(res => res.json())
+          .then(data => {
+            alert('Đã thêm sản phẩm vào giỏ hàng thành công!');
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) cartCount.innerText = parseInt(cartCount.innerText || 0) + 1;
+          })
+          .catch(err => console.error(err));
+        }
+      });
+    });
+  }
+
+  // Gửi tin nhắn qua API lõi /api/chat/
+  async function sendChatMessage(text) {
+    const message = text.trim();
+    if (!message) return;
+
+    appendUserMsg(message);
+    msgInput.value = '';
+    showThinking();
+
+    try {
+      const response = await fetch('/api/chat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({
+          message: message,
+          history: chatHistory
+        })
+      });
+
+      const data = await response.json();
+      removeThinking();
+
+      if (data.status === 'success') {
+        appendBotMsg(data.reply, data.products);
+        chatHistory.push({ role: 'user', content: message });
+        chatHistory.push({ role: 'assistant', content: data.reply });
+      } else {
+        appendBotMsg(data.message || 'AI đang bận, bạn vui lòng đợi trong giây lát nhé!');
+      }
+    } catch (err) {
+      console.error(err);
+      removeThinking();
+      appendBotMsg('Không thể kết nối đến máy chủ AI. Bạn hãy thử kiểm tra lại mạng nhé!');
+    }
+  }
+
+  // Submit form
+  msgForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendChatMessage(msgInput.value);
+  });
+
+  // Prompt chips & Quick tags
+  promptBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prompt = btn.getAttribute('data-prompt');
+      if (prompt) {
+        msgInput.value = prompt;
+        sendChatMessage(prompt);
+      }
+    });
+  });
+
+  // Reset cuộc trò chuyện
+  resetBtn.addEventListener('click', () => {
+    chatHistory = [];
+    chatBody.innerHTML = `
+      <div class=\"uni-msg-item bot\">
+        <div class=\"uni-msg-icon-box\"><i class=\"fas fa-robot\"></i></div>
+        <div class=\"uni-msg-bubble-wrap\">
+          <div class=\"uni-msg-bubble\">
+            Hội thoại đã được làm mới! Mình là <strong>UNI_AI Chatbot</strong>. Bạn đang cần tìm kiếm món đồ hay thông tin gì tiếp theo?
+          </div>
+        </div>
+      </div>
+    `;
+    msgInput.value = '';
+    msgInput.focus();
+  });
+});
+</script>
+{% endblock %}

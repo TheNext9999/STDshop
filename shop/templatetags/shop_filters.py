@@ -49,3 +49,9 @@ def star_rating(rating):
         html += f'<span style="color:#e2e5ea">{"★" * empty}</span>'
 
     return mark_safe(html)
+
+
+@register.filter
+def cyan_badge(text):
+    """Render tag huy hiệu màu cyan công nghệ hiện đại"""
+    return mark_safe(f'<span class="uni-ai-tag"><i class="fas fa-sparkles"></i> {text}</span>')

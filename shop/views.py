@@ -608,6 +608,19 @@ Sản phẩm hiện có:
     return JsonResponse({"status": "error", "message": "Method not allowed!"})
 
 
+def uni_ai_chat(request):
+    """
+    Trang giao diện chuyên biệt UNI_AI Chatbot.
+    Liên kết trực tiếp với endpoint POST /api/chat/.
+    """
+    ctx = _base_context(request)
+    ctx.update({
+        'ai_name': 'UNI_AI Chatbot',
+        'page_title': 'UNI_AI Chatbot - Trợ Lý Mua Sắm Thông Minh Dành Cho Sinh Viên',
+    })
+    return render(request, 'shop/uni_ai.html', ctx)
+
+
 # ============================================================
 #  THANH TOÁN — Kết quả sau khi thanh toán
 # ============================================================

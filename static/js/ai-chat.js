@@ -190,25 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn.addEventListener('click', () => widget.classList.remove('open'));
     }
 
-    // ===== PHÓNG TO / THU NHỎ =====
-    // Chỉ toggle class CSS - không đụng tới #aiChatMessages nên lịch sử chat
-    // (cả trong DOM lẫn biến chatHistory) được giữ nguyên hoàn toàn.
-    if (expandBtn) {
-        expandBtn.addEventListener('click', () => {
-            const isExpanded = panel.classList.toggle('expanded');
-            const icon = expandBtn.querySelector('i');
-            if (isExpanded) {
-                icon.classList.remove('fa-expand-alt');
-                icon.classList.add('fa-compress-alt');
-                expandBtn.title = 'Thu nhỏ';
-            } else {
-                icon.classList.remove('fa-compress-alt');
-                icon.classList.add('fa-expand-alt');
-                expandBtn.title = 'Phóng to';
-            }
-            scrollToBottom();
-        });
-    }
+    // ===== MỞ TRANG UNI_AI CHUYÊN BIỆT =====
+    // aiExpandBtn giờ là thẻ <a> chuyển thẳng sang trang /uni-ai/,
+    // không chặn chuyển trang hay toggle class expanded nữa.
 
     // ===== GỬI BẰNG NÚT / PHÍM ENTER =====
     sendBtn.addEventListener('click', sendMessage);
