@@ -1,0 +1,133 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment_result.css' %}" />
+{% endblock %}
+
+{% block content %}
+<!-- Confetti (chỉ hiển thị khi thành công) -->
+{% if payment_success %}
+<div class="confetti-wrapper" id="confetti"></div>
+{% endif %}
+
+<section class="result-page">
+  <div class="container">
+
+    {% if payment_success %}
+    <!-- ── THANH TOÁN THÀNH CÔNG ── -->
+    <div class="result-card">
+
+      <div class="success-circle"><i class="fas fa-check"></i></div>
+
+      <h1 class="result-title success">Thanh toán thành công!</h1>
+      <p class="result-sub">
+        Cảm ơn bạn đã mua sắm tại STD Shop! 🎉<br>
+        Đơn hàng của bạn đã được xác nhận và đang được chuẩn bị. Chúng tôi sẽ gửi email xác nhận đến <strong>{{ request.user.email }}</strong>.
+      </p>
+
+      <!-- Tóm tắt đơn — dữ liệu thật, ẩn dòng nếu không có order -->
+      <div class="order-recap">
+        {% if order %}
+        <div class="recap-row"><span class="r-label">Mã đơn hàng</span><span class="r-value" style="color:var(--green-deep);font-weight:700;">#{{ order.id }}</span></div>
+        <div class="recap-row"><span class="r-label">Ngày đặt</span><span class="r-value">{{ order.date_order|date:"d/m/Y H:i" }}</span></div>
+        <div class="recap-row"><span class="r-label">Trạng thái</span><span class="r-value">{{ order.get_status_display }}</span></div>
+        <div class="recap-row total"><span class="r-label">Tổng thanh toán</span><span class="r-value">${{ order.get_cart_total|floatformat:2 }}</span></div>
+        {% else %}
+        <div class="recap-row"><span class="r-label">Thông tin đơn hàng</span><span class="r-value">Xem chi tiết tại trang Đơn hàng</span></div>
+        {% endif %}
+      </div>
+
+      <div class="result-btns">
+        <a href="{% url 'order_history' %}" class="btn-order-res">
+          <i class="fas fa-box"></i>Theo dõi đơn hàng
+        </a>
+        <a href="{% url 'home' %}" class="btn-home-res">
+          <i class="fas fa-home"></i>Về trang chủ
+        </a>
+      </div>
+
+      <!-- Gợi ý chia sẻ -->
+      <p style="font-size:.8rem;color:var(--muted);margin-top:1.5rem;">
+        Chia sẻ trải nghiệm mua sắm với bạn bè:
+        <a href="#" style="color:var(--green-deep);font-weight:600;"> <i class="fab fa-facebook"></i> Facebook</a> ·
+        <a href="#" style="color:var(--green-deep);font-weight:600;"> <i class="fab fa-instagram"></i> Instagram</a>
+      </p>
+
+    </div>
+
+    {% else %}
+    <!-- ── THANH TOÁN THẤT BẠI ── -->
+    <div class="result-card">
+
+      <div class="fail-circle"><i class="fas fa-times"></i></div>
+
+      <h1 class="result-title fail">Thanh toán thất bại</h1>
+      <p class="result-sub">
+        Rất tiếc, giao dịch của bạn không thể hoàn tất. Đơn hàng chưa được xử lý.<br>
+        Vui lòng kiểm tra lại thông tin thanh toán và thử lại.
+      </p>
+
+      <!-- Thông tin đơn hàng (nếu có) -->
+      <div class="order-recap" style="background:#FEF2F2;">
+        <div class="recap-row" style="border-bottom-color:rgba(220,38,38,.1);"><span class="r-label">Trạng thái</span><span class="r-value" style="color:#DC2626;">Giao dịch không thành công</span></div>
+        {% if order %}
+        <div class="recap-row"><span class="r-label">Mã đơn (đã lưu)</span><span class="r-value">#{{ order.id }}</span></div>
+        {% endif %}
+      </div>
+
+      <!-- Gợi ý khắc phục -->
+      <div style="background:var(--cream);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1.5rem;text-align:left;">
+        <p style="font-size:.82rem;font-weight:700;color:var(--charcoal);margin-bottom:.5rem;">💡 Gợi ý khắc phục:</p>
+        <ul style="font-size:.83rem;color:var(--muted);padding-left:1.2rem;margin:0;">
+          <li>Kiểm tra số dư tài khoản</li>
+          <li>Đảm bảo thông tin thẻ chính xác</li>
+          <li>Thử phương thức thanh toán khác</li>
+          <li>Liên hệ ngân hàng nếu vẫn lỗi</li>
+        </ul>
+      </div>
+
+      <div class="result-btns">
+        <a href="{% url 'checkout' %}" class="btn-retry">
+          <i class="fas fa-redo me-1"></i>Thử lại
+        </a>
+        <a href="{% url 'cart' %}" class="btn-order-res">
+          <i class="fas fa-arrow-left me-1"></i>Quay lại giỏ hàng
+        </a>
+      </div>
+
+      <p style="font-size:.82rem;color:var(--muted);margin-top:1.2rem;">
+        Cần hỗ trợ? <a href="{% url 'contact' %}" style="color:var(--green-deep);font-weight:600;">Liên hệ ngay</a>
+      </p>
+
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% if payment_success %}
+<script>
+  /* Tạo hiệu ứng confetti khi thanh toán thành công */
+  const colors = ['#1A6B3C','#2E8B57','#E8773A','#FFE066','#EAF5EE'];
+  const container = document.getElementById('confetti');
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      animation-duration:${2+Math.random()*3}s;
+      animation-delay:${Math.random()*2}s;
+      opacity:${.6+Math.random()*.4};
+    `;
+    container.appendChild(el);
+  }
+  /* Xóa confetti sau 5 giây */
+  setTimeout(() => container.remove(), 5000);
+</script>
+{% endif %}
+{% endblock %}
