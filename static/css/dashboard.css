@@ -49,13 +49,17 @@
 .kpi-info .kpi-label { font-size: .78rem; color: #666; margin-top: .25rem; }
 
 /* Biểu đồ doanh thu (CSS bar chart đơn giản) */
-.bar-chart { display: flex; align-items: flex-end; gap: .5rem; height: 140px; padding: .5rem 0; }
-.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.bar-chart { display: flex; align-items: stretch; gap: .5rem; height: 140px; padding: .5rem 0; }
+.bar-col {
+    flex: 1; display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: center; gap: .3rem; height: 100%;
+}
 .bar-fill {
     width: 100%; border-radius: 4px 4px 0 0;
     background: linear-gradient(to top, var(--primary-dark), var(--primary));
     transition: height .5s ease;
     min-height: 4px;
+    align-self: end;
 }
 .bar-fill:hover { background: linear-gradient(to top, #f59e0b, #f5a623); }
 .bar-label { font-size: .7rem; color: #666; font-weight: 500; }

@@ -1,0 +1,156 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<section class="checkout-page">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="checkout-breadcrumb">
+      <ol>
+        <li><a href="{% url 'home' %}">Trang chủ</a></li>
+        <li><a href="{% url 'cart' %}">Giỏ hàng</a></li>
+        <li aria-current="page">Thanh toán</li>
+      </ol>
+    </nav>
+
+    <div class="section-divider"></div>
+    <h1 class="checkout-title">Thanh toán</h1>
+    <p class="checkout-subtitle">Điền thông tin giao hàng để hoàn tất đơn hàng</p>
+
+    <div class="checkout-layout">
+
+      <!-- ── CỘT TRÁI: Form thông tin ── -->
+      <div class="checkout-form-column">
+        <div class="checkout-form-card">
+
+          <form id="form" class="checkout-form" method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+
+            <!-- Thông tin người nhận -->
+            <div class="form-section-title">
+              <i class="fas fa-user"></i> Thông tin người nhận
+            </div>
+            <div id="user-info">
+              <div class="checkout-fields checkout-fields-single">
+                <div class="checkout-field">
+                  <label>Họ và tên *</label>
+                  <input required class="form-control" type="text" name="name" placeholder="Nguyễn Văn A">
+                </div>
+                <div class="checkout-field">
+                  <label>Địa chỉ email *</label>
+                  <input required class="form-control" type="email" name="email" placeholder="example@email.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- Thông tin giao hàng -->
+            <div class="form-section-title">
+              <i class="fas fa-map-marker-alt"></i> Địa chỉ giao hàng
+            </div>
+            <div id="shipping-info">
+              <div class="checkout-fields">
+                <div class="checkout-field checkout-field-full">
+                  <label>Địa chỉ</label>
+                  <input class="form-control" type="text" name="address" placeholder="Số nhà, tên đường, phường/xã">
+                </div>
+                <div class="checkout-field">
+                  <label>Quận / Huyện</label>
+                  <input class="form-control" type="text" name="city" placeholder="Quận 1">
+                </div>
+                <div class="checkout-field">
+                  <label>Tỉnh / Thành phố</label>
+                  <input class="form-control" type="text" name="state" placeholder="TP. Hồ Chí Minh">
+                </div>
+                <div class="checkout-field">
+                  <label>Số điện thoại</label>
+                  <input class="form-control" type="text" name="mobile" placeholder="0901 234 567">
+                </div>
+                <div class="checkout-field">
+                  <label>Quốc gia</label>
+                  <input class="form-control" type="text" name="country" placeholder="Việt Nam">
+                </div>
+              </div>
+            </div>
+
+            <hr style="margin:1.8rem 0;">
+            <!-- Nút tiếp tục sang bước thanh toán -->
+            <button id="form-button" class="btn-continue" type="submit">
+              <i class="fas fa-lock me-2"></i>Tiếp tục thanh toán
+            </button>
+          </form>
+
+        </div>
+
+        <!-- Khu vực chọn phương thức thanh toán (hiện khi submit form) -->
+        <div class="hidden" id="payment-info">
+          <div class="payment-option">
+            <i class="fab fa-paypal fa-2x" style="color:#003087;"></i>
+            <div>
+              <div style="font-weight:600;font-size:.9rem;">Thanh toán qua PayPal</div>
+              <div style="font-size:.82rem;color:var(--muted);">Nhanh chóng và bảo mật</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── CỘT PHẢI: Tóm tắt đơn hàng ── -->
+      <div class="checkout-summary-column">
+        <div class="order-summary-card">
+
+          <!-- Nút quay lại giỏ hàng -->
+          <a class="checkout-back-link" href="{% url 'cart' %}">
+            <i class="fas fa-arrow-left"></i>Quay lại giỏ hàng
+          </a>
+
+          <div class="order-summary-title">
+            <i class="fas fa-receipt"></i>Tóm tắt đơn hàng
+          </div>
+
+          <!-- Danh sách sản phẩm trong đơn -->
+          {% for item in items %}
+          <div class="order-item-row">
+            <img class="order-item-img" src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}">
+            <div class="order-item-info">
+              <div class="order-item-name">{{ item.product.name }}</div>
+              <div class="order-item-qty">x{{ item.quantity }}</div>
+            </div>
+            <div class="order-item-price">${{ item.product.price|floatformat:2 }}</div>
+          </div>
+          {% endfor %}
+
+          <!-- Tổng kết -->
+          <div class="checkout-totals">
+            <div class="order-total-row">
+              <span>Tạm tính ({{ order.get_cart_items }} món)</span>
+              <span>${{ order.get_cart_total }}</span>
+            </div>
+            <div class="order-total-row">
+              <span>Phí vận chuyển</span>
+              <span style="color:var(--green-deep);font-weight:600;">Miễn phí</span>
+            </div>
+            <div class="order-total-row grand-total">
+              <span>Tổng cộng</span>
+              <span>${{ order.get_cart_total }}</span>
+            </div>
+          </div>
+
+          <!-- Thông tin bảo mật -->
+          <div class="checkout-security">
+            <i class="fas fa-shield-alt"></i>
+            <span>Thanh toán 100% bảo mật. Thông tin của bạn được mã hóa SSL.</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
