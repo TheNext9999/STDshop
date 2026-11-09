@@ -20,7 +20,7 @@
   </head>
   <body>
     {% block site_nav %}
-    <nav class="navbar">
+    <nav class="navbar{% if '/admin-panel/' in request.path %} navbar-admin-dark{% endif %}">
       <div class="nav-container">
         <a href="{% url 'home' %}" style="text-decoration: none;">
           <!-- Logo bên trái -->

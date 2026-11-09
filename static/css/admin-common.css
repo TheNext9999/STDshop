@@ -189,3 +189,212 @@
 .modal-field-row { display: flex; flex-wrap: wrap; gap: 16px; }
 .modal-field-row .field-12 { flex: 1 1 100%; }
 .modal-field-row .field-6 { flex: 1 1 calc(50% - 8px); min-width: 180px; }
+
+/* ============================================================
+   ADMIN TOPBAR - DARK MINIMAL HEADER (LOẠI BỎ NAVBAR KHÁCH HÀNG)
+   Chỉ giữ lại cụm chuông thông báo & dropdown menu tài khoản admin
+   ============================================================ */
+.navbar.navbar-admin-dark {
+    background: #111622 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: background 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Ẩn hoàn toàn Logo, Link Landing, Thanh tìm kiếm và Giỏ hàng trên Admin */
+.navbar.navbar-admin-dark .logo,
+.navbar.navbar-admin-dark .nav-landing-link,
+.navbar.navbar-admin-dark .search-bar,
+.navbar.navbar-admin-dark .cart-icon {
+    display: none !important;
+}
+
+/* Đẩy toàn bộ nội dung còn lại (cụm tài khoản) sang góc phải */
+.navbar.navbar-admin-dark .nav-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 24px !important;
+}
+
+.navbar.navbar-admin-dark .nav-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-left: auto !important;
+}
+
+/* Điều chỉnh lại chiều cao và vị trí Sidebar khi thanh navbar thu gọn thành 56px */
+.admin-layout {
+    min-height: calc(100vh - 56px) !important;
+}
+.admin-sidebar {
+    top: 56px !important;
+    height: calc(100vh - 56px) !important;
+}
+
+/* Nút Chuông thông báo góc phải */
+.navbar.navbar-admin-dark .notif-icon {
+    background: #1e2433 !important;
+    color: #cbd5e1 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.navbar.navbar-admin-dark .notif-icon:hover {
+    background: rgba(45, 212, 191, 0.15) !important;
+    color: #2dd4bf !important;
+    border-color: rgba(45, 212, 191, 0.35) !important;
+    transform: scale(1.05) !important;
+}
+
+.navbar.navbar-admin-dark .notif-count {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 2px #111622 !important;
+}
+
+/* Nút Capsule Tài khoản Admin */
+.navbar.navbar-admin-dark .auth-link {
+    color: #ffffff !important;
+    background: #1e2433 !important;
+    border: 1.5px solid rgba(45, 212, 191, 0.45) !important;
+    border-radius: 999px !important;
+    padding: 6px 14px 6px 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.navbar.navbar-admin-dark .auth-link:hover,
+.navbar.navbar-admin-dark .user-menu.open .auth-link {
+    background: #252e42 !important;
+    border-color: #2dd4bf !important;
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25), 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.navbar.navbar-admin-dark .auth-link .fa-user-circle {
+    color: #2dd4bf !important;
+    font-size: 1.3rem !important;
+}
+
+.navbar.navbar-admin-dark .auth-text {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 0.92rem !important;
+    letter-spacing: 0.2px !important;
+}
+
+.navbar.navbar-admin-dark .auth-link .fa-caret-down {
+    color: #94a3b8 !important;
+    font-size: 0.82rem !important;
+    transition: transform 0.2s ease !important;
+}
+
+.navbar.navbar-admin-dark .user-menu.open .auth-link .fa-caret-down {
+    transform: rotate(180deg) !important;
+    color: #2dd4bf !important;
+}
+
+/* Dropdown Menu xổ xuống chuẩn Dark Theme */
+.navbar.navbar-admin-dark .user-dropdown {
+    background: #1e2433 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 14px !important;
+    padding: 10px 0 !important;
+    min-width: 230px !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    overflow: hidden !important;
+    animation: adminDropdownFade 0.18s ease-out !important;
+}
+
+@keyframes adminDropdownFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.navbar.navbar-admin-dark .user-dropdown p:first-child {
+    padding: 6px 18px 2px !important;
+    color: #64748b !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin: 0 !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown p:nth-child(2) {
+    padding: 0 18px 10px !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    margin: 0 0 6px 0 !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a {
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    padding: 9px 18px !important;
+    font-size: 0.88rem !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    transition: all 0.18s ease !important;
+    text-decoration: none !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a i {
+    color: #2dd4bf !important;
+    width: 16px !important;
+    text-align: center !important;
+    font-size: 0.92rem !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
+    color: #ffffff !important;
+    padding-left: 22px !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a[href*="admin-panel"] {
+    color: #c4b5fd !important;
+    font-weight: 700 !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a[href*="admin-panel"] i {
+    color: #a78bfa !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a:last-child {
+    border-bottom: none !important;
+    color: #f87171 !important;
+    font-weight: 600 !important;
+    margin-top: 4px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.navbar.navbar-admin-dark .user-dropdown a:last-child i {
+    color: #f87171 !important;
+}
+
