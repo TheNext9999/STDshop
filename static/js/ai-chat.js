@@ -1,6 +1,6 @@
 /* ============================================================
    AI CHAT WIDGET - STDShop (thiết kế mới hoàn toàn)
-   Nối với API thật: POST /api/chat/  (views.chat_ai - Groq)
+   Nối với API thật: POST /api/chat/  (AI/views.py -> chat_ai - Groq)
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -190,9 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
         closeBtn.addEventListener('click', () => widget.classList.remove('open'));
     }
 
-    // ===== MỞ TRANG UNI_AI CHUYÊN BIỆT =====
-    // aiExpandBtn giờ là thẻ <a> chuyển thẳng sang trang /uni-ai/,
-    // không chặn chuyển trang hay toggle class expanded nữa.
 
     // ===== GỬI BẰNG NÚT / PHÍM ENTER =====
     sendBtn.addEventListener('click', sendMessage);

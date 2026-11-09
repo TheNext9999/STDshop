@@ -1085,17 +1085,23 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="uni-card-item">
             <div class="uni-card-img-wrap">
               <div class="uni-card-top-badges">
-                <span class="uni-badge-discount">-35%</span>
-                <span class="uni-badge-student-tag">Sinh viên</span>
+                ${(p.discount_percent || 0) > 0
+                  ? `<span class="uni-badge-discount">-${p.discount_percent}%</span>`
+                  : ''}
+                ${p.stock <= 0
+                  ? '<span class="uni-badge-discount">Tạm hết</span>'
+                  : ''}
               </div>
               <img src="${p.image || '/static/css/pic/STDLogo2.png'}" alt="${escapeHtml(p.name)}" onerror="this.src='/static/css/pic/STDLogo2.png'">
-              <div class="uni-card-rating">
-                <i class="fas fa-star"></i> <span>4.8</span>
-              </div>
             </div>
             <div class="uni-card-body">
               <div class="uni-card-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
-              <div class="uni-card-price">${formatVND(p.price)}</div>
+              <div class="uni-card-price">
+                ${formatVND(p.sale_price !== undefined ? p.sale_price : p.price)}
+                ${(p.discount_percent || 0) > 0
+                  ? `<small style="display:block;color:#64748b;font-weight:500;text-decoration:line-through">${formatVND(p.price)}</small>`
+                  : ''}
+              </div>
               <div class="uni-card-btns">
                 <a href="/detail/?id=${p.id}" class="uni-btn-detail">Xem chi tiết</a>
                 <button type="button" class="uni-btn-cart update-cart" data-product="${p.id}" data-action="add">Thêm vào giỏ</button>

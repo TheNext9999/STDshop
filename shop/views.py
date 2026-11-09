@@ -21,9 +21,7 @@ from .models import *
 import json
 import os
 
-# AI imports (giữ nguyên)
 from django.contrib.auth.forms import UserCreationForm
-from openai import OpenAI
 
 
 # ============================================================
@@ -532,81 +530,9 @@ def updateItem(request):
 
 
 # ============================================================
-#  AI CHAT (giữ nguyên hoàn toàn)
+#  CHAT AI đã được chuyển sang module riêng: thư mục AI/ (xem AI/views.py).
+#  Đường dẫn /api/chat/ được khai báo ở AI/urls.py.
 # ============================================================
-
-def chat_ai(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        user_message = data.get("message", "").strip()
-        history = data.get("history", [])
-
-        keywords = [kw for kw in user_message.split() if len(kw) > 1]
-        matched_products = Product.objects.none()
-        for kw in keywords:
-            matched_products = matched_products | Product.objects.filter(name__icontains=kw, is_approved=True)
-
-        show_products = len(keywords) >= 1 and matched_products.exists()
-        if not matched_products.exists():
-            matched_products = Product.objects.filter(is_approved=True)[:6]
-
-        product_info = "\n".join([
-            f"- {p.name} | Giá: {int(p.price):,} VNĐ" for p in matched_products
-        ])
-
-        system_prompt = f"""
-Bạn là nhân viên bán hàng vui vẻ, nhiệt tình của **STDShop**.
-
-[QUY TẮC GIAO TIẾP]
-1. Chỉ chào ở tin nhắn đầu tiên. Từ tin thứ 2, vào thẳng vấn đề.
-2. Thân thiện, xưng hô [Em - Anh/Chị]. Câu ngắn dưới 15 từ.
-3. Tối đa 1-2 emoji mỗi tin nhắn.
-4. Nhớ toàn bộ lịch sử trò chuyện.
-
-[CHÍNH SÁCH BÁN HÀNG]
-- Ship COD toàn quốc, kiểm tra hàng trước khi thanh toán.
-- Đổi trả miễn phí trong 30 ngày.
-- Miễn phí ship đơn từ 200.000đ.
-
-Sản phẩm hiện có:
-{product_info}
-        """
-
-        try:
-            client = OpenAI(
-                api_key=os.environ.get("GROQ_API_KEY"),
-                base_url="https://api.groq.com/openai/v1",
-            )
-
-            msgs = [{"role": "system", "content": system_prompt}]
-            for msg in history:
-                msgs.append({"role": msg["role"], "content": msg["content"]})
-            msgs.append({"role": "user", "content": user_message})
-
-            response = client.chat.completions.create(
-                model="openai/gpt-oss-120b",
-                messages=msgs,
-                max_tokens=800,
-                temperature=0.75,
-            )
-
-            reply = response.choices[0].message.content.strip()
-            products_list = []
-            if show_products:
-                for p in matched_products[:6]:
-                    products_list.append({
-                        "id": p.id, "name": p.name,
-                        "price": p.price, "image": p.ImageURL,
-                    })
-
-            return JsonResponse({"status": "success", "reply": reply, "products": products_list})
-
-        except Exception as e:
-            print("AI Error:", str(e))
-            return JsonResponse({"status": "error", "message": "AI đang bận, vui lòng thử lại sau nhé!"})
-
-    return JsonResponse({"status": "error", "message": "Method not allowed!"})
-
 
 def uni_ai_chat(request):
     """

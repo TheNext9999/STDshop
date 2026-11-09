@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('landing/', include('landing.urls')),
+    path('', include('AI.urls')),   # Chat AI: /api/chat/
     path('', include('shop.urls')),
 ]
 
