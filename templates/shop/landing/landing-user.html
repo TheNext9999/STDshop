@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/landing-user.css' %}" />
+<link rel="stylesheet" href="{% static 'css/landing-search.css' %}" />
 {% endblock %}
 
 {% block site_nav %}
@@ -26,14 +27,17 @@
 
     </div>
 
-    <div class="search-bar">
+    <form class="search-bar" action="{% url 'landing:landing_user' %}" method="get"
+          data-suggest-url="{% url 'landing:landing_search_suggest' %}" autocomplete="off" style="margin:0;">
       <i class="fas fa-search"></i>
-      <input 
-        type="text" 
-        id="searchInput" 
+      <input
+        type="text"
+        id="searchInput"
+        name="q"
         placeholder="Tìm laptop, áo, sách, tai nghe... cũ giá rẻ"
+        autocomplete="off"
       >
-    </div>
+    </form>
 
     <div class="nav-right">
       <div class="cart-icon" onclick="showToast('Giỏ hàng của bạn đang trống','warning')">
@@ -533,5 +537,6 @@ sang /detail/?id=... (trang chi tiết sản phẩm của STDShop) thay vì mở
     // Dữ liệu sản phẩm thật từ MarketProduct (database) - thay cho mảng cứng cũ.
     const products = {{ products_json|safe }};
 </script>
+<script src="{% static 'js/landing-search.js' %}"></script>
 <script src="{% static 'js/landing-user.js' %}"></script>
 {% endblock %}

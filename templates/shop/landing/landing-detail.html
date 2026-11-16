@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/landing-user.css' %}" />
+<link rel="stylesheet" href="{% static 'css/landing-search.css' %}" />
 <link rel="stylesheet" href="{% static 'css/landing-detail.css' %}" />
 {% endblock %}
 
@@ -20,7 +21,8 @@
       </div>
     </a>
 
-    <form class="search-bar" action="{% url 'landing:landing_user' %}" method="get" style="margin:0;">
+    <form class="search-bar" action="{% url 'landing:landing_user' %}" method="get"
+          data-suggest-url="{% url 'landing:landing_search_suggest' %}" style="margin:0;">
       <i class="fas fa-search"></i>
       <input type="text" name="q" placeholder="Tìm laptop, áo, sách, tai nghe... cũ giá rẻ" autocomplete="off">
     </form>
@@ -153,6 +155,67 @@
         <button type="button" id="ldShareBtn" class="ld-btn ld-btn-ghost">
           <i class="fas fa-share-alt"></i> Chia sẻ
         </button>
+      </div>
+
+      <!-- ===== ĐẶT MUA ===== -->
+      <div class="ld-order-box" id="order-box">
+        {% if is_owner %}
+          {# chủ tin không tự đặt mua #}
+        {% elif product.is_sold %}
+          <div class="ld-order-info ld-order-sold"><i class="fas fa-ban"></i> Sản phẩm này đã bán</div>
+        {% elif not product.is_approved %}
+          <div class="ld-order-info"><i class="fas fa-hourglass-half"></i> Tin đang chờ duyệt, chưa nhận đặt mua</div>
+        {% elif not user.is_authenticated %}
+          <a href="{% url 'login' %}" class="ld-btn ld-btn-primary ld-btn-buy"><i class="fas fa-shopping-bag"></i> Đăng nhập để đặt mua</a>
+        {% elif my_order_active %}
+          <div class="ld-order-status ld-os-{{ my_order.status }}">
+            <div class="ld-order-status-head">
+              <i class="fas {{ my_order.status_icon }}"></i> Đơn {{ my_order.order_code }}: <strong>{{ my_order.status_label }}</strong>
+            </div>
+            <div class="ld-muted">Giá chốt {{ my_order.price|vnd }} · Giao tới: {{ my_order.address }}</div>
+            {% if my_order.status == 'pending' or my_order.status == 'confirmed' %}
+            <form method="post" class="ld-inline-form" onsubmit="return confirm('Hủy đơn mua này?');">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="cancel_my_order">
+              <input type="hidden" name="order_id" value="{{ my_order.id }}">
+              <button type="submit" class="ld-link-danger"><i class="fas fa-times-circle"></i> Hủy đơn</button>
+            </form>
+            {% endif %}
+          </div>
+        {% elif holding_other %}
+          <div class="ld-order-info"><i class="fas fa-handshake"></i> Sản phẩm đang được giữ cho người mua khác</div>
+        {% else %}
+          <button type="button" class="ld-btn ld-btn-primary ld-btn-buy" id="ldBuyBtn">
+            <i class="fas fa-shopping-bag"></i> Đặt mua ngay
+          </button>
+
+          <form method="post" class="ld-order-form" id="ldOrderForm" hidden>
+            {% csrf_token %}
+            <input type="hidden" name="action" value="place_order">
+            <div class="ld-order-form-title">Thông tin nhận hàng</div>
+            <label>Họ và tên người nhận
+              <input type="text" name="receiver_name" maxlength="100" required value="{{ user.get_full_name|default:user.username }}">
+            </label>
+            <label>Số điện thoại
+              <input type="tel" name="phone" maxlength="20" required placeholder="VD: 0912345678">
+            </label>
+            <label>Địa chỉ nhận hàng
+              <input type="text" name="address" maxlength="255" required placeholder="Số nhà, đường, quận/huyện, tỉnh/thành">
+            </label>
+            <label>Ghi chú cho người bán (không bắt buộc)
+              <textarea name="note" rows="2" placeholder="VD: hẹn gặp trực tiếp buổi tối..."></textarea>
+            </label>
+            <div class="ld-order-summary">Giá chốt: <strong>{{ product.price|vnd }}</strong> · Thanh toán khi nhận hàng</div>
+            <div class="ld-order-form-actions">
+              <button type="submit" class="ld-btn ld-btn-primary"><i class="fas fa-check"></i> Xác nhận đặt mua</button>
+              <button type="button" class="ld-btn ld-btn-ghost" id="ldOrderCancel">Đóng</button>
+            </div>
+          </form>
+        {% endif %}
+
+        {% if my_order and not my_order_active %}
+          <div class="ld-order-info ld-order-last">Đơn gần nhất của bạn {{ my_order.order_code }}: {{ my_order.status_label }}</div>
+        {% endif %}
       </div>
 
       {% if can_manage %}
@@ -313,5 +376,6 @@
 Không gọi block.super: trang STD Market tự có navbar và JS riêng, không nạp order-script.js
 của STDShop (script đó bắt click mọi .product-card và chuyển sang trang chi tiết của shop).
 {% endcomment %}
+<script src="{% static 'js/landing-search.js' %}"></script>
 <script src="{% static 'js/landing-detail.js' %}"></script>
 {% endblock %}

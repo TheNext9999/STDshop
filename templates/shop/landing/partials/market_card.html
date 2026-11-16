@@ -6,7 +6,8 @@
      data-seller="{{ product.seller.username|lower }}"
      data-price="{{ product.price }}"
      data-views="{{ product.views }}"
-     onclick="openProductById({{ product.id }})">
+     data-search="{{ product.search_text }}"
+     onclick="location.href='{% url 'landing:landing_product' product.id %}'">
   <div class="product-img-wrap">
     <img src="{{ product.ImageURL }}" alt="{{ product.name }}" loading="lazy">
     {% if product.condition == 'new' %}

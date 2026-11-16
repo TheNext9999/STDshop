@@ -1,0 +1,117 @@
+/* ============================================================
+   Hộp gợi ý tìm kiếm của STD Market (đi kèm landing-search.js)
+   Class riêng có tiền tố "ls-" để không đụng class của trang khác.
+   ============================================================ */
+
+/* chừa chỗ bên phải ô nhập cho nút xóa */
+.search-bar input { padding-right: 38px; }
+
+.ls-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #e3ece9;
+  color: #5b6a67;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.ls-clear:hover { background: #cfe0db; }
+.ls-clear[hidden] { display: none; }
+
+.ls-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #dcebe7;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 70vh;
+  z-index: 3500;
+}
+.ls-dropdown[hidden] { display: none; }
+
+.ls-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid #f1f5f4;
+  cursor: pointer;
+}
+.ls-item:hover,
+.ls-item.is-active { background: #f0fcfa; }
+
+.ls-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #eef5f3;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9aaaa6;
+}
+.ls-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ls-noimg::after {
+  content: '\f03e';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.ls-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ls-name {
+  font-size: .88rem;
+  font-weight: 600;
+  color: #1a2321;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ls-name mark {
+  background: #c8f5ee;
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+}
+.ls-meta {
+  font-size: .74rem;
+  color: #7b8a86;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ls-price { font-weight: 800; font-size: .88rem; color: #00a68f; white-space: nowrap; }
+
+.ls-all {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  font-size: .84rem;
+  font-weight: 700;
+  color: #00a68f;
+  text-decoration: none;
+  background: #fafdfc;
+}
+.ls-all:hover,
+.ls-all.is-active { background: #f0fcfa; }
+
+.ls-empty { padding: 22px 16px; text-align: center; color: #8a9894; font-size: .88rem; }

@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ===== 1b. TÌM KIẾM: hộp gợi ý khi gõ ở thanh điều hướng =====
+    if (window.LandingSearch) {
+        document.querySelectorAll('.search-bar[data-suggest-url]').forEach(bar => window.LandingSearch.attach(bar));
+    }
+
     // ===== 2. CHỌN SAO ĐÁNH GIÁ =====
     const starBox = document.getElementById('ldStarInput');
     const ratingInput = document.getElementById('ldRatingInput');
@@ -96,4 +101,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+}); 

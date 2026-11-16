@@ -53,8 +53,14 @@ function applyFilters(){
     if (filterState.flash && !p.flash) show = false;
 
     if (filterState.keyword) {
-      const hay = (card.dataset.name || '') + ' ' + (card.dataset.seller || '');
-      if (!hay.includes(filterState.keyword)) show = false;
+      // data-search do server dựng sẵn (đã bỏ dấu): tên, thương hiệu, khu vực, danh mục,
+      // tình trạng, người bán, mô tả. Gõ "ao thun" vẫn ra "Áo thun"; nhiều từ thì phải khớp hết.
+      const hay = card.dataset.search || ((card.dataset.name || '') + ' ' + (card.dataset.seller || ''));
+      if (window.LandingSearch) {
+        if (!LandingSearch.matchesAll(hay, LandingSearch.tokens(filterState.keyword))) show = false;
+      } else if (!hay.toLowerCase().includes(filterState.keyword.toLowerCase())) {
+        show = false;   // dự phòng nếu chưa nạp landing-search.js
+      }
     }
 
     card.style.display = show ? '' : 'none';
@@ -219,15 +225,22 @@ function showToast(msg, type){
 }
 
 // ===== COUNTDOWN =====
-let secs = 1*3600 + 45*60 + 30;
-setInterval(()=>{
-  if(secs<=0) return;
-  secs--;
-  const h=Math.floor(secs/3600), m=Math.floor((secs%3600)/60), s=secs%60;
-  document.getElementById('fh').textContent=String(h).padStart(2,'0');
-  document.getElementById('fm').textContent=String(m).padStart(2,'0');
-  document.getElementById('fs').textContent=String(s).padStart(2,'0');
-}, 1000);
+// Trang hiện chưa có khối đồng hồ Flash Sale (#fh/#fm/#fs). Trước đây đoạn này vẫn chạy mỗi giây và
+// báo lỗi "Cannot set properties of null" trong Console -> chỉ chạy khi các phần tử đó tồn tại.
+const fhEl = document.getElementById('fh');
+const fmEl = document.getElementById('fm');
+const fsEl = document.getElementById('fs');
+if (fhEl && fmEl && fsEl) {
+  let secs = 1*3600 + 45*60 + 30;
+  setInterval(()=>{
+    if(secs<=0) return;
+    secs--;
+    const h=Math.floor(secs/3600), m=Math.floor((secs%3600)/60), s=secs%60;
+    fhEl.textContent=String(h).padStart(2,'0');
+    fmEl.textContent=String(m).padStart(2,'0');
+    fsEl.textContent=String(s).padStart(2,'0');
+  }, 1000);
+}
 
 
 // ===== INIT: gắn sự kiện tìm kiếm & sắp xếp =====
@@ -251,9 +264,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const searchBox = document.getElementById('searchInput');
   if (searchBox) {
+    // Lọc danh sách ngay khi gõ
     searchBox.addEventListener('input', function(){
-      filterState.keyword = this.value.toLowerCase().trim();
+      filterState.keyword = this.value.trim();
       applyFilters();
+    });
+  }
+
+  // Hộp gợi ý khi gõ (ảnh, giá, tình trạng...) - xem landing-search.js
+  let searchUi = null;
+  const jumpToResults = () => {
+    const grid = document.getElementById('productGrid');
+    if (grid && grid.scrollIntoView) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  if (searchBox && window.LandingSearch) {
+    searchUi = LandingSearch.attach(searchBox.closest('.search-bar'), {
+      onSubmit: jumpToResults,      // Enter khi chưa chọn gợi ý nào: giữ nguyên bộ lọc và cuộn tới danh sách
+      onViewAll: jumpToResults      // "Xem tất cả": cũng chỉ cuộn tới danh sách đã lọc, không tải lại trang
     });
   }
 
@@ -261,8 +288,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialQuery = new URLSearchParams(window.location.search).get('q');
   if (initialQuery && searchBox) {
     searchBox.value = initialQuery;
-    filterState.keyword = initialQuery.toLowerCase().trim();
+    filterState.keyword = initialQuery.trim();
     applyFilters();
+    if (searchUi) searchUi.refresh();   // hiện nút xóa cho từ khóa điền sẵn
   }
 
   const sortSelect = document.querySelector('.sort-select');

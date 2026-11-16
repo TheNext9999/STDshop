@@ -21,7 +21,7 @@ from .models import (
     MarketProduct, MarketReview, MarketWishlist, MarketOrder, MarketNotification,
 )
 from .notifications import notify
-from . import services
+from . import services, search
 
 
 def landing_home(request):
@@ -78,6 +78,42 @@ def landing_user(request):
         'products_json': json.dumps(products_data, ensure_ascii=False).replace('</', '<\\/'),
     })
     return render(request, 'shop/landing/landing-user.html', ctx)
+
+
+SUGGEST_LIMIT = 6   # số gợi ý tối đa trong hộp thả xuống
+
+
+def landing_search_suggest(request):
+    """API gợi ý tìm kiếm khi gõ: GET /landing/search/suggest/?q=...
+
+    Trả về {"q", "results": [{id, name, price, image, condition, location, url}], "total"}.
+    Chỉ tìm trong sản phẩm đã duyệt và chưa bán; tìm không dấu, nhiều từ khóa, nhiều trường
+    (xem landing/search.py)."""
+    q = (request.GET.get('q') or '').strip()[:100]
+    tokens = search.tokenize(q)
+    if not tokens:
+        return JsonResponse({'q': q, 'results': [], 'total': 0})
+
+    matched = []
+    for p in MarketProduct.objects.filter(is_approved=True, is_sold=False).select_related('seller'):
+        if search.matches_all(p.search_text, tokens):
+            matched.append((search.score(p.name, tokens), p))
+    # điểm cao trước, rồi nhiều lượt xem, rồi mới đăng
+    matched.sort(key=lambda item: (-item[0], -item[1].views, -item[1].id))
+
+    results = [
+        {
+            'id': p.id,
+            'name': p.name,
+            'price': p.price,
+            'image': p.ImageURL,
+            'condition': p.condition_label,
+            'location': p.location,
+            'url': reverse('landing:landing_product', args=[p.id]),
+        }
+        for _, p in matched[:SUGGEST_LIMIT]
+    ]
+    return JsonResponse({'q': q, 'results': results, 'total': len(matched)})
 
 
 def landing_product(request, pk):

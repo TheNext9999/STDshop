@@ -63,6 +63,18 @@ class MarketProduct(models.Model):
         return self.name
 
     @property
+    def search_text(self):
+        """Chuỗi đã bỏ dấu gom các trường người dùng có thể tìm: tên, thương hiệu, khu vực,
+        danh mục, tình trạng, người bán và phần đầu mô tả. Dùng cho ô tìm kiếm."""
+        from .search import fold
+        parts = [
+            self.name, self.brand, self.location,
+            self.get_category_display(), self.condition_label,
+            self.seller.username, (self.description or '')[:300],
+        ]
+        return fold(' '.join(p for p in parts if p))
+
+    @property
     def ImageURL(self):
         """Ưu tiên ảnh người bán upload, nếu không có thì dùng link đã dán."""
         try:

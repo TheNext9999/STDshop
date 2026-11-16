@@ -8,4 +8,5 @@ urlpatterns = [
     path('user/', views.landing_user, name='landing_user'),
     path('seller/', views.landing_seller, name='landing_seller'),
     path('product/<int:pk>/', views.landing_product, name='landing_product'),
+    path('search/suggest/', views.landing_search_suggest, name='landing_search_suggest'),
 ]
