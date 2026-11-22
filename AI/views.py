@@ -54,7 +54,14 @@ def chat_ai(request):
         history = data.get("history", [])
         if not isinstance(history, list):
             history = []
-        matched_products, show_products = service.find_products(user_message, history)
+        exclude_product_ids = data.get("exclude_product_ids", [])
+        if not isinstance(exclude_product_ids, list):
+            exclude_product_ids = []
+        matched_products, show_products = service.find_products(
+            user_message,
+            history,
+            exclude_product_ids=exclude_product_ids[:500],
+        )
         system_prompt = prompts.build_system_prompt(
             service.format_product_info(matched_products)
         )

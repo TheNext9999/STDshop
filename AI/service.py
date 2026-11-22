@@ -105,10 +105,13 @@ FOLLOW_UP_MARKERS = (
     "cai nay", "cai do", "cai nao", "loai nay", "loai do", "mon nay",
     "mon do", "san pham nay", "san pham do", "con hang", "gia bao nhieu",
     "re nhat", "gia thap nhat", "dat nhat", "so sanh", "chi tiet",
+    "con cai nao khac", "con cai nao nua", "con mon nao khac",
+    "con mon nao nua", "co cai nao khac", "co mon nao khac",
+    "cai khac", "mon khac", "san pham khac",
 )
 
 
-def find_products(user_message, history=None):
+def find_products(user_message, history=None, exclude_product_ids=None):
     """Return relevant approved products and whether to show their cards."""
     message = str(user_message or "").strip()
     normalized_message = _normalize(message)
@@ -144,6 +147,14 @@ def find_products(user_message, history=None):
         Product.objects.filter(is_approved=True)
         .prefetch_related("catergory")
     )
+    excluded_ids = [
+        product_id
+        for product_id in (exclude_product_ids or [])
+        if isinstance(product_id, int) and product_id > 0
+    ]
+    if excluded_ids:
+        products = products.exclude(id__in=excluded_ids)
+
     ranked_products = []
     for product in products:
         price = product.sale_price

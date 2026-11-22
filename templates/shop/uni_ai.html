@@ -998,6 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const promptBtns = document.querySelectorAll('.uni-prompt-card, .uni-quick-tag');
 
   let chatHistory = [];
+  let shownProductIds = new Set();
 
   function getCookie(name) {
     let cookieValue = null;
@@ -1195,7 +1196,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify({
           message: message,
-          history: chatHistory
+          history: chatHistory,
+          exclude_product_ids: Array.from(shownProductIds)
         })
       });
 
@@ -1204,6 +1206,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.status === 'success') {
         appendBotMsg(data.reply, data.products);
+        (data.products || []).forEach(product => {
+          shownProductIds.add(product.id);
+        });
         chatHistory.push({ role: 'user', content: message });
         chatHistory.push({ role: 'assistant', content: data.reply });
       } else {
@@ -1236,6 +1241,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset cuộc trò chuyện
   resetBtn.addEventListener('click', () => {
     chatHistory = [];
+    shownProductIds.clear();
     chatBody.innerHTML = `
       <div class=\"uni-msg-item bot\">
         <div class=\"uni-msg-icon-box\"><i class=\"fas fa-robot\"></i></div>
