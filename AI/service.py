@@ -108,6 +108,8 @@ FOLLOW_UP_MARKERS = (
     "con cai nao khac", "con cai nao nua", "con mon nao khac",
     "con mon nao nua", "co cai nao khac", "co mon nao khac",
     "cai khac", "mon khac", "san pham khac",
+    "con san pham nao khac", "con san pham nao nua",
+    "co san pham nao khac", "co san pham nao nua",
 )
 
 

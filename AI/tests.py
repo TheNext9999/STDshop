@@ -86,6 +86,19 @@ class ProductRecommendationTests(TestCase):
         self.assertTrue(show_products)
         self.assertEqual([product.id for product in products], [self.cheap_lamp.id])
 
+    def test_follow_up_for_more_products_uses_previous_topic(self):
+        products, show_products = find_products(
+            "Còn sản phẩm nào khác không?",
+            [
+                {"role": "user", "content": "Tìm đèn decor bàn học"},
+                {"role": "assistant", "content": "Mình có vài mẫu đèn phù hợp."},
+            ],
+            exclude_product_ids=[self.decor_lamp.id],
+        )
+
+        self.assertTrue(show_products)
+        self.assertEqual([product.id for product in products], [self.cheap_lamp.id])
+
     def test_search_does_not_repeat_all_previously_shown_options(self):
         products, show_products = find_products(
             "Tìm đèn decor bàn học",
@@ -125,3 +138,16 @@ class ProductRecommendationTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
+
+    @patch("AI.views.service.ask_ai", return_value="   ")
+    def test_chat_endpoint_never_returns_an_empty_reply(self, ask_ai):
+        response = self.client.post(
+            reverse("chat_ai"),
+            data='{"message":"Xin chào","history":[]}',
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["reply"].strip())
+        self.assertEqual(response.json()["products"], [])
+        ask_ai.assert_called_once()

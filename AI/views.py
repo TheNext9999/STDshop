@@ -66,6 +66,12 @@ def chat_ai(request):
             service.format_product_info(matched_products)
         )
         reply = service.ask_ai(system_prompt, history, user_message)
+        reply = reply.strip() if isinstance(reply, str) else ""
+        if not reply:
+            if show_products:
+                reply = "Mình tìm thấy một số sản phẩm phù hợp bên dưới. Bạn muốn lọc thêm theo giá hay tính năng?"
+            else:
+                reply = "Mình chưa tìm thấy sản phẩm phù hợp. Bạn cho mình biết loại sản phẩm hoặc mức giá bạn cần nhé."
         products_list = service.products_payload(matched_products) if show_products else []
         return JsonResponse({"status": "success", "reply": reply, "products": products_list})
     except Exception:
