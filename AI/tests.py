@@ -49,6 +49,42 @@ class ProductRecommendationTests(TestCase):
             self.cheap_lamp.id,
         })
 
+    def test_specific_search_requires_keyword_coverage_and_name_or_category_match(self):
+        headset_category = Catergory.objects.create(
+            name="Tai nghe",
+            slug="tai-nghe",
+        )
+        gaming_headset = self.create_product(
+            "Tai nghe gaming có dây",
+            350000,
+            "Micro chống ồn cho game",
+        )
+        gaming_headset.catergory.clear()
+        gaming_headset.catergory.add(headset_category)
+
+        non_gaming_headset = self.create_product(
+            "Tai nghe Bluetooth không dây",
+            250000,
+            "Âm thanh không dây dùng hằng ngày",
+        )
+        non_gaming_headset.catergory.clear()
+        non_gaming_headset.catergory.add(headset_category)
+
+        unrelated_product = self.create_product(
+            "Đèn pin đội đầu",
+            45000,
+            "Phù hợp chơi game, nghe nhạc khi cắm trại",
+        )
+
+        products, show_products = find_products(
+            "Có bao nhiêu loại tai nghe gaming thế nhỉ?"
+        )
+
+        self.assertTrue(show_products)
+        self.assertEqual([product.id for product in products], [gaming_headset.id])
+        self.assertNotIn(non_gaming_headset.id, [product.id for product in products])
+        self.assertNotIn(unrelated_product.id, [product.id for product in products])
+
     def test_budget_filters_by_current_sale_price(self):
         self.decor_lamp.discount_percent = 50
         self.decor_lamp.save()

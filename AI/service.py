@@ -20,6 +20,8 @@ STOP_WORDS = {
     "san", "pham", "toi", "tim", "tu", "van", "va", "voi", "em", "can",
     "muon", "gia", "re", "duoi", "tren", "khoang", "tam", "tien",
     "sinh", "vien",
+    "nhieu", "loai", "the", "nhi", "chiec", "mot",
+    "do", "phong", "tro",
 }
 
 
@@ -32,7 +34,9 @@ def _normalize(value):
 def _tokens(value):
     return {
         token for token in re.findall(r"[a-z0-9]+", _normalize(value))
-        if len(token) > 1 and not token.isdigit() and token not in STOP_WORDS
+        if len(token) > 1
+        and not token[0].isdigit()
+        and token not in STOP_WORDS
     }
 
 
@@ -80,14 +84,17 @@ def _rank_product(text, keywords, phrase):
     detail_tokens = _tokens(text["detail"])
     score = 0
     matched = 0
+    strong_matches = 0
 
     for keyword in keywords:
         if keyword in name_tokens:
             score += 4
             matched += 1
+            strong_matches += 1
         elif keyword in category_tokens:
             score += 3
             matched += 1
+            strong_matches += 1
         elif keyword in detail_tokens:
             score += 1
             matched += 1
@@ -95,8 +102,13 @@ def _rank_product(text, keywords, phrase):
     if phrase and phrase in text["name"]:
         score += 5
 
-    required_matches = min(2, len(keywords))
-    if score < 3 or matched < required_matches:
+    required_matches = (len(keywords) * 3 + 3) // 4
+    required_strong_matches = 1
+    if (
+        score < 3
+        or matched < required_matches
+        or strong_matches < required_strong_matches
+    ):
         return 0
     return score
 
