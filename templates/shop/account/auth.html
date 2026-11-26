@@ -37,12 +37,13 @@
                   style="{% if active_tab == 'register' %}display:none;{% endif %}">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label>Tên đăng nhập</label>
-                    <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
+                    <label>Email</label>
+                    <input type="text" name="email" inputmode="email" autocomplete="username"
+                           placeholder="Nhập email của bạn" value="{{ login_email|default:'' }}" required>
                 </div>
                 <div class="form-group">
                     <label>Mật khẩu</label>
-                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                    <input type="password" name="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required>
                 </div>
                 <button type="submit" class="btn-login">ĐĂNG NHẬP</button>
             </form>
@@ -63,7 +64,7 @@
                 </div>
                 <div class="form-group">
                     <label>Email sinh viên</label>
-                    <input type="email" name="email" placeholder="ví dụ: ten.sinhvien@sinhvien.edu.vn">
+                    <input type="email" name="email" autocomplete="email" placeholder="ví dụ: ten.sinhvien@sinhvien.edu.vn" required>
                     {% if form.email.errors %}<p style="color:#e74c3c;font-size:.85rem;">{{ form.email.errors|striptags }}</p>{% endif %}
                 </div>
                 <div class="form-group">

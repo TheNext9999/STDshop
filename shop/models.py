@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django import forms
 
 # Create your models here.
 class Catergory(models.Model):
@@ -13,9 +14,18 @@ class Catergory(models.Model):
         return self.name
 
 class CreateUserForm(UserCreationForm):
+    # Email là thông tin dùng để ĐĂNG NHẬP nên bắt buộc và không được trùng với tài khoản khác.
+    email = forms.EmailField(label='Email', required=True)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError('Email này đã được đăng ký. Hãy dùng email khác hoặc đăng nhập.')
+        return email
 
     
 class Product(models.Model):

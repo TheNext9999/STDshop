@@ -182,19 +182,54 @@ def register(request):
     return render(request, 'shop/account/auth.html', context)
 
 
+# Tài khoản cũ chưa có email (VD tài khoản admin tạo bằng createsuperuser) vẫn đăng nhập được
+# bằng TÊN ĐĂNG NHẬP trong cùng ô nhập. Đặt False nếu chỉ muốn cho đăng nhập bằng email.
+ALLOW_USERNAME_LOGIN = True
+
+
+def _authenticate_by_email(request, identifier, password):
+    """Đăng nhập bằng EMAIL (không phân biệt hoa thường). Trả về user hoặc None.
+
+    - Có "@"  : tìm theo email. Nếu nhiều tài khoản trùng email (dữ liệu cũ) thì thử lần lượt
+                từng tài khoản bằng mật khẩu đã nhập (tối đa 5).
+    - Không có "@" và ALLOW_USERNAME_LOGIN: coi là tên đăng nhập (cho tài khoản cũ chưa có email).
+    Việc kiểm tra mật khẩu vẫn do hệ thống xác thực của Django làm (authenticate)."""
+    identifier = (identifier or '').strip()
+    if not identifier or not password:
+        return None
+
+    candidates = []
+    if '@' in identifier:
+        candidates = list(User.objects.filter(email__iexact=identifier).order_by('id')[:5])
+    elif ALLOW_USERNAME_LOGIN:
+        candidates = list(User.objects.filter(username=identifier)[:1])
+
+    for candidate in candidates:
+        user = authenticate(request, username=candidate.get_username(), password=password)
+        if user is not None:
+            return user
+
+    if not candidates:
+        # Không có tài khoản nào: vẫn băm mật khẩu 1 lần để thời gian phản hồi không lộ
+        # việc "email này có tồn tại hay không".
+        User().set_password(password)
+    return None
+
+
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
+    login_email = ''
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        # ô nhập tên "email"; vẫn nhận "username" để tương thích với trang đăng nhập cũ
+        login_email = (request.POST.get('email') or request.POST.get('username') or '').strip()
+        password = request.POST.get('password') or ''
+        user = _authenticate_by_email(request, login_email, password)
         if user is not None:
             login(request, user)
             return redirect('home')
-        else:
-            messages.info(request, 'Tên đăng nhập hoặc mật khẩu không đúng')
-    return render(request, 'shop/account/auth.html', {'active_tab': 'login'})
+        messages.info(request, 'Email hoặc mật khẩu không đúng')
+    return render(request, 'shop/account/auth.html', {'active_tab': 'login', 'login_email': login_email})
 
 
 def logoutPage(request):
@@ -586,7 +621,23 @@ def profile(request):
         user = request.user
         user.first_name = request.POST.get('first_name', '').strip() or user.first_name
         user.last_name  = request.POST.get('last_name', '').strip()  or user.last_name
-        user.email      = request.POST.get('email', '').strip()      or user.email
+        # Email dùng để đăng nhập nên phải hợp lệ và không được trùng tài khoản khác
+        email_error = False
+        new_email = request.POST.get('email', '').strip()
+        if new_email and new_email != user.email:
+            from django.core.validators import validate_email
+            from django.core.exceptions import ValidationError
+            try:
+                validate_email(new_email)
+            except ValidationError:
+                messages.error(request, 'Email không hợp lệ nên chưa được cập nhật.')
+                email_error = True
+            else:
+                if User.objects.filter(email__iexact=new_email).exclude(pk=user.pk).exists():
+                    messages.error(request, 'Email này đã được tài khoản khác sử dụng nên chưa thể đổi.')
+                    email_error = True
+                else:
+                    user.email = new_email
         user.save()
 
         # Đổi mật khẩu nếu người dùng có điền
@@ -605,7 +656,7 @@ def profile(request):
                     messages.error(request, 'Mật khẩu xác nhận không khớp.')
             else:
                 messages.error(request, 'Mật khẩu hiện tại không đúng.')
-        else:
+        elif not email_error:
             messages.success(request, 'Cập nhật thông tin thành công!')
 
         return redirect('profile')
