@@ -4,10 +4,12 @@ Mọi thông số cấu hình của Chat AI nằm ở đây. Muốn đổi mô h
 độ "sáng tạo" hay số sản phẩm gợi ý thì chỉ cần sửa file này.
 """
 
+import os
+
 # ---- Nhà cung cấp & mô hình (Groq, dùng giao thức tương thích OpenAI) ----
-API_KEY_ENV = "GROQ_API_KEY"                  # tên biến môi trường trong file .env
-BASE_URL = "https://api.groq.com/openai/v1"
-MODEL = "openai/gpt-oss-120b"
+API_KEY_ENV = "AI_API_KEY"
+BASE_URL = os.environ.get("BASE_URL") or "https://api.groq.com/openai/v1"
+MODEL = os.environ.get("MODEL") or "openai/gpt-oss-120b"
 
 # ---- Tham số sinh câu trả lời ----
 MAX_TOKENS = 900

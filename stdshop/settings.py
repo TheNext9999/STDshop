@@ -12,13 +12,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 import pymysql
 pymysql.install_as_MySQLdb()
 from dotenv import load_dotenv
-load_dotenv()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -103,12 +103,12 @@ WSGI_APPLICATION = 'stdshop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stdshop',
-        "USER": "root",
-        "PASSWORD": "HoChiMinh1890",
-        "HOST": "localhost",
-        "PORT": "3306",
+        'ENGINE': os.environ.get('ENGINE') or 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME') or 'stdshop',
+        'USER': os.environ.get('DB_USER') or 'root',
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST') or 'localhost',
+        'PORT': os.environ.get('DB_PORT') or '3306',
     }
 }
 

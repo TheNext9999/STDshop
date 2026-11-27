@@ -101,12 +101,18 @@ copy .env.example .env
 ```
 Mở file `.env` và thiết lập các thông số cần thiết:
 ```ini
-# Cấu hình Django
-DJANGO_SECRET_KEY=your-secret-key-here
-DJANGO_DEBUG=True
+# AI (BASE_URL và MODEL để trống sẽ dùng giá trị mặc định trong AI/config.py)
+AI_API_KEY=your-ai-api-key
+BASE_URL=
+MODEL=
 
-# Groq API Key (bắt buộc để sử dụng AI Chatbot)
-GROQ_API_KEY=your-groq-api-key-here
+# Database MySQL
+ENGINE=django.db.backends.mysql
+DB_NAME=stdshop
+DB_USER=root
+DB_PASSWORD=your-database-password
+DB_HOST=127.0.0.1
+DB_PORT=3306
 
 # Đăng nhập mạng xã hội (tùy chọn)
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -115,31 +121,18 @@ FACEBOOK_CLIENT_ID=your-facebook-app-id
 FACEBOOK_CLIENT_SECRET=your-facebook-app-secret
 ZALO_APP_ID=your-zalo-app-id
 ZALO_APP_SECRET=your-zalo-app-secret
-
-# Cấu hình gửi Email (tùy chọn - mặc định in ra terminal console)
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-app-password
 ```
 
 ### Bước 5: Cấu hình cơ sở dữ liệu
 
-* **Cách 1: Sử dụng MySQL (Mặc định trong `settings.py`)**
+* **Sử dụng MySQL**
   1. Mở MySQL Client/Workbench và tạo cơ sở dữ liệu:
      ```sql
      CREATE DATABASE stdshop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
      ```
-  2. Đảm bảo thông tin user/password trong `stdshop/settings.py` khớp với MySQL server của bạn.
+  2. Đặt `ENGINE`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` và `DB_PORT` trong `.env`.
 
-* **Cách 2: Sử dụng SQLite (Phát triển thử nghiệm nhanh)**
-  Mở file `stdshop/settings.py` và thay khối `DATABASES` thành:
-  ```python
-  DATABASES = {
-      'default': {
-          'ENGINE': 'django.db.backends.sqlite3',
-          'NAME': BASE_DIR / 'db.sqlite3',
-      }
-  }
-  ```
+* **Sử dụng SQLite (phát triển thử nghiệm nhanh)**: đặt `ENGINE=django.db.backends.sqlite3` và `DB_NAME` thành đường dẫn file SQLite. Ví dụ `DB_NAME=db.sqlite3`.
 
 ### Bước 6: Khởi tạo database và tài khoản quản trị
 ```powershell
